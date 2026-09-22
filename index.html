@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#7c3aed">
+<title>Cathy's Learning Adventure</title>
+<style>
+  :root{
+    --purple:#7c3aed; --purple-dark:#5b21b6; --pink:#ec4899; --blue:#3b82f6;
+    --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --bg1:#fef3ff; --bg2:#e0f2fe;
+    --card:#ffffff; --ink:#312e52; --muted:#7c7a9c; --border:#e9e5fb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  body{
+    background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%);
+    color:var(--ink); min-height:100vh; display:flex; justify-content:center;
+    padding:14px; -webkit-tap-highlight-color:transparent;
+  }
+  .wrap{width:100%; max-width:760px;}
+  .card{
+    background:var(--card); border-radius:26px; padding:24px;
+    box-shadow:0 16px 40px -12px rgba(91,33,182,.25); position:relative; overflow:hidden;
+  }
+  .topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px; flex-wrap:wrap;}
+  .name-badge{background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; font-weight:800;
+    padding:8px 16px; border-radius:999px; font-size:.95rem;}
+  .stars-badge{background:#fff7e0; color:#92400e; font-weight:800; padding:8px 14px; border-radius:999px;
+    font-size:.95rem; border:2px solid #fde68a; display:flex; align-items:center; gap:6px;}
+  .progress-outer{width:100%; height:14px; background:#f1effb; border-radius:999px; overflow:hidden; margin-bottom:18px; display:none;}
+  .progress-inner{height:100%; width:0%; background:linear-gradient(90deg,var(--purple),var(--pink)); transition:width .35s ease; border-radius:999px;}
+  h1{font-size:1.5rem; margin-bottom:6px;}
+  h2{font-size:1.3rem; margin-bottom:6px;}
+  .sub{color:var(--muted); font-size:.95rem; margin-bottom:16px; line-height:1.4;}
+  .mascot{font-size:3.2rem; text-align:center; margin-bottom:4px;}
+  .level-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0;}
+  @media(max-width:480px){.level-grid{grid-template-columns:1fr;}}
+  .level-card{border:3px solid var(--border); border-radius:18px; padding:16px; cursor:pointer; transition:.15s;}
+  .level-card:active{transform:scale(.98);}
+  .level-card h3{font-size:1.1rem; margin-bottom:4px;}
+  .level-card p{color:var(--muted); font-size:.82rem;}
+  .level-card .stat-line{margin-top:8px; font-size:.78rem; color:var(--purple-dark); font-weight:700;}
+  .lvl1{border-color:#bbf7d0;} .lvl1.active,.lvl1:hover{background:#f0fdf4; border-color:var(--green);}
+  .lvl2{border-color:#bfdbfe;} .lvl2.active,.lvl2:hover{background:#eff6ff; border-color:var(--blue);}
+  .lvl3{border-color:#fde68a;} .lvl3.active,.lvl3:hover{background:#fffbeb; border-color:var(--amber);}
+  .lvl4{border-color:#ddd6fe;} .lvl4.active,.lvl4:hover{background:#f5f3ff; border-color:var(--purple);}
+  .toggle-row{display:flex; align-items:center; gap:10px; margin:14px 0; font-size:.88rem; color:var(--muted); user-select:none;}
+  .switch{width:42px; height:24px; background:#e2e0f5; border-radius:999px; position:relative; cursor:pointer; flex:0 0 auto;}
+  .switch.on{background:var(--purple);}
+  .switch::after{content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; background:#fff; border-radius:50%; transition:.2s;}
+  .switch.on::after{left:21px;}
+  .big-btn{width:100%; background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; border:none;
+    padding:16px; border-radius:14px; font-size:1.1rem; font-weight:800; cursor:pointer; margin-top:6px; box-shadow:0 8px 20px -8px rgba(124,58,237,.6);}
+  .big-btn:active{transform:scale(.98);}
+  .ghost-btn{width:100%; background:#f6f5fc; color:var(--purple-dark); border:2px solid var(--border);
+    padding:13px; border-radius:14px; font-size:.95rem; font-weight:700; cursor:pointer; margin-top:10px;}
+  .section-tag{font-size:.78rem; font-weight:800; color:var(--purple); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;}
+  .prompt-box{background:#f6f3ff; border-left:5px solid var(--purple); padding:14px 16px; border-radius:10px;
+    font-size:1.05rem; color:var(--purple-dark); margin-bottom:16px; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  .speak-btn{background:#fff; border:2px solid #ddd6fe; color:var(--purple); border-radius:50%; width:38px; height:38px;
+    font-size:1.1rem; cursor:pointer; flex:0 0 auto;}
+  .display-box{background:linear-gradient(160deg,#faf9ff,#f3f0ff); border:3px dashed #ddd6fe; border-radius:18px;
+    padding:26px 16px; text-align:center; margin-bottom:18px; min-height:140px; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; gap:6px;}
+  .big-target{font-size:4.2rem; font-weight:900; color:var(--ink); letter-spacing:.02em;}
+  .emoji-row{font-size:2.6rem; line-height:1.3; word-spacing:4px;}
+  .side-by-side{display:flex; gap:22px; justify-content:center; align-items:center; font-size:2.4rem;}
+  .options-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
+  .options-grid.opt2{grid-template-columns:1fr 1fr;}
+  @media(max-width:480px){.options-grid{grid-template-columns:1fr 1fr;}}
+  .opt-btn{padding:16px 10px; font-size:1.15rem; font-weight:800; border:3px solid var(--border); border-radius:14px;
+    background:#fff; cursor:pointer; transition:.12s; min-height:64px; display:flex; align-items:center; justify-content:center;}
+  .opt-btn:active{transform:scale(.96);}
+  .opt-btn.correct{background:#f0fdf4; border-color:var(--green); color:#15803d; animation:pop .3s ease;}
+  .opt-btn.incorrect{background:#fef2f2; border-color:var(--red); color:#b91c1c;}
+  .opt-btn[disabled]{opacity:.55; cursor:default;}
+  @keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+  .verbal-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .vbtn{padding:16px 14px; font-size:1rem; font-weight:800; border:3px solid var(--border); border-radius:14px; cursor:pointer;}
+  .vbtn.yes{background:#f0fdf4; border-color:var(--green); color:#15803d;}
+  .vbtn.no{background:#fef2f2; border-color:var(--red); color:#b91c1c;}
+  .feedback-banner{text-align:center; font-weight:800; font-size:1.2rem; margin-bottom:10px; min-height:28px;}
+  .fb-good{color:var(--green);} .fb-bad{color:#b45309;}
+  .summary-hero{font-size:2.6rem; font-weight:900; color:var(--purple); text-align:center; margin:10px 0 4px;}
+  .summary-sub{text-align:center; color:var(--muted); margin-bottom:16px;}
+  .cat-row{display:flex; justify-content:space-between; align-items:center; padding:10px 4px; border-bottom:1px solid var(--border); font-size:.92rem;}
+  .cat-badge{font-weight:800; padding:3px 10px; border-radius:8px; font-size:.78rem;}
+  .cat-pass{background:#dcfce7; color:#15803d;} .cat-review{background:#fee2e2; color:#b91c1c;}
+  .confetti{position:fixed; top:-10px; font-size:1.4rem; animation:fall linear forwards; pointer-events:none; z-index:99;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(360deg); opacity:.9;}}
+  .streak-flame{font-size:.85rem; color:var(--amber); font-weight:800; text-align:center; margin-bottom:8px; min-height:18px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="topbar">
+      <div class="name-badge">🌟 Cathy</div>
+      <div class="stars-badge" id="starsBadge">⭐ 0</div>
+    </div>
+    <div class="progress-outer" id="progressOuter"><div class="progress-inner" id="progressInner"></div></div>
+    <div id="app"></div>
+  </div>
+</div>
+
+<script>
+/* ============================= UTILITIES ============================= */
+function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function pick(a,n){return shuffle(a).slice(0,n);}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.rate=0.85; u.pitch=1.15;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function makeOptions(correct,pool,count){
+  count=count||3;
+  const distractors=shuffle(pool.filter(x=>String(x)!==String(correct)));
+  const opts=[correct,...distractors.slice(0,count-1)];
+  return shuffle(opts).map(o=>({label:String(o),correct:String(o)===String(correct)}));
+}
+
+/* ============================= STATE / STORAGE ============================= */
+const STORE_KEY='cathyTrainerStats_v1';
+function loadStats(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {totalStars:0, sessionsCompleted:0, sessionNum:0, items:{}};
+}
+function saveStats(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(stats)); }catch(e){} }
+let stats=loadStats();
+
+/* ============================= LEVELS & CATEGORIES ============================= */
+const LEVELS=[
+  {id:1,cls:'lvl1',emoji:'🌱',name:'Little Explorer',hint:'Ages 3–4 · letters, first words, shapes & colors'},
+  {id:2,cls:'lvl2',emoji:'🚀',name:'Word Adventurer',hint:'Ages 4–5 · more sight words, rhymes, counting to 20'},
+  {id:3,cls:'lvl3',emoji:'⭐',name:'Reading Star',hint:'Ages 5–6 · digraphs, syllables, bigger numbers'},
+  {id:4,cls:'lvl4',emoji:'🏆',name:'Rising Champion',hint:'Ages 6–7 · blends, addition, tricky words'}
+];
+const CAT_LABELS={
+  letters:'🔤 Letters', beginSounds:'👂 Starting Sounds', sightWords:'📖 Sight Words',
+  rhymeMatch:'🎵 Rhyme Time', rhymeProd:'🎤 Make a Rhyme', syllables:'👏 Syllable Claps',
+  numbers:'🔢 Numbers', counting:'🧮 Counting', addition:'➕ Adding',
+  shapes:'🔺 Shapes', colors:'🎨 Colors', compare:'⚖️ More or Less',
+  patterns:'🧩 Patterns', opposites:'↔️ Opposites', oddOne:'🔍 Odd One Out'
+};
+
+/* ============================= HAND-CURATED CONTENT ============================= */
+const SIGHT_WORDS={
+  1:['a','and','big','can','go','I','in','is','it','look','my','see','the','up','we'],
+  2:['are','at','come','down','for','have','he','like','little','no','play','said','she','this','you'],
+  3:['about','after','again','any','could','every','give','know','live','of','some','there','they','was','who'],
+  4:['always','because','been','before','both','does','found','gave','goes','many','once','right','upon','would','write']
+};
+const RHYME_PAIRS={
+  1:[['cat','hat',true],['sun','fish',false],['dog','frog',true],['cup','cat',false],['bed','red',true],['shoe','ball',false]],
+  2:[['moon','spoon',true],['tree','bee',true],['chair','table',false],['king','ring',true],['snake','cake',true],['house','mouse',true]],
+  3:[['star','car',true],['book','hook',true],['phone','shoe',false],['light','night',true],['clock','sock',true],['chair','bear',true]],
+  4:[['flower','shower',true],['mountain','fountain',true],['green','queen',true],['water','ladder',false],['spring','king',true],['orange','banana',false]]
+};
+const RHYME_PROD={1:['dog','cat','sun','hat'],2:['train','moon','star','tree'],3:['light','book','king','snake'],4:['mountain','flower','spring','chair']};
+const BEGIN_SOUNDS={
+  1:[['Ball','⚽','B'],['Cat','🐱','C'],['Dog','🐶','D'],['Fish','🐟','F'],['Sun','☀️','S'],['Moon','🌙','M']],
+  2:[['Apple','🍎','A'],['Banana','🍌','B'],['Girl','👧','G'],['House','🏠','H'],['Juice','🧃','J'],['King','👑','K']],
+  3:[['Ship','🚢','SH'],['Cheese','🧀','CH'],['Thumb','👍','TH'],['Whale','🐳','WH'],['Chair','🪑','CH'],['Shoe','👟','SH']],
+  4:[['Star','⭐','ST'],['Frog','🐸','FR'],['Plane','✈️','PL'],['Snake','🐍','SN'],['Truck','🚚','TR'],['Cloud','☁️','CL']]
+};
+const SYLLABLES={
+  2:[['cat','🐱',1],['dog','🐶',1],['apple','🍎',2],['flower','🌸',2]],
+  3:[['banana','🍌',3],['pencil','✏️',2],['rainbow','🌈',2],['umbrella','☂️',3]],
+  4:[['elephant','🐘',3],['butterfly','🦋',3],['dinosaur','🦕',3],['computer','💻',3]]
+};
+const OPPOSITES={
+  1:[['hot','cold'],['big','small'],['up','down'],['fast','slow'],['happy','sad'],['day','night']],
+  2:[['open','closed'],['loud','quiet'],['wet','dry'],['full','empty'],['near','far'],['first','last']],
+  3:[['heavy','light'],['soft','hard'],['thick','thin'],['high','low'],['inside','outside'],['old','new']],
+  4:[['early','late'],['whole','broken'],['rough','smooth'],['wide','narrow'],['true','false'],['front','back']]
+};
+const PATTERNS={
+  1:[[['🔴','🔵','🔴','🔵'],'🔴'],[['🐶','🐱','🐶','🐱'],'🐶'],[['⭐','🌙','⭐','🌙'],'⭐']],
+  2:[[['🔴','🔴','🔵','🔴','🔴','🔵'],'🔴'],[['🔺','🔺','🔵','🔺','🔺','🔵'],'🔺'],[['🍎','🍎','🍌','🍎','🍎','🍌'],'🍎']],
+  3:[[['2','4','6'],'8'],[['5','10','15'],'20'],[['1','3','5'],'7']],
+  4:[[['3','6','9'],'12'],[['10','20','30'],'40'],[['4','8','12'],'16']]
+};
+const ODD_ONE={
+  1:[[['🐶','🐱','🐰','🚗'],3],[['🍎','🍌','🍇','⚽'],3]],
+  2:[[['🔵','🔴','🟢','🐶'],3],[['1','2','3','🐱'],3]],
+  3:[[['2','4','6','7'],3],[['🐟','🐬','🦈','🦅'],3]],
+  4:[[['🔺','⬛','⚪','🧊'],3],[['5','10','15','17'],3]]
+};
+const SHAPES={
+  1:[['circle','⚪'],['square','⬛'],['triangle','🔺'],['rectangle','▬']],
+  2:[['star','⭐'],['heart','❤️'],['oval','⬭'],['diamond','🔷']],
+  3:[['pentagon','⬠'],['hexagon','⬡'],['octagon','🛑']],
+  4:[['cube','🧊'],['sphere','🌐'],['cone','🍦'],['cylinder','🥫']]
+};
+const COLORS={
+  1:[['red','#ef4444'],['blue','#3b82f6'],['yellow','#eab308'],['green','#22c55e']],
+  2:[['orange','#f97316'],['purple','#a855f7'],['pink','#ec4899'],['brown','#92400e']],
+  3:[['black','#111827'],['white','#f8fafc'],['gray','#9ca3af'],['turquoise','#06b6d4']],
+  4:null // level 4 colors handled as mixing questions
+};
+const COLOR_MIX=[['red','yellow','orange'],['blue','yellow','green'],['red','blue','purple']];
+const COUNT_EMOJI=['🐶','🐱','🍎','⭐','🎈','🐟','🦋','🐻'];
+
+/* ============================= PROGRAMMATIC BANK BUILDERS ============================= */
+let UID=0;
+function nid(prefix){UID++;return prefix+'-'+UID;}
+
+function buildLetters(){
+  const items=[];
+  const upper='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const lower=upper.map(l=>l.toLowerCase());
+  upper.forEach(L=>items.push({id:'let-u-'+L,category:'letters',level:1,type:'mc',
+    prompt:`Tap the letter ${L}`,tts:`Can you find the letter ${L}?`,
+    display:`<div style="font-size:3.5rem;">🔠</div>`,
+    options:()=>makeOptions(L,upper,3)}));
+  lower.forEach(l=>items.push({id:'let-l-'+l,category:'letters',level:2,type:'mc',
+    prompt:`Tap the little letter ${l}`,tts:`Can you find the lowercase letter ${l}?`,
+    display:`<div style="font-size:3.5rem;">🔡</div>`,
+    options:()=>makeOptions(l,lower,3)}));
+  return items;
+}
+function buildBeginSounds(){
+  const items=[];
+  Object.keys(BEGIN_SOUNDS).forEach(lvl=>{
+    const letterPool=[...new Set(Object.values(BEGIN_SOUNDS).flat().map(x=>x[2]))];
+    BEGIN_SOUNDS[lvl].forEach(([word,emoji,letter])=>{
+      items.push({id:nid('bs'),category:'beginSounds',level:+lvl,type:'mc',
+        prompt:`What sound does "${word}" start with?`,tts:`What sound does the word ${word} start with?`,
+        display:`<div style="font-size:3rem;">${emoji}</div><div style="font-weight:800;font-size:1.1rem;margin-top:4px;">${word}</div>`,
+        options:()=>makeOptions(letter,letterPool,3)});
+    });
+  });
+  return items;
+}
+function buildSightWords(){
+  const items=[];
+  Object.keys(SIGHT_WORDS).forEach(lvl=>{
+    lvl=+lvl;
+    const pool=SIGHT_WORDS[lvl];
+    pool.forEach(w=>{
+      if(lvl<=2){
+        items.push({id:nid('sw'),category:'sightWords',level:lvl,type:'mc',
+          prompt:`Tap the word "${w}"`,tts:`Can you find the word ${w}?`,
+          display:`<div style="font-size:2.2rem;">📖</div>`,
+          options:()=>makeOptions(w,pool,3)});
+      }else{
+        items.push({id:nid('sw'),category:'sightWords',level:lvl,type:'verbal',
+          prompt:'Read this word out loud',tts:'Can you read this word out loud?',
+          display:`<span class="big-target">${w}</span>`,answer:w});
+      }
+    });
+  });
+  return items;
+}
+function buildRhymeMatch(){
+  const items=[];
+  Object.keys(RHYME_PAIRS).forEach(lvl=>{
+    RHYME_PAIRS[lvl].forEach(([w1,w2,rhymes])=>{
+      items.push({id:nid('rm'),category:'rhymeMatch',level:+lvl,type:'mc2',
+        prompt:`Do "${w1}" and "${w2}" rhyme?`,tts:`Do ${w1} and ${w2} rhyme?`,
+        display:`<div style="font-size:1.9rem;font-weight:800;">${w1} &amp; ${w2}</div>`,
+        options:[{label:'Yes! 🎵',correct:rhymes===true},{label:'No',correct:rhymes===false}]});
+    });
+  });
+  return items;
+}
+function buildRhymeProd(){
+  const items=[];
+  Object.keys(RHYME_PROD).forEach(lvl=>{
+    RHYME_PROD[lvl].forEach(w=>{
+      items.push({id:nid('rp'),category:'rhymeProd',level:+lvl,type:'verbal',
+        prompt:`Say a word that rhymes with "${w}"`,tts:`Can you say a word that rhymes with ${w}?`,
+        display:`<span class="big-target">${w}</span>`,answer:'rhyme production'});
+    });
+  });
+  return items;
+}
+function buildSyllables(){
+  const items=[];
+  Object.keys(SYLLABLES).forEach(lvl=>{
+    SYLLABLES[lvl].forEach(([w,emoji,count])=>{
+      items.push({id:nid('sy'),category:'syllables',level:+lvl,type:'mc',
+        prompt:`How many claps (syllables) in "${w}"?`,tts:`How many beats do you hear in the word ${w}?`,
+        display:`<div style="font-size:2.6rem;">${emoji}</div><div style="font-weight:800;">${w}</div>`,
+        options:()=>makeOptions(count,[1,2,3,4],3)});
+    });
+  });
+  return items;
+}
+function buildNumbers(){
+  const items=[];
+  const ranges={1:[1,10],2:[11,20]};
+  Object.keys(ranges).forEach(lvl=>{
+    const [lo,hi]=ranges[lvl];
+    for(let n=lo;n<=hi;n++){
+      items.push({id:'num-'+n,category:'numbers',level:+lvl,type:'mc',
+        prompt:'What number is this?',tts:'What number is this?',
+        display:`<span class="big-target">${n}</span>`,
+        options:()=>makeOptions(n,Array.from({length:hi-lo+1},(_,i)=>i+lo),3)});
+    }
+  });
+  const tens=[10,20,30,40,50,60,70,80,90,100];
+  tens.forEach(n=>items.push({id:'num-t-'+n,category:'numbers',level:3,type:'mc',
+    prompt:'What number is this?',tts:'What number is this?',
+    display:`<span class="big-target">${n}</span>`,options:()=>makeOptions(n,tens,3)}));
+  const bigOnes=[21,34,45,58,63,72,89,96];
+  bigOnes.forEach(n=>items.push({id:'num-b-'+n,category:'numbers',level:4,type:'mc',
+    prompt:'What number is this?',tts:'What number is this?',
+    display:`<span class="big-target">${n}</span>`,options:()=>makeOptions(n,bigOnes,3)}));
+  return items;
+}
+function buildCounting(){
+  const items=[];
+  const cfg={1:{max:5,n:6},2:{max:10,n:6},3:{max:15,n:5},4:{max:20,n:5}};
+  Object.keys(cfg).forEach(lvl=>{
+    const {max,n}=cfg[lvl];
+    for(let i=0;i<n;i++){
+      const count=rand(Math.max(1,max-4),max);
+      const emoji=COUNT_EMOJI[i%COUNT_EMOJI.length];
+      items.push({id:nid('ct'),category:'counting',level:+lvl,type:'mc',
+        prompt:'How many do you see?',tts:'How many do you see?',
+        display:`<div class="emoji-row">${emoji.repeat(count)}</div>`,
+        options:()=>makeOptions(count,Array.from({length:max},(_,i)=>i+1),3)});
+    }
+  });
+  return items;
+}
+function buildAddition(){
+  const items=[];
+  const probs=[[1,1],[2,2],[2,3],[3,4],[4,4],[5,3],[3,3],[2,5]];
+  probs.forEach(([a,b])=>{
+    items.push({id:nid('ad'),category:'addition',level:4,type:'mc',
+      prompt:`What is ${a} + ${b}?`,tts:`What is ${a} plus ${b}?`,
+      display:`<div style="font-size:1.6rem;">${'●'.repeat(a)} + ${'●'.repeat(b)}</div><div class="big-target" style="font-size:2rem;margin-top:6px;">${a} + ${b} = ?</div>`,
+      options:()=>makeOptions(a+b,[a+b-2,a+b-1,a+b,a+b+1,a+b+2].filter(x=>x>=0),3)});
+  });
+  return items;
+}
+function buildShapes(){
+  const items=[];
+  Object.keys(SHAPES).forEach(lvl=>{
+    const names=SHAPES[lvl].map(s=>s[0]);
+    SHAPES[lvl].forEach(([name,emoji])=>{
+      items.push({id:nid('sh'),category:'shapes',level:+lvl,type:'mc',
+        prompt:'What shape is this?',tts:'What shape is this?',
+        display:`<div style="font-size:3.4rem;">${emoji}</div>`,
+        options:()=>makeOptions(name,names,3)});
+    });
+  });
+  return items;
+}
+function buildColors(){
+  const items=[];
+  [1,2,3].forEach(lvl=>{
+    const names=COLORS[lvl].map(c=>c[0]);
+    COLORS[lvl].forEach(([name,hex])=>{
+      items.push({id:nid('co'),category:'colors',level:lvl,type:'mc',
+        prompt:'What color is this?',tts:'What color is this?',
+        display:`<div style="width:80px;height:80px;border-radius:50%;background:${hex};border:3px solid #e5e7eb;"></div>`,
+        options:()=>makeOptions(name,names,3)});
+    });
+  });
+  const allNames=COLOR_MIX.map(m=>m[2]);
+  COLOR_MIX.forEach(([a,b,result])=>{
+    items.push({id:nid('comix'),category:'colors',level:4,type:'mc',
+      prompt:`What color do you get: ${a} + ${b}?`,tts:`If you mix ${a} and ${b}, what color do you get?`,
+      display:`<div style="font-size:1.5rem;font-weight:800;">${a} + ${b} = ?</div>`,
+      options:()=>makeOptions(result,[...allNames,'brown','black'],3)});
+  });
+  return items;
+}
+function buildCompare(){
+  const items=[];
+  const cfg={1:4,2:6,3:10,4:15};
+  Object.keys(cfg).forEach(lvl=>{
+    const max=cfg[lvl];
+    for(let i=0;i<4;i++){
+      let a=rand(1,max), b=rand(1,max);
+      while(a===b) b=rand(1,max);
+      const emoji1=COUNT_EMOJI[rand(0,COUNT_EMOJI.length-1)];
+      const emoji2=COUNT_EMOJI[rand(0,COUNT_EMOJI.length-1)];
+      const answer=a>b?'Left side':'Right side';
+      items.push({id:nid('cmp'),category:'compare',level:+lvl,type:'mc2',
+        prompt:'Which side has more?',tts:'Which side has more?',
+        display:`<div class="side-by-side"><span>${emoji1.repeat(a)}</span><span style="color:#c7c5e0;">|</span><span>${emoji2.repeat(b)}</span></div>`,
+        options:[{label:'Left side',correct:answer==='Left side'},{label:'Right side',correct:answer==='Right side'}]});
+    }
+  });
+  return items;
+}
+function buildPatterns(){
+  const items=[];
+  Object.keys(PATTERNS).forEach(lvl=>{
+    PATTERNS[lvl].forEach(([seq,next])=>{
+      const pool=+lvl<=2?['🔴','🔵','🟢','🔺','🐶','🐱','⭐','🌙','🍎','🍌']:['2','4','6','8','5','7','12','16','20','40'];
+      items.push({id:nid('pt'),category:'patterns',level:+lvl,type:'mc',
+        prompt:'What comes next?',tts:'What comes next in the pattern?',
+        display:`<div style="font-size:2.2rem;">${seq.join(' ')} ❓</div>`,
+        options:()=>makeOptions(next,pool,3)});
+    });
+  });
+  return items;
+}
+function buildOpposites(){
+  const items=[];
+  Object.keys(OPPOSITES).forEach(lvl=>{
+    const answerPool=OPPOSITES[lvl].map(p=>p[1]);
+    OPPOSITES[lvl].forEach(([word,opp])=>{
+      items.push({id:nid('op'),category:'opposites',level:+lvl,type:'mc',
+        prompt:`What is the opposite of "${word}"?`,tts:`What is the opposite of ${word}?`,
+        display:`<div style="font-size:1.6rem;font-weight:800;">${word}</div>`,
+        options:()=>makeOptions(opp,answerPool,3)});
+    });
+  });
+  return items;
+}
+function buildOddOne(){
+  const items=[];
+  Object.keys(ODD_ONE).forEach(lvl=>{
+    ODD_ONE[lvl].forEach(([group,oddIdx])=>{
+      items.push({id:nid('oo'),category:'oddOne',level:+lvl,type:'mc',
+        prompt:"Which one doesn't belong?",tts:"Which one doesn't belong?",
+        display:`<div style="font-size:2.4rem;">${group.join('&nbsp;&nbsp;')}</div>`,
+        options:shuffle(group.map((g,i)=>({label:g,correct:i===oddIdx})))});
+    });
+  });
+  return items;
+}
+
+function buildBank(){
+  return [].concat(
+    buildLetters(), buildBeginSounds(), buildSightWords(), buildRhymeMatch(), buildRhymeProd(),
+    buildSyllables(), buildNumbers(), buildCounting(), buildAddition(), buildShapes(),
+    buildColors(), buildCompare(), buildPatterns(), buildOpposites(), buildOddOne()
+  );
+}
+const BANK=buildBank();
+
+/* ============================= SESSION ENGINE ============================= */
+let session=[]; let idx=0; let results=[]; let sessionStars=0; let streak=0; let selectedLevel=1; let includeReview=true;
+
+function itemStat(id){
+  if(!stats.items[id]) stats.items[id]={attempts:0,correct:0,lastSeen:-1};
+  return stats.items[id];
+}
+function weightFor(item){
+  const s=itemStat(item.id);
+  let w=10;
+  if(stats.sessionNum - s.lastSeen < 2 && s.lastSeen>=0) w-=7; // recently seen -> lower weight
+  if(s.attempts>0 && s.correct/s.attempts>0.8) w-=4; // mastered -> lower weight
+  if(s.attempts>0 && s.correct/s.attempts<0.5) w+=5; // needs practice -> higher weight
+  return Math.max(1,w);
+}
+function weightedSample(pool,n){
+  const copy=pool.map(it=>({it,w:weightFor(it)+Math.random()*3}));
+  copy.sort((a,b)=>b.w-a.w);
+  return copy.slice(0,n).map(c=>c.it);
+}
+function buildSession(level){
+  stats.sessionNum++;
+  const cats=Object.keys(CAT_LABELS);
+  const chosen=[];
+  cats.forEach(cat=>{
+    let pool=BANK.filter(it=>it.category===cat && it.level===level);
+    if(includeReview && level>1){
+      const reviewPool=BANK.filter(it=>it.category===cat && it.level<level);
+      pool=pool.concat(weightedSample(reviewPool, Math.min(1,reviewPool.length)));
+    }
+    if(pool.length===0) return;
+    const take=weightedSample(pool.filter(it=>it.level===level).length?pool:pool, 1);
+    chosen.push(...take);
+  });
+  // fill up to 15 with more weighted picks across level (avoid dup ids)
+  const already=new Set(chosen.map(c=>c.id));
+  let fullPool=BANK.filter(it=>it.level===level && !already.has(it.id));
+  const extra=weightedSample(fullPool, Math.max(0,15-chosen.length));
+  extra.forEach(e=>{ if(!already.has(e.id)){chosen.push(e); already.add(e.id);} });
+  return shuffle(chosen).slice(0,15);
+}
+
+/* ============================= RENDER: START SCREEN ============================= */
+function renderStart(){
+  document.getElementById('progressOuter').style.display='none';
+  document.getElementById('starsBadge').textContent=`⭐ ${stats.totalStars}`;
+  const cards=LEVELS.map(l=>{
+    const mastered=BANK.filter(it=>it.level===l.id).length;
+    return `<div class="level-card ${l.cls} ${selectedLevel===l.id?'active':''}" onclick="setLevel(${l.id})">
+      <h3>${l.emoji} ${l.name}</h3>
+      <p>${l.hint}</p>
+      <div class="stat-line">${mastered} activities in this level</div>
+    </div>`;
+  }).join('');
+  document.getElementById('app').innerHTML=`
+    <div class="mascot">🦉</div>
+    <div class="section-tag">Cathy's Learning Adventure</div>
+    <h1>Pick a level to play!</h1>
+    <p class="sub">A brand-new mix of letters, words, numbers and puzzles every time — Hoot the Owl will read the questions out loud.</p>
+    <div class="level-grid">${cards}</div>
+    <div class="toggle-row">
+      <div class="switch ${includeReview?'on':''}" id="reviewSwitch" onclick="toggleReview()"></div>
+      <span>Mix in a few easier review questions to keep skills fresh</span>
+    </div>
+    <button class="big-btn" onclick="startSession()">▶️ Start Playing</button>
+    <div class="sub" style="margin-top:14px;text-align:center;">Sessions played: ${stats.sessionsCompleted} &nbsp;·&nbsp; Total stars: ${stats.totalStars} ⭐</div>
+  `;
+}
+function setLevel(l){ selectedLevel=l; renderStart(); }
+function toggleReview(){ includeReview=!includeReview; renderStart(); }
+
+/* ============================= RENDER: QUESTION ============================= */
+function renderQuestion(){
+  document.getElementById('progressOuter').style.display='block';
+  const q=session[idx];
+  const pct=(idx/session.length)*100;
+  document.getElementById('progressInner').style.width=pct+'%';
+
+  let optsHtml='';
+  const opts = typeof q.options==='function' ? q.options() : q.options;
+  q._resolvedOptions = opts;
+
+  if(q.type==='mc'){
+    optsHtml=`<div class="options-grid">${opts.map((o,i)=>
+      `<button class="opt-btn" id="opt-${i}" onclick="answerMC(${i})">${o.label}</button>`).join('')}</div>`;
+  } else if(q.type==='mc2'){
+    optsHtml=`<div class="options-grid opt2">${opts.map((o,i)=>
+      `<button class="opt-btn" id="opt-${i}" onclick="answerMC(${i})">${o.label}</button>`).join('')}</div>`;
+  } else if(q.type==='verbal'){
+    optsHtml=`<div class="verbal-grid">
+      <button class="vbtn yes" onclick="answerVerbal(true)">✓ Correct / Mastered</button>
+      <button class="vbtn no" onclick="answerVerbal(false)">✗ Needs Practice</button>
+    </div>`;
+  }
+
+  document.getElementById('app').innerHTML=`
+    <div class="section-tag">${CAT_LABELS[q.category]||''} · Item ${idx+1} of ${session.length}</div>
+    <div class="streak-flame">${streak>=3?`🔥 ${streak} in a row!`:''}</div>
+    <div class="prompt-box"><span>${q.prompt}</span><button class="speak-btn" onclick="speak('${(q.tts||q.prompt).replace(/'/g,"\\'")}')">🔊</button></div>
+    <div class="display-box">${q.display}</div>
+    <div id="feedback" class="feedback-banner"></div>
+    ${optsHtml}
+  `;
+  setTimeout(()=>speak(q.tts||q.prompt),350);
+}
+
+function recordAndAdvance(item,correct){
+  const s=itemStat(item.id);
+  s.attempts++; if(correct) s.correct++; s.lastSeen=stats.sessionNum;
+  results.push({category:item.category,label:CAT_LABELS[item.category]||item.category,correct});
+  if(correct){ streak++; sessionStars++; } else { streak=0; }
+  saveStats();
+  idx++;
+  setTimeout(()=>{ if(idx<session.length) renderQuestion(); else renderSummary(); }, correct?900:1400);
+}
+
+function answerMC(i){
+  const q=session[idx];
+  const opts=q._resolvedOptions;
+  const buttons=document.querySelectorAll('.opt-btn');
+  buttons.forEach(b=>b.disabled=true);
+  const chosen=opts[i];
+  document.getElementById('opt-'+i).classList.add(chosen.correct?'correct':'incorrect');
+  if(!chosen.correct){
+    opts.forEach((o,idx2)=>{ if(o.correct) document.getElementById('opt-'+idx2).classList.add('correct'); });
+  }
+  const fb=document.getElementById('feedback');
+  fb.textContent=chosen.correct?'Great job! 🎉':`Good try! It's "${opts.find(o=>o.correct).label}"`;
+  fb.className='feedback-banner '+(chosen.correct?'fb-good':'fb-bad');
+  recordAndAdvance(q,chosen.correct);
+}
+function answerVerbal(correct){
+  const fb=document.getElementById('feedback');
+  fb.textContent=correct?'Wonderful reading! 🎉':"That's okay — let's practice this one again soon.";
+  fb.className='feedback-banner '+(correct?'fb-good':'fb-bad');
+  document.querySelectorAll('.vbtn').forEach(b=>b.disabled=true);
+  recordAndAdvance(session[idx],correct);
+}
+
+/* ============================= RENDER: SUMMARY ============================= */
+function launchConfetti(){
+  const emojis=['🎉','⭐','🌟','🎊','✨'];
+  for(let i=0;i<24;i++){
+    const el=document.createElement('div');
+    el.className='confetti'; el.textContent=emojis[rand(0,emojis.length-1)];
+    el.style.left=rand(0,100)+'vw';
+    el.style.animationDuration=(rand(18,32)/10)+'s';
+    el.style.animationDelay=(rand(0,10)/10)+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),4000);
+  }
+}
+function renderSummary(){
+  document.getElementById('progressInner').style.width='100%';
+  const total=results.length;
+  const correctCt=results.filter(r=>r.correct).length;
+  const pct=Math.round((correctCt/total)*100);
+  const bonus=(correctCt===total)?3:(pct>=80?1:0);
+  sessionStars+=bonus;
+  stats.totalStars+=sessionStars;
+  stats.sessionsCompleted++;
+  saveStats();
+  document.getElementById('starsBadge').textContent=`⭐ ${stats.totalStars}`;
+
+  const byCat={};
+  results.forEach(r=>{ if(!byCat[r.label]) byCat[r.label]={c:0,t:0}; byCat[r.label].t++; if(r.correct) byCat[r.label].c++; });
+  const rows=Object.keys(byCat).map(label=>{
+    const {c,t}=byCat[label];
+    const pass=c/t>=0.6;
+    return `<div class="cat-row"><span>${label}</span><span class="cat-badge ${pass?'cat-pass':'cat-review'}">${c}/${t}</span></div>`;
+  }).join('');
+
+  document.getElementById('app').innerHTML=`
+    <div class="mascot">${pct>=80?'🥳':pct>=50?'🦉':'🤗'}</div>
+    <div class="section-tag">Session Complete</div>
+    <h2>Great work, Cathy!</h2>
+    <div class="summary-hero">${correctCt} / ${total}</div>
+    <div class="summary-sub">${pct}% correct &nbsp;·&nbsp; +${sessionStars} stars earned this session ⭐</div>
+    <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:14px; padding:0 14px; margin-top:10px;">${rows}</div>
+    <button class="big-btn" onclick="renderStart()">🔁 Play Again</button>
+    <button class="ghost-btn" onclick="changeLevel()">🎚️ Choose a Different Level</button>
+  `;
+  if(pct>=80) launchConfetti();
+}
+function changeLevel(){ renderStart(); }
+
+function startSession(){
+  session=buildSession(selectedLevel);
+  idx=0; results=[]; sessionStars=0; streak=0;
+  renderQuestion();
+}
+
+/* ============================= INIT ============================= */
+renderStart();
+</script>
+</body>
+</html>
