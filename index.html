@@ -6,7 +6,13 @@
 <meta name="theme-color" content="#7c3aed">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cathy's Adventure">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="A playful, ever-changing literacy and math practice game for pre-K through 1st grade.">
 <title>Cathy's Learning Adventure</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
 <!-- Playful, highly legible Google Font -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -810,6 +816,13 @@ function resetStats(){
 
 /* ============================= INIT ============================= */
 renderStart();
+
+/* ============================= PWA: SERVICE WORKER ============================= */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>
