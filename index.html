@@ -2,16 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Cathy's Learning Adventure</title>
+<!-- Playful, highly legible Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --purple:#7c3aed; --purple-dark:#5b21b6; --pink:#ec4899; --blue:#3b82f6;
     --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --bg1:#fef3ff; --bg2:#e0f2fe;
     --card:#ffffff; --ink:#312e52; --muted:#7c7a9c; --border:#e9e5fb;
   }
-  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',-apple-system,BlinkMacSystemFont,sans-serif;}
   body{
     background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%);
     color:var(--ink); min-height:100vh; display:flex; justify-content:center;
@@ -19,76 +25,123 @@
   }
   .wrap{width:100%; max-width:760px;}
   .card{
-    background:var(--card); border-radius:26px; padding:24px;
-    box-shadow:0 16px 40px -12px rgba(91,33,182,.25); position:relative; overflow:hidden;
+    background:var(--card); border-radius:28px; padding:24px;
+    box-shadow:0 20px 45px -12px rgba(91,33,182,.22); position:relative; overflow:hidden;
+    border:2px solid #ffffff;
   }
   .topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px; flex-wrap:wrap;}
   .name-badge{background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; font-weight:800;
-    padding:8px 16px; border-radius:999px; font-size:.95rem;}
+    padding:8px 18px; border-radius:999px; font-size:1rem; letter-spacing:.02em; font-family:'Fredoka',sans-serif;
+    box-shadow:0 4px 10px rgba(124,58,237,.25);}
+  .top-right-group{display:flex; gap:8px; align-items:center;}
   .stars-badge{background:#fff7e0; color:#92400e; font-weight:800; padding:8px 14px; border-radius:999px;
-    font-size:.95rem; border:2px solid #fde68a; display:flex; align-items:center; gap:6px;}
-  .progress-outer{width:100%; height:14px; background:#f1effb; border-radius:999px; overflow:hidden; margin-bottom:18px; display:none;}
+    font-size:.95rem; border:2px solid #fde68a; display:flex; align-items:center; gap:6px; font-family:'Fredoka',sans-serif;}
+  .parent-portal-btn{background:#f1effb; color:var(--purple-dark); border:none; padding:8px 12px; border-radius:999px;
+    font-weight:800; font-size:.85rem; cursor:pointer; transition:.15s;}
+  .parent-portal-btn:active{transform:scale(.95);}
+
+  .progress-outer{width:100%; height:16px; background:#f1effb; border-radius:999px; overflow:hidden; margin-bottom:18px; display:none; border:2px solid var(--border);}
   .progress-inner{height:100%; width:0%; background:linear-gradient(90deg,var(--purple),var(--pink)); transition:width .35s ease; border-radius:999px;}
-  h1{font-size:1.5rem; margin-bottom:6px;}
-  h2{font-size:1.3rem; margin-bottom:6px;}
-  .sub{color:var(--muted); font-size:.95rem; margin-bottom:16px; line-height:1.4;}
-  .mascot{font-size:3.2rem; text-align:center; margin-bottom:4px;}
+  
+  h1{font-family:'Fredoka',sans-serif; font-size:1.65rem; margin-bottom:6px; color:var(--ink);}
+  h2{font-family:'Fredoka',sans-serif; font-size:1.35rem; margin-bottom:6px;}
+  .sub{color:var(--muted); font-size:.95rem; margin-bottom:16px; line-height:1.4; font-weight:700;}
+  .mascot{font-size:3.6rem; text-align:center; margin-bottom:4px; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.1));}
+  
+  /* Toy-like 3D Buttons */
   .level-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0;}
   @media(max-width:480px){.level-grid{grid-template-columns:1fr;}}
-  .level-card{border:3px solid var(--border); border-radius:18px; padding:16px; cursor:pointer; transition:.15s;}
-  .level-card:active{transform:scale(.98);}
-  .level-card h3{font-size:1.1rem; margin-bottom:4px;}
-  .level-card p{color:var(--muted); font-size:.82rem;}
-  .level-card .stat-line{margin-top:8px; font-size:.78rem; color:var(--purple-dark); font-weight:700;}
-  .lvl1{border-color:#bbf7d0;} .lvl1.active,.lvl1:hover{background:#f0fdf4; border-color:var(--green);}
-  .lvl2{border-color:#bfdbfe;} .lvl2.active,.lvl2:hover{background:#eff6ff; border-color:var(--blue);}
-  .lvl3{border-color:#fde68a;} .lvl3.active,.lvl3:hover{background:#fffbeb; border-color:var(--amber);}
-  .lvl4{border-color:#ddd6fe;} .lvl4.active,.lvl4:hover{background:#f5f3ff; border-color:var(--purple);}
-  .toggle-row{display:flex; align-items:center; gap:10px; margin:14px 0; font-size:.88rem; color:var(--muted); user-select:none;}
-  .switch{width:42px; height:24px; background:#e2e0f5; border-radius:999px; position:relative; cursor:pointer; flex:0 0 auto;}
+  .level-card{
+    border:3px solid var(--border); border-radius:20px; padding:16px; cursor:pointer; transition:.15s;
+    box-shadow:0 5px 0 var(--border); position:relative; background:#fff;
+  }
+  .level-card:active{transform:translateY(3px); box-shadow:0 2px 0 var(--border);}
+  .level-card h3{font-family:'Fredoka',sans-serif; font-size:1.15rem; margin-bottom:4px;}
+  .level-card p{color:var(--muted); font-size:.85rem; font-weight:700;}
+  .level-card .stat-line{margin-top:8px; font-size:.78rem; color:var(--purple-dark); font-weight:800;}
+  .lvl1{border-color:#bbf7d0; box-shadow:0 5px 0 #86efac;} .lvl1.active,.lvl1:hover{background:#f0fdf4; border-color:var(--green);}
+  .lvl2{border-color:#bfdbfe; box-shadow:0 5px 0 #93c5fd;} .lvl2.active,.lvl2:hover{background:#eff6ff; border-color:var(--blue);}
+  .lvl3{border-color:#fde68a; box-shadow:0 5px 0 #fcd34d;} .lvl3.active,.lvl3:hover{background:#fffbeb; border-color:var(--amber);}
+  .lvl4{border-color:#ddd6fe; box-shadow:0 5px 0 #c4b5fd;} .lvl4.active,.lvl4:hover{background:#f5f3ff; border-color:var(--purple);}
+
+  .toggle-row{display:flex; align-items:center; gap:10px; margin:16px 0; font-size:.9rem; color:var(--muted); font-weight:800; user-select:none;}
+  .switch{width:46px; height:26px; background:#e2e0f5; border-radius:999px; position:relative; cursor:pointer; flex:0 0 auto; transition:.2s;}
   .switch.on{background:var(--purple);}
-  .switch::after{content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; background:#fff; border-radius:50%; transition:.2s;}
-  .switch.on::after{left:21px;}
-  .big-btn{width:100%; background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; border:none;
-    padding:16px; border-radius:14px; font-size:1.1rem; font-weight:800; cursor:pointer; margin-top:6px; box-shadow:0 8px 20px -8px rgba(124,58,237,.6);}
-  .big-btn:active{transform:scale(.98);}
-  .ghost-btn{width:100%; background:#f6f5fc; color:var(--purple-dark); border:2px solid var(--border);
-    padding:13px; border-radius:14px; font-size:.95rem; font-weight:700; cursor:pointer; margin-top:10px;}
-  .section-tag{font-size:.78rem; font-weight:800; color:var(--purple); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;}
-  .prompt-box{background:#f6f3ff; border-left:5px solid var(--purple); padding:14px 16px; border-radius:10px;
-    font-size:1.05rem; color:var(--purple-dark); margin-bottom:16px; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:10px;}
-  .speak-btn{background:#fff; border:2px solid #ddd6fe; color:var(--purple); border-radius:50%; width:38px; height:38px;
-    font-size:1.1rem; cursor:pointer; flex:0 0 auto;}
-  .display-box{background:linear-gradient(160deg,#faf9ff,#f3f0ff); border:3px dashed #ddd6fe; border-radius:18px;
-    padding:26px 16px; text-align:center; margin-bottom:18px; min-height:140px; display:flex; flex-direction:column;
-    justify-content:center; align-items:center; gap:6px;}
-  .big-target{font-size:4.2rem; font-weight:900; color:var(--ink); letter-spacing:.02em;}
-  .emoji-row{font-size:2.6rem; line-height:1.3; word-spacing:4px;}
-  .side-by-side{display:flex; gap:22px; justify-content:center; align-items:center; font-size:2.4rem;}
+  .switch::after{content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 2px 4px rgba(0,0,0,0.2);}
+  .switch.on::after{left:23px;}
+
+  .big-btn{
+    width:100%; background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; border:none;
+    padding:16px; border-radius:18px; font-size:1.15rem; font-family:'Fredoka',sans-serif; font-weight:700;
+    cursor:pointer; margin-top:6px; box-shadow:0 6px 0 var(--purple-dark); transition:.1s;
+  }
+  .big-btn:active{transform:translateY(4px); box-shadow:0 2px 0 var(--purple-dark);}
+  .ghost-btn{
+    width:100%; background:#f6f5fc; color:var(--purple-dark); border:2px solid var(--border);
+    padding:13px; border-radius:16px; font-size:.98rem; font-weight:800; cursor:pointer; margin-top:10px;
+    box-shadow:0 4px 0 var(--border); transition:.1s;
+  }
+  .ghost-btn:active{transform:translateY(3px); box-shadow:0 1px 0 var(--border);}
+
+  .section-tag{font-size:.8rem; font-weight:900; color:var(--purple); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; font-family:'Fredoka',sans-serif;}
+  .prompt-box{
+    background:#f6f3ff; border-left:6px solid var(--purple); padding:14px 18px; border-radius:14px;
+    font-size:1.1rem; color:var(--purple-dark); margin-bottom:16px; font-weight:800; display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .speak-btn{
+    background:#fff; border:2px solid #ddd6fe; color:var(--purple); border-radius:50%; width:42px; height:42px;
+    font-size:1.2rem; cursor:pointer; flex:0 0 auto; box-shadow:0 3px 0 #ddd6fe; transition:.1s;
+  }
+  .speak-btn:active{transform:translateY(2px); box-shadow:0 1px 0 #ddd6fe;}
+
+  .display-box{
+    background:linear-gradient(160deg,#faf9ff,#f3f0ff); border:3px dashed #ddd6fe; border-radius:22px;
+    padding:26px 16px; text-align:center; margin-bottom:18px; min-height:150px; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; gap:6px;
+  }
+  .big-target{font-size:4.5rem; font-weight:900; color:var(--ink); letter-spacing:.02em; font-family:'Fredoka',sans-serif;}
+  .emoji-row{font-size:2.8rem; line-height:1.3; word-spacing:6px;}
+  .side-by-side{display:flex; gap:22px; justify-content:center; align-items:center; font-size:2.5rem;}
+
   .options-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
   .options-grid.opt2{grid-template-columns:1fr 1fr;}
   @media(max-width:480px){.options-grid{grid-template-columns:1fr 1fr;}}
-  .opt-btn{padding:16px 10px; font-size:1.15rem; font-weight:800; border:3px solid var(--border); border-radius:14px;
-    background:#fff; cursor:pointer; transition:.12s; min-height:64px; display:flex; align-items:center; justify-content:center;}
-  .opt-btn:active{transform:scale(.96);}
-  .opt-btn.correct{background:#f0fdf4; border-color:var(--green); color:#15803d; animation:pop .3s ease;}
-  .opt-btn.incorrect{background:#fef2f2; border-color:var(--red); color:#b91c1c;}
-  .opt-btn[disabled]{opacity:.55; cursor:default;}
-  @keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+  
+  .opt-btn{
+    padding:16px 10px; font-size:1.25rem; font-family:'Fredoka',sans-serif; font-weight:700;
+    border:3px solid var(--border); border-radius:18px; background:#fff; cursor:pointer; transition:.12s;
+    min-height:68px; display:flex; align-items:center; justify-content:center; box-shadow:0 5px 0 var(--border);
+  }
+  .opt-btn:active{transform:translateY(3px); box-shadow:0 2px 0 var(--border);}
+  .opt-btn.correct{background:#f0fdf4; border-color:var(--green); color:#15803d; box-shadow:0 5px 0 var(--green); animation:pop .3s ease;}
+  .opt-btn.incorrect{background:#fef2f2; border-color:var(--red); color:#b91c1c; box-shadow:0 5px 0 var(--red);}
+  .opt-btn[disabled]{opacity:.65; cursor:default;}
+  @keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);}}
+
   .verbal-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
-  .vbtn{padding:16px 14px; font-size:1rem; font-weight:800; border:3px solid var(--border); border-radius:14px; cursor:pointer;}
-  .vbtn.yes{background:#f0fdf4; border-color:var(--green); color:#15803d;}
-  .vbtn.no{background:#fef2f2; border-color:var(--red); color:#b91c1c;}
-  .feedback-banner{text-align:center; font-weight:800; font-size:1.2rem; margin-bottom:10px; min-height:28px;}
+  .vbtn{padding:16px 14px; font-size:1.05rem; font-family:'Fredoka',sans-serif; font-weight:700; border:3px solid var(--border); border-radius:18px; cursor:pointer;}
+  .vbtn.yes{background:#f0fdf4; border-color:var(--green); color:#15803d; box-shadow:0 5px 0 var(--green);}
+  .vbtn.no{background:#fef2f2; border-color:var(--red); color:#b91c1c; box-shadow:0 5px 0 var(--red);}
+  .vbtn:active{transform:translateY(3px);}
+
+  .feedback-banner{text-align:center; font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.3rem; margin-bottom:12px; min-height:32px;}
   .fb-good{color:var(--green);} .fb-bad{color:#b45309;}
-  .summary-hero{font-size:2.6rem; font-weight:900; color:var(--purple); text-align:center; margin:10px 0 4px;}
-  .summary-sub{text-align:center; color:var(--muted); margin-bottom:16px;}
-  .cat-row{display:flex; justify-content:space-between; align-items:center; padding:10px 4px; border-bottom:1px solid var(--border); font-size:.92rem;}
-  .cat-badge{font-weight:800; padding:3px 10px; border-radius:8px; font-size:.78rem;}
+
+  .summary-hero{font-size:3rem; font-family:'Fredoka',sans-serif; font-weight:700; color:var(--purple); text-align:center; margin:10px 0 4px;}
+  .summary-sub{text-align:center; color:var(--muted); margin-bottom:16px; font-weight:800;}
+  .cat-row{display:flex; justify-content:space-between; align-items:center; padding:12px 4px; border-bottom:1px solid var(--border); font-size:.95rem; font-weight:800;}
+  .cat-badge{font-weight:900; padding:4px 12px; border-radius:10px; font-size:.82rem; font-family:'Fredoka',sans-serif;}
   .cat-pass{background:#dcfce7; color:#15803d;} .cat-review{background:#fee2e2; color:#b91c1c;}
-  .confetti{position:fixed; top:-10px; font-size:1.4rem; animation:fall linear forwards; pointer-events:none; z-index:99;}
+  
+  .confetti{position:fixed; top:-10px; font-size:1.6rem; animation:fall linear forwards; pointer-events:none; z-index:99;}
   @keyframes fall{to{transform:translateY(105vh) rotate(360deg); opacity:.9;}}
-  .streak-flame{font-size:.85rem; color:var(--amber); font-weight:800; text-align:center; margin-bottom:8px; min-height:18px;}
+  .streak-flame{font-size:.9rem; color:var(--amber); font-weight:900; text-align:center; margin-bottom:8px; min-height:20px; font-family:'Fredoka',sans-serif;}
+
+  /* Parent Portal Modal */
+  .modal-overlay{position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(49,46,82,0.6); display:flex; justify-content:center; align-items:center; z-index:100; padding:16px;}
+  .modal-card{background:#fff; border-radius:24px; padding:24px; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; box-shadow:0 20px 40px rgba(0,0,0,0.2);}
+  .modal-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+  .close-btn{background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--muted);}
 </style>
 </head>
 <body>
@@ -96,27 +149,86 @@
   <div class="card">
     <div class="topbar">
       <div class="name-badge">🌟 Cathy</div>
-      <div class="stars-badge" id="starsBadge">⭐ 0</div>
+      <div class="top-right-group">
+        <div class="stars-badge" id="starsBadge">⭐ 0</div>
+        <button class="parent-portal-btn" onclick="openParentPortal()">📊 Parents</button>
+      </div>
     </div>
     <div class="progress-outer" id="progressOuter"><div class="progress-inner" id="progressInner"></div></div>
     <div id="app"></div>
   </div>
 </div>
 
+<div id="modalContainer"></div>
+
 <script>
+/* ============================= AUDIO SYNTHESIZER (NO EXTERNAL FILES) ============================= */
+class SoundEffects {
+  constructor() { this.ctx = null; }
+  init() { if(!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+  playPop() {
+    this.init();
+    const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+    osc.connect(gain); gain.connect(this.ctx.destination);
+    osc.start(); osc.stop(this.ctx.currentTime + 0.08);
+  }
+  playCorrect() {
+    this.init();
+    const now = this.ctx.currentTime;
+    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+      const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+      osc.type = 'triangle'; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, now + (i * 0.07));
+      gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.07) + 0.25);
+      osc.connect(gain); gain.connect(this.ctx.destination);
+      osc.start(now + (i * 0.07)); osc.stop(now + (i * 0.07) + 0.25);
+    });
+  }
+  playIncorrect() {
+    this.init();
+    const now = this.ctx.currentTime;
+    [220, 180].forEach((freq, i) => {
+      const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+      osc.type = 'sawtooth'; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, now + (i * 0.12));
+      gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.12) + 0.2);
+      osc.connect(gain); gain.connect(this.ctx.destination);
+      osc.start(now + (i * 0.12)); osc.stop(now + (i * 0.12) + 0.2);
+    });
+  }
+}
+const sfx = new SoundEffects();
+
 /* ============================= UTILITIES ============================= */
 function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
-function pick(a,n){return shuffle(a).slice(0,n);}
 function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+let preferredVoice = null;
+function loadVoices(){
+  if(!('speechSynthesis' in window)) return;
+  const voices = window.speechSynthesis.getVoices();
+  preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Natural') || v.name.includes('Google'))) || voices.find(v => v.lang.startsWith('en')) || null;
+}
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
 function speak(text){
   try{
     if(!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    u.rate=0.85; u.pitch=1.15;
+    if(preferredVoice) u.voice = preferredVoice;
+    u.rate=0.88; u.pitch=1.1;
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
+
 function makeOptions(correct,pool,count){
   count=count||3;
   const distractors=shuffle(pool.filter(x=>String(x)!==String(correct)));
@@ -125,7 +237,7 @@ function makeOptions(correct,pool,count){
 }
 
 /* ============================= STATE / STORAGE ============================= */
-const STORE_KEY='cathyTrainerStats_v1';
+const STORE_KEY='cathyTrainerStats_v2';
 function loadStats(){
   try{
     const raw=localStorage.getItem(STORE_KEY);
@@ -136,7 +248,7 @@ function loadStats(){
 function saveStats(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(stats)); }catch(e){} }
 let stats=loadStats();
 
-/* ============================= LEVELS & CATEGORIES ============================= */
+/* ============================= CONTENT DATA ============================= */
 const LEVELS=[
   {id:1,cls:'lvl1',emoji:'🌱',name:'Little Explorer',hint:'Ages 3–4 · letters, first words, shapes & colors'},
   {id:2,cls:'lvl2',emoji:'🚀',name:'Word Adventurer',hint:'Ages 4–5 · more sight words, rhymes, counting to 20'},
@@ -151,7 +263,6 @@ const CAT_LABELS={
   patterns:'🧩 Patterns', opposites:'↔️ Opposites', oddOne:'🔍 Odd One Out'
 };
 
-/* ============================= HAND-CURATED CONTENT ============================= */
 const SIGHT_WORDS={
   1:['a','and','big','can','go','I','in','is','it','look','my','see','the','up','we'],
   2:['are','at','come','down','for','have','he','like','little','no','play','said','she','this','you'],
@@ -204,7 +315,7 @@ const COLORS={
   1:[['red','#ef4444'],['blue','#3b82f6'],['yellow','#eab308'],['green','#22c55e']],
   2:[['orange','#f97316'],['purple','#a855f7'],['pink','#ec4899'],['brown','#92400e']],
   3:[['black','#111827'],['white','#f8fafc'],['gray','#9ca3af'],['turquoise','#06b6d4']],
-  4:null // level 4 colors handled as mixing questions
+  4:null
 };
 const COLOR_MIX=[['red','yellow','orange'],['blue','yellow','green'],['red','blue','purple']];
 const COUNT_EMOJI=['🐶','🐱','🍎','⭐','🎈','🐟','🦋','🐻'];
@@ -234,7 +345,7 @@ function buildBeginSounds(){
     BEGIN_SOUNDS[lvl].forEach(([word,emoji,letter])=>{
       items.push({id:nid('bs'),category:'beginSounds',level:+lvl,type:'mc',
         prompt:`What sound does "${word}" start with?`,tts:`What sound does the word ${word} start with?`,
-        display:`<div style="font-size:3rem;">${emoji}</div><div style="font-weight:800;font-size:1.1rem;margin-top:4px;">${word}</div>`,
+        display:`<div style="font-size:3.2rem;">${emoji}</div><div style="font-weight:800;font-size:1.2rem;margin-top:4px;">${word}</div>`,
         options:()=>makeOptions(letter,letterPool,3)});
     });
   });
@@ -266,7 +377,7 @@ function buildRhymeMatch(){
     RHYME_PAIRS[lvl].forEach(([w1,w2,rhymes])=>{
       items.push({id:nid('rm'),category:'rhymeMatch',level:+lvl,type:'mc2',
         prompt:`Do "${w1}" and "${w2}" rhyme?`,tts:`Do ${w1} and ${w2} rhyme?`,
-        display:`<div style="font-size:1.9rem;font-weight:800;">${w1} &amp; ${w2}</div>`,
+        display:`<div style="font-size:2rem;font-weight:800;">${w1} &amp; ${w2}</div>`,
         options:[{label:'Yes! 🎵',correct:rhymes===true},{label:'No',correct:rhymes===false}]});
     });
   });
@@ -289,7 +400,7 @@ function buildSyllables(){
     SYLLABLES[lvl].forEach(([w,emoji,count])=>{
       items.push({id:nid('sy'),category:'syllables',level:+lvl,type:'mc',
         prompt:`How many claps (syllables) in "${w}"?`,tts:`How many beats do you hear in the word ${w}?`,
-        display:`<div style="font-size:2.6rem;">${emoji}</div><div style="font-weight:800;">${w}</div>`,
+        display:`<div style="font-size:2.8rem;">${emoji}</div><div style="font-weight:800;font-size:1.1rem;">${w}</div>`,
         options:()=>makeOptions(count,[1,2,3,4],3)});
     });
   });
@@ -339,7 +450,7 @@ function buildAddition(){
   probs.forEach(([a,b])=>{
     items.push({id:nid('ad'),category:'addition',level:4,type:'mc',
       prompt:`What is ${a} + ${b}?`,tts:`What is ${a} plus ${b}?`,
-      display:`<div style="font-size:1.6rem;">${'●'.repeat(a)} + ${'●'.repeat(b)}</div><div class="big-target" style="font-size:2rem;margin-top:6px;">${a} + ${b} = ?</div>`,
+      display:`<div style="font-size:1.8rem;">${'●'.repeat(a)} + ${'●'.repeat(b)}</div><div class="big-target" style="font-size:2.2rem;margin-top:6px;">${a} + ${b} = ?</div>`,
       options:()=>makeOptions(a+b,[a+b-2,a+b-1,a+b,a+b+1,a+b+2].filter(x=>x>=0),3)});
   });
   return items;
@@ -351,7 +462,7 @@ function buildShapes(){
     SHAPES[lvl].forEach(([name,emoji])=>{
       items.push({id:nid('sh'),category:'shapes',level:+lvl,type:'mc',
         prompt:'What shape is this?',tts:'What shape is this?',
-        display:`<div style="font-size:3.4rem;">${emoji}</div>`,
+        display:`<div style="font-size:3.6rem;">${emoji}</div>`,
         options:()=>makeOptions(name,names,3)});
     });
   });
@@ -364,7 +475,7 @@ function buildColors(){
     COLORS[lvl].forEach(([name,hex])=>{
       items.push({id:nid('co'),category:'colors',level:lvl,type:'mc',
         prompt:'What color is this?',tts:'What color is this?',
-        display:`<div style="width:80px;height:80px;border-radius:50%;background:${hex};border:3px solid #e5e7eb;"></div>`,
+        display:`<div style="width:90px;height:90px;border-radius:50%;background:${hex};border:4px solid #ffffff;box-shadow:0 4px 10px rgba(0,0,0,0.15);"></div>`,
         options:()=>makeOptions(name,names,3)});
     });
   });
@@ -372,7 +483,7 @@ function buildColors(){
   COLOR_MIX.forEach(([a,b,result])=>{
     items.push({id:nid('comix'),category:'colors',level:4,type:'mc',
       prompt:`What color do you get: ${a} + ${b}?`,tts:`If you mix ${a} and ${b}, what color do you get?`,
-      display:`<div style="font-size:1.5rem;font-weight:800;">${a} + ${b} = ?</div>`,
+      display:`<div style="font-size:1.6rem;font-weight:800;">${a} + ${b} = ?</div>`,
       options:()=>makeOptions(result,[...allNames,'brown','black'],3)});
   });
   return items;
@@ -403,7 +514,7 @@ function buildPatterns(){
       const pool=+lvl<=2?['🔴','🔵','🟢','🔺','🐶','🐱','⭐','🌙','🍎','🍌']:['2','4','6','8','5','7','12','16','20','40'];
       items.push({id:nid('pt'),category:'patterns',level:+lvl,type:'mc',
         prompt:'What comes next?',tts:'What comes next in the pattern?',
-        display:`<div style="font-size:2.2rem;">${seq.join(' ')} ❓</div>`,
+        display:`<div style="font-size:2.4rem;">${seq.join(' ')} ❓</div>`,
         options:()=>makeOptions(next,pool,3)});
     });
   });
@@ -416,7 +527,7 @@ function buildOpposites(){
     OPPOSITES[lvl].forEach(([word,opp])=>{
       items.push({id:nid('op'),category:'opposites',level:+lvl,type:'mc',
         prompt:`What is the opposite of "${word}"?`,tts:`What is the opposite of ${word}?`,
-        display:`<div style="font-size:1.6rem;font-weight:800;">${word}</div>`,
+        display:`<div style="font-size:1.8rem;font-weight:800;">${word}</div>`,
         options:()=>makeOptions(opp,answerPool,3)});
     });
   });
@@ -428,7 +539,7 @@ function buildOddOne(){
     ODD_ONE[lvl].forEach(([group,oddIdx])=>{
       items.push({id:nid('oo'),category:'oddOne',level:+lvl,type:'mc',
         prompt:"Which one doesn't belong?",tts:"Which one doesn't belong?",
-        display:`<div style="font-size:2.4rem;">${group.join('&nbsp;&nbsp;')}</div>`,
+        display:`<div style="font-size:2.5rem;">${group.join('&nbsp;&nbsp;')}</div>`,
         options:shuffle(group.map((g,i)=>({label:g,correct:i===oddIdx})))});
     });
   });
@@ -444,7 +555,7 @@ function buildBank(){
 }
 const BANK=buildBank();
 
-/* ============================= SESSION ENGINE ============================= */
+/* ============================= ENGINE & WEIGHTING ============================= */
 let session=[]; let idx=0; let results=[]; let sessionStars=0; let streak=0; let selectedLevel=1; let includeReview=true;
 
 function itemStat(id){
@@ -454,9 +565,9 @@ function itemStat(id){
 function weightFor(item){
   const s=itemStat(item.id);
   let w=10;
-  if(stats.sessionNum - s.lastSeen < 2 && s.lastSeen>=0) w-=7; // recently seen -> lower weight
-  if(s.attempts>0 && s.correct/s.attempts>0.8) w-=4; // mastered -> lower weight
-  if(s.attempts>0 && s.correct/s.attempts<0.5) w+=5; // needs practice -> higher weight
+  if(stats.sessionNum - s.lastSeen < 2 && s.lastSeen>=0) w-=7;
+  if(s.attempts>0 && s.correct/s.attempts>0.8) w-=4;
+  if(s.attempts>0 && s.correct/s.attempts<0.5) w+=5;
   return Math.max(1,w);
 }
 function weightedSample(pool,n){
@@ -478,7 +589,6 @@ function buildSession(level){
     const take=weightedSample(pool.filter(it=>it.level===level).length?pool:pool, 1);
     chosen.push(...take);
   });
-  // fill up to 15 with more weighted picks across level (avoid dup ids)
   const already=new Set(chosen.map(c=>c.id));
   let fullPool=BANK.filter(it=>it.level===level && !already.has(it.id));
   const extra=weightedSample(fullPool, Math.max(0,15-chosen.length));
@@ -486,7 +596,7 @@ function buildSession(level){
   return shuffle(chosen).slice(0,15);
 }
 
-/* ============================= RENDER: START SCREEN ============================= */
+/* ============================= RENDER SCREENS ============================= */
 function renderStart(){
   document.getElementById('progressOuter').style.display='none';
   document.getElementById('starsBadge').textContent=`⭐ ${stats.totalStars}`;
@@ -495,27 +605,26 @@ function renderStart(){
     return `<div class="level-card ${l.cls} ${selectedLevel===l.id?'active':''}" onclick="setLevel(${l.id})">
       <h3>${l.emoji} ${l.name}</h3>
       <p>${l.hint}</p>
-      <div class="stat-line">${mastered} activities in this level</div>
+      <div class="stat-line">${mastered} activities in this tier</div>
     </div>`;
   }).join('');
   document.getElementById('app').innerHTML=`
     <div class="mascot">🦉</div>
     <div class="section-tag">Cathy's Learning Adventure</div>
     <h1>Pick a level to play!</h1>
-    <p class="sub">A brand-new mix of letters, words, numbers and puzzles every time — Hoot the Owl will read the questions out loud.</p>
+    <p class="sub">A fresh mix of letters, sight words, math and puzzles every time — with audio prompts for independent practice.</p>
     <div class="level-grid">${cards}</div>
     <div class="toggle-row">
       <div class="switch ${includeReview?'on':''}" id="reviewSwitch" onclick="toggleReview()"></div>
-      <span>Mix in a few easier review questions to keep skills fresh</span>
+      <span>Mix in a few easier review questions to build confidence</span>
     </div>
     <button class="big-btn" onclick="startSession()">▶️ Start Playing</button>
-    <div class="sub" style="margin-top:14px;text-align:center;">Sessions played: ${stats.sessionsCompleted} &nbsp;·&nbsp; Total stars: ${stats.totalStars} ⭐</div>
+    <div class="sub" style="margin-top:16px;text-align:center;">Sessions played: ${stats.sessionsCompleted} &nbsp;·&nbsp; Total stars: ${stats.totalStars} ⭐</div>
   `;
 }
-function setLevel(l){ selectedLevel=l; renderStart(); }
-function toggleReview(){ includeReview=!includeReview; renderStart(); }
+function setLevel(l){ sfx.playPop(); selectedLevel=l; renderStart(); }
+function toggleReview(){ sfx.playPop(); includeReview=!includeReview; renderStart(); }
 
-/* ============================= RENDER: QUESTION ============================= */
 function renderQuestion(){
   document.getElementById('progressOuter').style.display='block';
   const q=session[idx];
@@ -557,7 +666,7 @@ function recordAndAdvance(item,correct){
   if(correct){ streak++; sessionStars++; } else { streak=0; }
   saveStats();
   idx++;
-  setTimeout(()=>{ if(idx<session.length) renderQuestion(); else renderSummary(); }, correct?900:1400);
+  setTimeout(()=>{ if(idx<session.length) renderQuestion(); else renderSummary(); }, correct?950:1450);
 }
 
 function answerMC(i){
@@ -566,6 +675,9 @@ function answerMC(i){
   const buttons=document.querySelectorAll('.opt-btn');
   buttons.forEach(b=>b.disabled=true);
   const chosen=opts[i];
+  
+  if(chosen.correct){ sfx.playCorrect(); } else { sfx.playIncorrect(); }
+  
   document.getElementById('opt-'+i).classList.add(chosen.correct?'correct':'incorrect');
   if(!chosen.correct){
     opts.forEach((o,idx2)=>{ if(o.correct) document.getElementById('opt-'+idx2).classList.add('correct'); });
@@ -575,7 +687,9 @@ function answerMC(i){
   fb.className='feedback-banner '+(chosen.correct?'fb-good':'fb-bad');
   recordAndAdvance(q,chosen.correct);
 }
+
 function answerVerbal(correct){
+  if(correct){ sfx.playCorrect(); } else { sfx.playIncorrect(); }
   const fb=document.getElementById('feedback');
   fb.textContent=correct?'Wonderful reading! 🎉':"That's okay — let's practice this one again soon.";
   fb.className='feedback-banner '+(correct?'fb-good':'fb-bad');
@@ -583,10 +697,9 @@ function answerVerbal(correct){
   recordAndAdvance(session[idx],correct);
 }
 
-/* ============================= RENDER: SUMMARY ============================= */
 function launchConfetti(){
   const emojis=['🎉','⭐','🌟','🎊','✨'];
-  for(let i=0;i<24;i++){
+  for(let i=0;i<26;i++){
     const el=document.createElement('div');
     el.className='confetti'; el.textContent=emojis[rand(0,emojis.length-1)];
     el.style.left=rand(0,100)+'vw';
@@ -596,6 +709,7 @@ function launchConfetti(){
     setTimeout(()=>el.remove(),4000);
   }
 }
+
 function renderSummary(){
   document.getElementById('progressInner').style.width='100%';
   const total=results.length;
@@ -622,18 +736,76 @@ function renderSummary(){
     <h2>Great work, Cathy!</h2>
     <div class="summary-hero">${correctCt} / ${total}</div>
     <div class="summary-sub">${pct}% correct &nbsp;·&nbsp; +${sessionStars} stars earned this session ⭐</div>
-    <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:14px; padding:0 14px; margin-top:10px;">${rows}</div>
+    <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:16px; padding:0 14px; margin-top:10px;">${rows}</div>
     <button class="big-btn" onclick="renderStart()">🔁 Play Again</button>
     <button class="ghost-btn" onclick="changeLevel()">🎚️ Choose a Different Level</button>
   `;
-  if(pct>=80) launchConfetti();
+  if(pct>=80){ sfx.playCorrect(); launchConfetti(); }
 }
-function changeLevel(){ renderStart(); }
+function changeLevel(){ sfx.playPop(); renderStart(); }
 
 function startSession(){
+  sfx.playPop();
   session=buildSession(selectedLevel);
   idx=0; results=[]; sessionStars=0; streak=0;
   renderQuestion();
+}
+
+/* ============================= PARENT PORTAL MODAL ============================= */
+function openParentPortal(){
+  sfx.playPop();
+  let itemTotal=0, itemMastered=0;
+  Object.values(stats.items).forEach(s=>{
+    itemTotal++;
+    if(s.attempts>0 && s.correct/s.attempts>=0.75) itemMastered++;
+  });
+
+  const html=`
+    <div class="modal-overlay" onclick="closeParentPortal(event)">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2>📊 Parent Dashboard</h2>
+          <button class="close-btn" onclick="closeParentPortalDirect()">✕</button>
+        </div>
+        <div class="sub">Progress summary and diagnostic insights for Cathy.</div>
+        
+        <div style="background:#f6f3ff; border-radius:16px; padding:16px; margin-bottom:16px;">
+          <div style="font-weight:800; font-size:1.1rem; color:var(--purple); margin-bottom:8px;">Overall Performance</div>
+          <div style="font-size:.95rem; line-height:1.6;">
+            • Total Practice Sessions: <strong>${stats.sessionsCompleted}</strong><br>
+            • Cumulative Stars: <strong>${stats.totalStars} ⭐</strong><br>
+            • Unique Prompts Encountered: <strong>${itemTotal}</strong><br>
+            • High-Proficiency Items (&gt;75%): <strong>${itemMastered}</strong>
+          </div>
+        </div>
+
+        <button class="big-btn" style="font-size:1rem; padding:12px;" onclick="exportData()">💾 Copy Summary to Clipboard</button>
+        <button class="ghost-btn" style="color:var(--red); border-color:#fca5a5; margin-top:12px;" onclick="resetStats()">🗑️ Reset All Progress</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('modalContainer').innerHTML=html;
+}
+
+function closeParentPortal(e){ if(e.target.classList.contains('modal-overlay')) closeParentPortalDirect(); }
+function closeParentPortalDirect(){ document.getElementById('modalContainer').innerHTML=''; }
+
+function exportData(){
+  const summaryText = `Cathy's Literacy Progress Report:\nSessions Completed: ${stats.sessionsCompleted}\nTotal Stars: ${stats.totalStars}\nDate: ${new Date().toLocaleDateString()}`;
+  navigator.clipboard.writeText(summaryText).then(()=>{
+    alert("Summary copied to clipboard! You can paste this in an email or note.");
+  }).catch(()=>{
+    alert(summaryText);
+  });
+}
+
+function resetStats(){
+  if(confirm("Are you sure you want to reset all of Cathy's star and progress stats?")){
+    localStorage.removeItem(STORE_KEY);
+    stats = loadStats();
+    closeParentPortalDirect();
+    renderStart();
+  }
 }
 
 /* ============================= INIT ============================= */
