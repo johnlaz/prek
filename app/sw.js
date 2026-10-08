@@ -1,6 +1,6 @@
 // Cathy's Learning Adventure — app service worker (scope: /app/)
 // VERSION: bump CACHE_NAME and APP_VERSION in index.html together on every release.
-const CACHE_NAME = 'cathy-adventure-v2.0';
+const CACHE_NAME = 'cathy-adventure-v2.1';
 const PREFIX = 'cathy-adventure-';
 const CORE_ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 

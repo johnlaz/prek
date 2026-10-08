@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Cathy's Learning Adventure",
   "short_name": "Cathy's Adventure",
-  "description": "A playful, ever-changing literacy and math practice game for pre-K through 1st grade.",
+  "description": "A Pre-K assessment tool: a playful, ever-changing literacy and math game for pre-K through 1st grade.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
