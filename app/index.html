@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cathy's Adventure">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="A playful, ever-changing literacy and math practice game for pre-K through 1st grade.">
+<title>Cathy's Learning Adventure</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --purple:#7c3aed; --purple-dark:#5b21b6; --pink:#ec4899; --blue:#3b82f6;
+    --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --bg1:#fef3ff; --bg2:#e0f2fe;
+    --card:#ffffff; --ink:#312e52; --muted:#5d5a85; --border:#e9e5fb;
+    --display:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Hiragino Maru Gothic ProN",Quicksand,Nunito,"Segoe UI",system-ui,sans-serif;
+    --body:ui-rounded,"SF Pro Rounded",Nunito,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:var(--body);}
+  body{
+    background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%);
+    color:var(--ink); min-height:100vh; min-height:100dvh; display:flex; justify-content:center;
+    padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left)); -webkit-tap-highlight-color:transparent;
+  }
+  .wrap{width:100%; max-width:760px;}
+  .card{
+    background:var(--card); border-radius:28px; padding:24px;
+    box-shadow:0 20px 45px -12px rgba(91,33,182,.22); position:relative; overflow:hidden;
+    border:2px solid #ffffff;
+  }
+  .topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px; flex-wrap:wrap;}
+  .name-badge{background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; font-weight:800;
+    padding:8px 18px; border-radius:999px; font-size:1rem; letter-spacing:.02em; font-family:var(--display);
+    box-shadow:0 4px 10px rgba(124,58,237,.25);}
+  .top-right-group{display:flex; gap:8px; align-items:center;}
+  .stars-badge{background:#fff7e0; color:#92400e; font-weight:800; padding:8px 14px; border-radius:999px;
+    font-size:.95rem; border:2px solid #fde68a; display:flex; align-items:center; gap:6px; font-family:var(--display);}
+  .parent-portal-btn{background:#f1effb; color:var(--purple-dark); border:none; padding:8px 14px; min-height:44px; border-radius:999px;
+    font-weight:800; font-size:.85rem; cursor:pointer; transition:.15s;}
+  .parent-portal-btn:active{transform:scale(.95);}
+
+  .progress-outer{width:100%; height:16px; background:#f1effb; border-radius:999px; overflow:hidden; margin-bottom:18px; display:none; border:2px solid var(--border);}
+  .progress-inner{height:100%; width:0%; background:linear-gradient(90deg,var(--purple),var(--pink)); transition:width .35s ease; border-radius:999px;}
+  
+  h1{font-family:var(--display); font-size:1.65rem; margin-bottom:6px; color:var(--ink);}
+  h2{font-family:var(--display); font-size:1.35rem; margin-bottom:6px;}
+  .sub{color:var(--muted); font-size:.95rem; margin-bottom:16px; line-height:1.4; font-weight:700;}
+  .mascot{font-size:3.6rem; text-align:center; margin-bottom:4px; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.1));}
+  
+  /* Toy-like 3D Buttons */
+  .level-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0;}
+    .level-card{
+    border:3px solid var(--border); border-radius:20px; padding:16px; cursor:pointer; transition:.15s;
+    box-shadow:0 5px 0 var(--border); position:relative; background:#fff;
+  }
+  .level-card:active{transform:translateY(3px); box-shadow:0 2px 0 var(--border);}
+  .level-card h3{font-family:var(--display); font-size:1.15rem; margin-bottom:4px;}
+  .level-card p{color:var(--muted); font-size:.85rem; font-weight:700;}
+  .level-card .stat-line{margin-top:8px; font-size:.78rem; color:var(--purple-dark); font-weight:800;}
+  .lvl1{border-color:#bbf7d0; box-shadow:0 5px 0 #86efac;} .lvl1.active,.lvl1:hover{background:#f0fdf4; border-color:var(--green);}
+  .lvl2{border-color:#bfdbfe; box-shadow:0 5px 0 #93c5fd;} .lvl2.active,.lvl2:hover{background:#eff6ff; border-color:var(--blue);}
+  .lvl3{border-color:#fde68a; box-shadow:0 5px 0 #fcd34d;} .lvl3.active,.lvl3:hover{background:#fffbeb; border-color:var(--amber);}
+  .lvl4{border-color:#ddd6fe; box-shadow:0 5px 0 #c4b5fd;} .lvl4.active,.lvl4:hover{background:#f5f3ff; border-color:var(--purple);}
+
+  .toggle-row{display:flex; align-items:center; gap:10px; margin:16px 0; font-size:.9rem; color:var(--muted); font-weight:800; user-select:none;}
+  .switch{width:46px; height:26px; background:#e2e0f5; border-radius:999px; position:relative; cursor:pointer; flex:0 0 auto; transition:.2s;}
+  .switch.on{background:var(--purple);}
+  .switch::after{content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 2px 4px rgba(0,0,0,0.2);}
+  .switch.on::after{left:23px;}
+
+  .big-btn{
+    width:100%; background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; border:none;
+    padding:16px; border-radius:18px; font-size:1.15rem; font-family:var(--display); font-weight:700;
+    cursor:pointer; margin-top:6px; box-shadow:0 6px 0 var(--purple-dark); transition:.1s;
+  }
+  .big-btn:active{transform:translateY(4px); box-shadow:0 2px 0 var(--purple-dark);}
+  .ghost-btn{
+    width:100%; background:#f6f5fc; color:var(--purple-dark); border:2px solid var(--border);
+    padding:13px; border-radius:16px; font-size:.98rem; font-weight:800; cursor:pointer; margin-top:10px;
+    box-shadow:0 4px 0 var(--border); transition:.1s;
+  }
+  .ghost-btn:active{transform:translateY(3px); box-shadow:0 1px 0 var(--border);}
+
+  .section-tag{font-size:.8rem; font-weight:900; color:var(--purple); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; font-family:var(--display);}
+  .prompt-box{
+    background:#f6f3ff; border-left:6px solid var(--purple); padding:14px 18px; border-radius:14px;
+    font-size:1.1rem; color:var(--purple-dark); margin-bottom:16px; font-weight:800; display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .speak-btn{
+    background:#fff; border:2px solid #ddd6fe; color:var(--purple); border-radius:50%; width:42px; height:42px;
+    font-size:1.2rem; cursor:pointer; flex:0 0 auto; box-shadow:0 3px 0 #ddd6fe; transition:.1s;
+  }
+  .speak-btn:active{transform:translateY(2px); box-shadow:0 1px 0 #ddd6fe;}
+
+  .display-box{
+    background:linear-gradient(160deg,#faf9ff,#f3f0ff); border:3px dashed #ddd6fe; border-radius:22px;
+    padding:26px 16px; text-align:center; margin-bottom:18px; min-height:150px; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; gap:6px;
+  }
+  .big-target{font-size:4.5rem; font-weight:900; color:var(--ink); letter-spacing:.02em; font-family:var(--display);}
+  .emoji-row{font-size:2.8rem; line-height:1.3; word-spacing:6px;}
+  .side-by-side{display:flex; gap:22px; justify-content:center; align-items:center; font-size:2.5rem;}
+
+  .options-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
+  .options-grid.opt2{grid-template-columns:1fr 1fr;}
+  @media(max-width:480px){.options-grid{grid-template-columns:1fr 1fr;}}
+  
+  .opt-btn{
+    padding:16px 10px; font-size:1.25rem; font-family:var(--display); font-weight:700;
+    border:3px solid var(--border); border-radius:18px; background:#fff; cursor:pointer; transition:.12s;
+    min-height:68px; display:flex; align-items:center; justify-content:center; box-shadow:0 5px 0 var(--border);
+  }
+  .opt-btn:active{transform:translateY(3px); box-shadow:0 2px 0 var(--border);}
+  .opt-btn.correct{background:#f0fdf4; border-color:var(--green); color:#15803d; box-shadow:0 5px 0 var(--green); animation:pop .3s ease;}
+  .opt-btn.incorrect{background:#fef2f2; border-color:var(--red); color:#b91c1c; box-shadow:0 5px 0 var(--red);}
+  .opt-btn[disabled]{opacity:.65; cursor:default;}
+  @keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);}}
+
+  .verbal-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .vbtn{padding:16px 14px; font-size:1.05rem; font-family:var(--display); font-weight:700; border:3px solid var(--border); border-radius:18px; cursor:pointer;}
+  .vbtn.yes{background:#f0fdf4; border-color:var(--green); color:#15803d; box-shadow:0 5px 0 var(--green);}
+  .vbtn.no{background:#fef2f2; border-color:var(--red); color:#b91c1c; box-shadow:0 5px 0 var(--red);}
+  .vbtn:active{transform:translateY(3px);}
+
+  .feedback-banner{text-align:center; font-family:var(--display); font-weight:700; font-size:1.3rem; margin-bottom:12px; min-height:32px;}
+  .fb-good{color:var(--green);} .fb-bad{color:#b45309;}
+
+  .summary-hero{font-size:3rem; font-family:var(--display); font-weight:700; color:var(--purple); text-align:center; margin:10px 0 4px;}
+  .summary-sub{text-align:center; color:var(--muted); margin-bottom:16px; font-weight:800;}
+  .cat-row{display:flex; justify-content:space-between; align-items:center; padding:12px 4px; border-bottom:1px solid var(--border); font-size:.95rem; font-weight:800;}
+  .cat-badge{font-weight:900; padding:4px 12px; border-radius:10px; font-size:.82rem; font-family:var(--display);}
+  .cat-pass{background:#dcfce7; color:#15803d;} .cat-review{background:#fee2e2; color:#b91c1c;}
+  
+  .confetti{position:fixed; top:-10px; font-size:1.6rem; animation:fall linear forwards; pointer-events:none; z-index:99;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(360deg); opacity:.9;}}
+  .streak-flame{font-size:.9rem; color:var(--amber); font-weight:900; text-align:center; margin-bottom:8px; min-height:20px; font-family:var(--display);}
+
+  /* Parent Portal Modal */
+  .modal-overlay{position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(49,46,82,0.6); display:flex; justify-content:center; align-items:center; z-index:100; padding:16px;}
+  .modal-card{background:#fff; border-radius:24px; padding:24px; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; box-shadow:0 20px 40px rgba(0,0,0,0.2);}
+  .modal-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+  .close-btn{background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--muted);}
+
+  /* ===== v2.0 additions ===== */
+  [hidden]{display:none!important;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  button{font-family:inherit;}
+  :focus-visible{outline:4px solid #f59e0b;outline-offset:2px;}
+  .owl-row{display:flex;align-items:center;justify-content:center;gap:12px;margin:4px 0 8px;}
+  .owl-btn{background:none;border:none;font-size:4.2rem;line-height:1;cursor:pointer;filter:drop-shadow(0 4px 8px rgba(0,0,0,.12));animation:bob 3s ease-in-out infinite;}
+  .owl-btn:active{transform:scale(.92);}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+  .bubble{background:#f6f3ff;border:3px solid #ddd6fe;border-radius:20px 20px 20px 4px;padding:10px 16px;font-family:var(--display);font-weight:700;font-size:1.25rem;color:var(--purple-dark);line-height:1.25;}
+  .level-card{font:inherit;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:14px 8px;min-height:120px;color:var(--ink);}
+  .lv-emoji{font-size:2.8rem;line-height:1;}
+  .lv-name{font-family:var(--display);font-weight:700;font-size:1.1rem;}
+  .lv-badge{background:#fff7e0;border:2px solid #fde68a;color:#92400e;border-radius:999px;font-size:.78rem;font-weight:900;padding:2px 10px;}
+  .level-card.active{outline:4px solid var(--purple);outline-offset:2px;}
+  .big-btn.play{font-size:1.6rem;padding:20px;}
+  .footline{margin-top:16px;text-align:center;font-size:.85rem;color:var(--muted);font-weight:800;}
+  .grownup-note{text-align:center;font-weight:900;color:var(--muted);margin:6px 0 10px;font-size:.95rem;}
+  .holdbtn{position:relative;overflow:hidden;}
+  .holdbtn small{font-weight:700;opacity:.8;}
+  .holdbtn::before{content:'';position:absolute;left:0;bottom:0;height:8px;width:0;background:var(--green);}
+  .holdbtn.holding::before{width:100%;transition:width .9s linear;}
+  .toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-weight:800;z-index:200;max-width:90vw;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.25);}
+  .update-bar{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:150;background:var(--purple-dark);color:#fff;border-radius:18px;padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+  .update-bar button{background:#fff;color:var(--purple-dark);border:none;border-radius:12px;padding:10px 16px;font-weight:900;cursor:pointer;min-height:44px;}
+  .gate-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+  .gate-q{font-family:var(--display);font-size:2rem;text-align:center;font-weight:700;margin:8px 0;}
+  .panel{background:#f6f3ff;border-radius:16px;padding:16px;margin-bottom:16px;}
+  .panel h3{font-family:var(--display);color:var(--purple);font-size:1.05rem;margin-bottom:8px;}
+  .skill-row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.92rem;font-weight:800;}
+  .skill-row:last-child{border-bottom:none;}
+  .bar{grid-column:1/-1;height:8px;background:#e9e5fb;border-radius:99px;overflow:hidden;}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));}
+  .tag{font-size:.75rem;padding:3px 10px;border-radius:99px;font-weight:900;}
+  .tag.strong{background:#dcfce7;color:#15803d;} .tag.ok{background:#e0f2fe;color:#075985;} .tag.weak{background:#fee2e2;color:#b91c1c;} .tag.new{background:#f1effb;color:var(--muted);}
+  .set-row{display:flex;align-items:center;gap:12px;padding:8px 0;font-size:.92rem;font-weight:800;}
+  .set-row .switch{border:none;padding:0;}
+  .mini{font-size:.8rem;color:var(--muted);font-weight:700;line-height:1.4;}
+  .hist-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.9rem;font-weight:800;border-bottom:1px solid var(--border);}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media(max-width:380px){.btn-row{grid-template-columns:1fr;}}
+  .options-grid > :last-child:nth-child(odd){grid-column:1/-1;}
+  .options-grid.opt2 > :last-child:nth-child(odd){grid-column:auto;}
+  @media(max-width:480px){.card{padding:18px;} .name-badge{padding:8px 14px;} .topbar{flex-wrap:nowrap;} .parent-portal-btn{padding:8px 10px;}}
+  .name-badge,.stars-badge,.parent-portal-btn{white-space:nowrap;}
+  @media(max-width:360px){.topbar{flex-wrap:wrap;}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="topbar">
+      <div class="name-badge">🌟 Cathy</div>
+      <div class="top-right-group">
+        <div class="stars-badge" id="starsBadge" aria-live="polite">⭐ 0</div>
+        <button class="parent-portal-btn" onclick="openParentPortal()" aria-label="Grown-ups area">🔒 Grown-ups</button>
+      </div>
+    </div>
+    <div class="progress-outer" id="progressOuter"><div class="progress-inner" id="progressInner"></div></div>
+    <div id="app"></div>
+  </div>
+</div>
+
+<div id="modalContainer"></div>
+
+<script>
+/* ============================= AUDIO SYNTHESIZER (NO EXTERNAL FILES) ============================= */
+class SoundEffects {
+  constructor() { this.ctx = null; }
+  init() { if(!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+  playPop() {
+    this.init();
+    const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+    osc.connect(gain); gain.connect(this.ctx.destination);
+    osc.start(); osc.stop(this.ctx.currentTime + 0.08);
+  }
+  playCorrect() {
+    this.init();
+    const now = this.ctx.currentTime;
+    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+      const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+      osc.type = 'triangle'; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, now + (i * 0.07));
+      gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.07) + 0.25);
+      osc.connect(gain); gain.connect(this.ctx.destination);
+      osc.start(now + (i * 0.07)); osc.stop(now + (i * 0.07) + 0.25);
+    });
+  }
+  playIncorrect() {
+    this.init();
+    const now = this.ctx.currentTime;
+    [220, 180].forEach((freq, i) => {
+      const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+      osc.type = 'sawtooth'; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, now + (i * 0.12));
+      gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.12) + 0.2);
+      osc.connect(gain); gain.connect(this.ctx.destination);
+      osc.start(now + (i * 0.12)); osc.stop(now + (i * 0.12) + 0.2);
+    });
+  }
+}
+const sfx = new SoundEffects();
+
+/* ============================= UTILITIES ============================= */
+function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+let preferredVoice = null;
+function loadVoices(){
+  if(!('speechSynthesis' in window)) return;
+  const voices = window.speechSynthesis.getVoices();
+  preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Natural') || v.name.includes('Google'))) || voices.find(v => v.lang.startsWith('en')) || null;
+}
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    if(preferredVoice) u.voice = preferredVoice;
+    u.rate=0.88; u.pitch=1.1;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function makeOptions(correct,pool,count){
+  count=count||3;
+  const distractors=shuffle(pool.filter(x=>String(x)!==String(correct)));
+  const opts=[correct,...distractors.slice(0,count-1)];
+  return shuffle(opts).map(o=>({label:String(o),correct:String(o)===String(correct)}));
+}
+
+/* ============================= STATE / STORAGE ============================= */
+const STORE_KEY='cathyTrainerStats_v2';   // unchanged so existing progress carries over
+const APP_VERSION='2.0';                  // keep in step with CACHE_NAME in sw.js
+function defaultStats(){
+  return {totalStars:0, sessionsCompleted:0, sessionNum:0, items:{}, history:[], settings:{review:true, solo:false}};
+}
+function loadStats(){
+  const d=defaultStats();
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw){
+      const p=JSON.parse(raw);
+      if(p && typeof p==='object'){
+        return Object.assign(d,p,{
+          items:(p.items && typeof p.items==='object')?p.items:{},
+          history:Array.isArray(p.history)?p.history:[],
+          settings:Object.assign(d.settings,p.settings||{})
+        });
+      }
+    }
+  }catch(e){}
+  return d;
+}
+function saveStats(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(stats)); }catch(e){} }
+let stats=loadStats();
+
+/* ============================= CONTENT DATA ============================= */
+const LEVELS=[
+  {id:1,cls:'lvl1',emoji:'🌱',name:'Little Explorer',hint:'Ages 3–4 · letters, first words, shapes & colors'},
+  {id:2,cls:'lvl2',emoji:'🚀',name:'Word Adventurer',hint:'Ages 4–5 · more sight words, rhymes, counting to 20'},
+  {id:3,cls:'lvl3',emoji:'⭐',name:'Reading Star',hint:'Ages 5–6 · digraphs, syllables, bigger numbers'},
+  {id:4,cls:'lvl4',emoji:'🏆',name:'Rising Champion',hint:'Ages 6–7 · blends, addition, tricky words'}
+];
+const CAT_LABELS={
+  letters:'🔤 Letters', beginSounds:'👂 Starting Sounds', sightWords:'📖 Sight Words',
+  rhymeMatch:'🎵 Rhyme Time', rhymeProd:'🎤 Make a Rhyme', syllables:'👏 Syllable Claps',
+  numbers:'🔢 Numbers', counting:'🧮 Counting', addition:'➕ Adding',
+  shapes:'🔺 Shapes', colors:'🎨 Colors', compare:'⚖️ More or Less',
+  patterns:'🧩 Patterns', opposites:'↔️ Opposites', oddOne:'🔍 Odd One Out'
+};
+
+const SIGHT_WORDS={
+  1:['a','and','big','can','go','I','in','is','it','look','my','see','the','up','we'],
+  2:['are','at','come','down','for','have','he','like','little','no','play','said','she','this','you'],
+  3:['about','after','again','any','could','every','give','know','live','of','some','there','they','was','who'],
+  4:['always','because','been','before','both','does','found','gave','goes','many','once','right','upon','would','write']
+};
+const RHYME_PAIRS={
+  1:[['cat','hat',true],['sun','fish',false],['dog','frog',true],['cup','cat',false],['bed','red',true],['shoe','ball',false]],
+  2:[['moon','spoon',true],['tree','bee',true],['chair','table',false],['king','ring',true],['snake','cake',true],['house','mouse',true]],
+  3:[['star','car',true],['book','hook',true],['phone','shoe',false],['light','night',true],['clock','sock',true],['chair','bear',true]],
+  4:[['flower','shower',true],['mountain','fountain',true],['green','queen',true],['water','ladder',false],['spring','king',true],['orange','banana',false]]
+};
+const RHYME_PROD={1:['dog','cat','sun','hat'],2:['train','moon','star','tree'],3:['light','book','king','snake'],4:['mountain','flower','spring','chair']};
+const BEGIN_SOUNDS={
+  1:[['Ball','⚽','B'],['Cat','🐱','C'],['Dog','🐶','D'],['Fish','🐟','F'],['Sun','☀️','S'],['Moon','🌙','M']],
+  2:[['Apple','🍎','A'],['Banana','🍌','B'],['Girl','👧','G'],['House','🏠','H'],['Juice','🧃','J'],['King','👑','K']],
+  3:[['Ship','🚢','SH'],['Cheese','🧀','CH'],['Thumb','👍','TH'],['Whale','🐳','WH'],['Chair','🪑','CH'],['Shoe','👟','SH']],
+  4:[['Star','⭐','ST'],['Frog','🐸','FR'],['Plane','✈️','PL'],['Snake','🐍','SN'],['Truck','🚚','TR'],['Cloud','☁️','CL']]
+};
+const SYLLABLES={
+  2:[['cat','🐱',1],['dog','🐶',1],['apple','🍎',2],['flower','🌸',2]],
+  3:[['banana','🍌',3],['pencil','✏️',2],['rainbow','🌈',2],['umbrella','☂️',3]],
+  4:[['elephant','🐘',3],['butterfly','🦋',3],['dinosaur','🦕',3],['computer','💻',3]]
+};
+const OPPOSITES={
+  1:[['hot','cold'],['big','small'],['up','down'],['fast','slow'],['happy','sad'],['day','night']],
+  2:[['open','closed'],['loud','quiet'],['wet','dry'],['full','empty'],['near','far'],['first','last']],
+  3:[['heavy','light'],['soft','hard'],['thick','thin'],['high','low'],['inside','outside'],['old','new']],
+  4:[['early','late'],['whole','broken'],['rough','smooth'],['wide','narrow'],['true','false'],['front','back']]
+};
+const PATTERNS={
+  1:[[['🔴','🔵','🔴','🔵'],'🔴'],[['🐶','🐱','🐶','🐱'],'🐶'],[['⭐','🌙','⭐','🌙'],'⭐']],
+  2:[[['🔴','🔴','🔵','🔴','🔴','🔵'],'🔴'],[['🔺','🔺','🔵','🔺','🔺','🔵'],'🔺'],[['🍎','🍎','🍌','🍎','🍎','🍌'],'🍎']],
+  3:[[['2','4','6'],'8'],[['5','10','15'],'20'],[['1','3','5'],'7']],
+  4:[[['3','6','9'],'12'],[['10','20','30'],'40'],[['4','8','12'],'16']]
+};
+const ODD_ONE={
+  1:[[['🐶','🐱','🐰','🚗'],3],[['🍎','🍌','🍇','⚽'],3]],
+  2:[[['🔵','🔴','🟢','🐶'],3],[['1','2','3','🐱'],3]],
+  3:[[['2','4','6','7'],3],[['🐟','🐬','🦈','🦅'],3]],
+  4:[[['🔺','⬛','⚪','🍎'],3],[['5','10','15','17'],3]]
+};
+const SHAPES={
+  1:[['circle','⚪'],['square','⬛'],['triangle','🔺'],['rectangle','▬']],
+  2:[['star','⭐'],['heart','❤️'],['oval','⬭'],['diamond','🔷']],
+  3:[['pentagon','⬠'],['hexagon','⬡'],['octagon','🛑']],
+  4:[['cube','🧊'],['sphere','🌐'],['cone','🍦'],['cylinder','🥫']]
+};
+const COLORS={
+  1:[['red','#ef4444'],['blue','#3b82f6'],['yellow','#eab308'],['green','#22c55e']],
+  2:[['orange','#f97316'],['purple','#a855f7'],['pink','#ec4899'],['brown','#92400e']],
+  3:[['black','#111827'],['white','#f8fafc'],['gray','#9ca3af'],['turquoise','#06b6d4']],
+  4:null
+};
+const COLOR_MIX=[['red','yellow','orange'],['blue','yellow','green'],['red','blue','purple']];
+const COUNT_EMOJI=['🐶','🐱','🍎','⭐','🎈','🐟','🦋','🐻'];
+
+/* ============================= PROGRAMMATIC BANK BUILDERS ============================= */
+let UID=0;
+function nid(prefix){UID++;return prefix+'-'+UID;}
+
+function buildLetters(){
+  const items=[];
+  const upper='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const lower=upper.map(l=>l.toLowerCase());
+  upper.forEach(L=>items.push({id:'let-u-'+L,category:'letters',level:1,type:'mc',
+    prompt:`Tap the letter ${L}`,tts:`Can you find the letter ${L}?`,
+    display:`<div style="font-size:3.5rem;">🔠</div>`,
+    options:()=>makeOptions(L,upper,3)}));
+  lower.forEach(l=>items.push({id:'let-l-'+l,category:'letters',level:2,type:'mc',
+    prompt:`Tap the little letter ${l}`,tts:`Can you find the lowercase letter ${l}?`,
+    display:`<div style="font-size:3.5rem;">🔡</div>`,
+    options:()=>makeOptions(l,lower,3)}));
+  return items;
+}
+function buildBeginSounds(){
+  const items=[];
+  Object.keys(BEGIN_SOUNDS).forEach(lvl=>{
+    const letterPool=[...new Set(Object.values(BEGIN_SOUNDS).flat().map(x=>x[2]))];
+    BEGIN_SOUNDS[lvl].forEach(([word,emoji,letter])=>{
+      items.push({id:nid('bs'),category:'beginSounds',level:+lvl,type:'mc',
+        prompt:`What sound does "${word}" start with?`,tts:`What sound does the word ${word} start with?`,
+        display:`<div style="font-size:3.2rem;">${emoji}</div><div style="font-weight:800;font-size:1.2rem;margin-top:4px;">${word}</div>`,
+        options:()=>makeOptions(letter,letterPool.filter(x=>x.length===letter.length),3)});
+    });
+  });
+  return items;
+}
+function buildSightWords(){
+  const items=[];
+  Object.keys(SIGHT_WORDS).forEach(lvl=>{
+    lvl=+lvl;
+    const pool=SIGHT_WORDS[lvl];
+    pool.forEach(w=>{
+      if(lvl<=2){
+        items.push({id:nid('sw'),category:'sightWords',level:lvl,type:'mc',
+          prompt:`Tap the word "${w}"`,tts:`Can you find the word ${w}?`,
+          display:`<div style="font-size:2.2rem;">📖</div>`,
+          options:()=>makeOptions(w, w==='I'?['I','It','In','If','At']:pool.filter(x=>x!=='I'), 3)});
+      }else{
+        items.push({id:nid('sw'),category:'sightWords',level:lvl,type:'verbal',
+          prompt:'Read this word out loud',tts:'Can you read this word out loud?',
+          display:`<span class="big-target">${w}</span>`,answer:w});
+      }
+    });
+  });
+  return items;
+}
+function buildRhymeMatch(){
+  const items=[];
+  Object.keys(RHYME_PAIRS).forEach(lvl=>{
+    RHYME_PAIRS[lvl].forEach(([w1,w2,rhymes])=>{
+      items.push({id:nid('rm'),category:'rhymeMatch',level:+lvl,type:'mc2',
+        prompt:`Do "${w1}" and "${w2}" rhyme?`,tts:`Do ${w1} and ${w2} rhyme?`,
+        display:`<div style="font-size:2rem;font-weight:800;">${w1} &amp; ${w2}</div>`,
+        options:[{label:'Yes! 🎵',correct:rhymes===true},{label:'No',correct:rhymes===false}]});
+    });
+  });
+  return items;
+}
+function buildRhymeProd(){
+  const items=[];
+  Object.keys(RHYME_PROD).forEach(lvl=>{
+    RHYME_PROD[lvl].forEach(w=>{
+      items.push({id:nid('rp'),category:'rhymeProd',level:+lvl,type:'verbal',
+        prompt:`Say a word that rhymes with "${w}"`,tts:`Can you say a word that rhymes with ${w}?`,
+        display:`<span class="big-target">${w}</span>`,answer:'rhyme production'});
+    });
+  });
+  return items;
+}
+function buildSyllables(){
+  const items=[];
+  Object.keys(SYLLABLES).forEach(lvl=>{
+    SYLLABLES[lvl].forEach(([w,emoji,count])=>{
+      items.push({id:nid('sy'),category:'syllables',level:+lvl,type:'mc',
+        prompt:`How many claps (syllables) in "${w}"?`,tts:`How many beats do you hear in the word ${w}?`,
+        display:`<div style="font-size:2.8rem;">${emoji}</div><div style="font-weight:800;font-size:1.1rem;">${w}</div>`,
+        options:()=>makeOptions(count,[1,2,3,4],3)});
+    });
+  });
+  return items;
+}
+function buildNumbers(){
+  const items=[];
+  const ranges={1:[1,10],2:[11,20]};
+  Object.keys(ranges).forEach(lvl=>{
+    const [lo,hi]=ranges[lvl];
+    for(let n=lo;n<=hi;n++){
+      items.push({id:'num-'+n,category:'numbers',level:+lvl,type:'mc',
+        prompt:'What number is this?',tts:'What number is this?',
+        display:`<span class="big-target">${n}</span>`,
+        options:()=>makeOptions(n,Array.from({length:hi-lo+1},(_,i)=>i+lo),3)});
+    }
+  });
+  const tens=[10,20,30,40,50,60,70,80,90,100];
+  tens.forEach(n=>items.push({id:'num-t-'+n,category:'numbers',level:3,type:'mc',
+    prompt:'What number is this?',tts:'What number is this?',
+    display:`<span class="big-target">${n}</span>`,options:()=>makeOptions(n,tens,3)}));
+  const bigOnes=[21,34,45,58,63,72,89,96];
+  bigOnes.forEach(n=>items.push({id:'num-b-'+n,category:'numbers',level:4,type:'mc',
+    prompt:'What number is this?',tts:'What number is this?',
+    display:`<span class="big-target">${n}</span>`,options:()=>makeOptions(n,bigOnes,3)}));
+  return items;
+}
+function buildCounting(){
+  const items=[];
+  const cfg={1:{max:5,n:6},2:{max:10,n:6},3:{max:15,n:5},4:{max:20,n:5}};
+  Object.keys(cfg).forEach(lvl=>{
+    const {max,n}=cfg[lvl];
+    for(let i=0;i<n;i++){
+      const count=rand(Math.max(1,max-4),max);
+      const emoji=COUNT_EMOJI[i%COUNT_EMOJI.length];
+      items.push({id:nid('ct'),category:'counting',level:+lvl,type:'mc',
+        prompt:'How many do you see?',tts:'How many do you see?',
+        display:`<div class="emoji-row" style="font-size:${count>12?'1.9rem':'2.8rem'}">${emoji.repeat(count)}</div>`,
+        options:()=>makeOptions(count,Array.from({length:max},(_,i)=>i+1),3)});
+    }
+  });
+  return items;
+}
+function buildAddition(){
+  const items=[];
+  const probs=[[1,1],[2,2],[2,3],[3,4],[4,4],[5,3],[3,3],[2,5]];
+  probs.forEach(([a,b])=>{
+    items.push({id:nid('ad'),category:'addition',level:4,type:'mc',
+      prompt:`What is ${a} + ${b}?`,tts:`What is ${a} plus ${b}?`,
+      display:`<div style="font-size:1.8rem;">${'●'.repeat(a)} + ${'●'.repeat(b)}</div><div class="big-target" style="font-size:2.2rem;margin-top:6px;">${a} + ${b} = ?</div>`,
+      options:()=>makeOptions(a+b,[a+b-2,a+b-1,a+b,a+b+1,a+b+2].filter(x=>x>=0),3)});
+  });
+  return items;
+}
+function shapeSVG(n){
+  const f='fill="url(#g)" stroke="#5b21b6" stroke-width="3" stroke-linejoin="round"';
+  const defs='<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#ec4899"/></linearGradient><radialGradient id="rg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#f9a8d4"/><stop offset="1" stop-color="#7c3aed"/></radialGradient></defs>';
+  const st='stroke="#5b21b6" stroke-width="3" stroke-linejoin="round"';
+  const P={
+    circle:`<circle cx="50" cy="50" r="38" ${f}/>`,
+    square:`<rect x="14" y="14" width="72" height="72" rx="3" ${f}/>`,
+    triangle:`<polygon points="50,12 90,86 10,86" ${f}/>`,
+    rectangle:`<rect x="6" y="28" width="88" height="44" rx="3" ${f}/>`,
+    star:`<polygon points="50,8 61,38 93,38 67,57 77,89 50,70 23,89 33,57 7,38 39,38" ${f}/>`,
+    heart:`<path d="M50 88 C10 56 6 30 26 20 C40 14 50 24 50 32 C50 24 60 14 74 20 C94 30 90 56 50 88Z" ${f}/>`,
+    oval:`<ellipse cx="50" cy="50" rx="42" ry="26" ${f}/>`,
+    diamond:`<polygon points="50,6 90,50 50,94 10,50" ${f}/>`,
+    pentagon:`<polygon points="50,8 92,38 76,88 24,88 8,38" ${f}/>`,
+    hexagon:`<polygon points="27,10 73,10 96,50 73,90 27,90 4,50" ${f}/>`,
+    octagon:`<polygon points="32,8 68,8 92,32 92,68 68,92 32,92 8,68 8,32" ${f}/>`,
+    cube:`<polygon points="50,10 88,30 50,50 12,30" fill="#ddd6fe" ${st}/><polygon points="12,30 50,50 50,92 12,70" fill="#8b5cf6" ${st}/><polygon points="50,50 88,30 88,70 50,92" fill="#6d28d9" ${st}/>`,
+    sphere:`<circle cx="50" cy="50" r="38" fill="url(#rg)" ${st}/>`,
+    cone:`<path d="M50 10 L90 78 A40 14 0 0 1 10 78 Z" ${f}/>`,
+    cylinder:`<path d="M16 24 V76 A34 12 0 0 0 84 76 V24 Z" ${f}/><ellipse cx="50" cy="24" rx="34" ry="12" fill="#ddd6fe" ${st}/>`
+  };
+  return `<svg viewBox="0 0 100 100" width="120" height="120" role="img" aria-label="shape">${defs}${P[n]||''}</svg>`;
+}
+function buildShapes(){
+  const items=[];
+  Object.keys(SHAPES).forEach(lvl=>{
+    const names=SHAPES[lvl].map(s=>s[0]);
+    SHAPES[lvl].forEach(([name,emoji])=>{
+      items.push({id:nid('sh'),category:'shapes',level:+lvl,type:'mc',
+        prompt:'What shape is this?',tts:'What shape is this?',
+        display:shapeSVG(name),
+        options:()=>makeOptions(name,names,3)});
+    });
+  });
+  return items;
+}
+function buildColors(){
+  const items=[];
+  [1,2,3].forEach(lvl=>{
+    const names=COLORS[lvl].map(c=>c[0]);
+    COLORS[lvl].forEach(([name,hex])=>{
+      items.push({id:nid('co'),category:'colors',level:lvl,type:'mc',
+        prompt:'What color is this?',tts:'What color is this?',
+        display:`<div style="width:90px;height:90px;border-radius:50%;background:${hex};border:4px solid #ffffff;box-shadow:0 4px 10px rgba(0,0,0,0.15);"></div>`,
+        options:()=>makeOptions(name,names,3)});
+    });
+  });
+  const allNames=COLOR_MIX.map(m=>m[2]);
+  COLOR_MIX.forEach(([a,b,result])=>{
+    items.push({id:nid('comix'),category:'colors',level:4,type:'mc',
+      prompt:`What color do you get: ${a} + ${b}?`,tts:`If you mix ${a} and ${b}, what color do you get?`,
+      display:`<div style="font-size:1.6rem;font-weight:800;">${a} + ${b} = ?</div>`,
+      options:()=>makeOptions(result,[...allNames,'brown','black'],3)});
+  });
+  return items;
+}
+function buildCompare(){
+  const items=[];
+  const cfg={1:4,2:6,3:10,4:15};
+  Object.keys(cfg).forEach(lvl=>{
+    const max=cfg[lvl];
+    for(let i=0;i<4;i++){
+      let a=rand(1,max), b=rand(1,max);
+      while(a===b) b=rand(1,max);
+      const emoji1=COUNT_EMOJI[rand(0,COUNT_EMOJI.length-1)];
+      const emoji2=emoji1;
+      const answer=a>b?'Left side':'Right side';
+      items.push({id:nid('cmp'),category:'compare',level:+lvl,type:'mc2',
+        prompt:'Which side has more?',tts:'Which side has more?',
+        display:`<div class="side-by-side"><span>${emoji1.repeat(a)}</span><span style="color:#c7c5e0;">|</span><span>${emoji2.repeat(b)}</span></div>`,
+        options:[{label:'Left side',correct:answer==='Left side'},{label:'Right side',correct:answer==='Right side'}]});
+    }
+  });
+  return items;
+}
+function buildPatterns(){
+  const items=[];
+  Object.keys(PATTERNS).forEach(lvl=>{
+    PATTERNS[lvl].forEach(([seq,next])=>{
+      const pool=+lvl<=2?['🔴','🔵','🟢','🔺','🐶','🐱','⭐','🌙','🍎','🍌']:['2','4','6','8','5','7','12','16','20','40'];
+      items.push({id:nid('pt'),category:'patterns',level:+lvl,type:'mc',
+        prompt:'What comes next?',tts:'What comes next in the pattern?',
+        display:`<div style="font-size:2.4rem;">${seq.join(' ')} ❓</div>`,
+        options:()=>makeOptions(next,pool,3)});
+    });
+  });
+  return items;
+}
+function buildOpposites(){
+  const items=[];
+  Object.keys(OPPOSITES).forEach(lvl=>{
+    const answerPool=OPPOSITES[lvl].map(p=>p[1]);
+    OPPOSITES[lvl].forEach(([word,opp])=>{
+      items.push({id:nid('op'),category:'opposites',level:+lvl,type:'mc',
+        prompt:`What is the opposite of "${word}"?`,tts:`What is the opposite of ${word}?`,
+        display:`<div style="font-size:1.8rem;font-weight:800;">${word}</div>`,
+        options:()=>makeOptions(opp,answerPool,3)});
+    });
+  });
+  return items;
+}
+function buildOddOne(){
+  const items=[];
+  Object.keys(ODD_ONE).forEach(lvl=>{
+    ODD_ONE[lvl].forEach(([group,oddIdx])=>{
+      items.push({id:nid('oo'),category:'oddOne',level:+lvl,type:'mc',
+        prompt:"Which one doesn't belong?",tts:"Which one doesn't belong?",
+        display:`<div style="font-size:2.5rem;">${group.join('&nbsp;&nbsp;')}</div>`,
+        options:shuffle(group.map((g,i)=>({label:g,correct:i===oddIdx})))});
+    });
+  });
+  return items;
+}
+
+function buildExtras(){
+  const items=[];
+  const set='ABDEFGHNQRT'.split(''), setL=set.map(x=>x.toLowerCase());
+  set.forEach(L=>items.push({id:'x-let-ul-'+L,category:'letters',level:3,type:'mc',
+    prompt:`Which little letter goes with ${L}?`,tts:`Which little letter is the partner of capital ${L}?`,
+    display:`<span class="big-target">${L}</span>`,options:()=>makeOptions(L.toLowerCase(),setL,3)}));
+  setL.forEach(l=>items.push({id:'x-let-lu-'+l,category:'letters',level:4,type:'mc',
+    prompt:`Which big letter goes with ${l}?`,tts:`Which capital letter is the partner of little ${l}?`,
+    display:`<span class="big-target">${l}</span>`,options:()=>makeOptions(l.toUpperCase(),set,3)}));
+  [['sun','☀️',1],['fish','🐟',1],['monkey','🐵',2],['pizza','🍕',2]].forEach(([w,e,n],i)=>items.push({
+    id:'x-sy-1-'+i,category:'syllables',level:1,type:'mc',
+    prompt:`How many claps in "${w}"?`,tts:`How many beats do you hear in the word ${w}?`,
+    display:`<div style="font-size:2.8rem;">${e}</div><div style="font-weight:800;font-size:1.1rem;">${w}</div>`,
+    options:()=>makeOptions(n,[1,2,3],3)}));
+  const add={2:[[1,1],[1,2],[2,1],[2,2]],3:[[2,3],[3,2],[4,1],[3,3],[5,2],[4,3]],4:[[6,4],[7,2],[5,5],[6,3]]};
+  Object.keys(add).forEach(l=>add[l].forEach(([a,b],i)=>{
+    const sum=a+b;
+    items.push({id:`x-ad-${l}-${i}`,category:'addition',level:+l,type:'mc',
+      prompt:`What is ${a} + ${b}?`,tts:`What is ${a} plus ${b}?`,
+      display:`<div style="font-size:1.8rem;">${'●'.repeat(a)} + ${'●'.repeat(b)}</div><div class="big-target" style="font-size:2.2rem;margin-top:6px;">${a} + ${b} = ?</div>`,
+      options:()=>makeOptions(sum,[sum-2,sum-1,sum,sum+1,sum+2].filter(x=>x>=0),3)});
+  }));
+  const odd={1:[[['🚗','🚌','🚲','🐟'],3],[['🍌','🐶','🍎','🍇'],1]],
+    2:[[['🐦','🦋','🐝','🚗'],3],[['🍕','⚽','🍔','🍟'],1]],
+    3:[[['🐶','🐱','🐰','🌳'],3],[['🔴','🟢','🔵','🔺'],3]],
+    4:[[['🍎','🍌','🥕','🍇'],2],[['3','6','9','10'],3]]};
+  Object.keys(odd).forEach(l=>odd[l].forEach(([group,oddIdx],i)=>items.push({
+    id:`x-oo-${l}-${i}`,category:'oddOne',level:+l,type:'mc',
+    prompt:"Which one doesn't belong?",tts:"Which one doesn't belong?",
+    display:`<div style="font-size:2.5rem;">${group.join('&nbsp;&nbsp;')}</div>`,
+    options:shuffle(group.map((g,k)=>({label:g,correct:k===oddIdx})))})));
+  return items;
+}
+
+function buildBank(){
+  return [].concat(
+    buildLetters(), buildBeginSounds(), buildSightWords(), buildRhymeMatch(), buildRhymeProd(),
+    buildSyllables(), buildNumbers(), buildCounting(), buildAddition(), buildShapes(),
+    buildColors(), buildCompare(), buildPatterns(), buildOpposites(), buildOddOne(), buildExtras()
+  );
+}
+const BANK=buildBank();
+const CATOF={}; BANK.forEach(b=>{CATOF[b.id]=b.category;});
+
+/* ============================= ENGINE & WEIGHTING ============================= */
+let session=[]; let idx=0; let results=[]; let sessionStars=0; let streak=0; let selectedLevel=1;
+
+function itemStat(id){
+  if(!stats.items[id]) stats.items[id]={attempts:0,correct:0,lastSeen:-1};
+  return stats.items[id];
+}
+function weightFor(item){
+  const s=itemStat(item.id);
+  let w=10;
+  if(stats.sessionNum - s.lastSeen < 2 && s.lastSeen>=0) w-=7;
+  if(s.attempts>0 && s.correct/s.attempts>0.8) w-=4;
+  if(s.attempts>0 && s.correct/s.attempts<0.5) w+=5;
+  return Math.max(1,w);
+}
+function weightedSample(pool,n){
+  const copy=pool.map(it=>({it,w:weightFor(it)+Math.random()*3}));
+  copy.sort((a,b)=>b.w-a.w);
+  return copy.slice(0,n).map(c=>c.it);
+}
+function buildSession(level){
+  stats.sessionNum++;
+  const solo=stats.settings.solo, review=stats.settings.review;
+  const ok=it=>!(solo && it.type==='verbal');           // solo mode: skip items a grown-up must grade
+  const core=[];
+  Object.keys(CAT_LABELS).forEach(cat=>{
+    const pool=BANK.filter(it=>it.category===cat && it.level===level && ok(it));
+    if(pool.length) core.push(...weightedSample(pool,1));
+  });
+  let main=shuffle(core), reviews=[];
+  if(review && level>1){
+    const used=new Set(main.map(c=>c.id));
+    reviews=weightedSample(BANK.filter(it=>it.level<level && ok(it) && !used.has(it.id)),2);
+    main=main.slice(0,13);
+  }
+  const have=new Set(main.concat(reviews).map(c=>c.id));
+  const extra=weightedSample(BANK.filter(it=>it.level===level && ok(it) && !have.has(it.id)),Math.max(0,15-main.length-reviews.length));
+  return shuffle(main.concat(reviews,extra)).slice(0,15);
+}
+
+function suggestedLevel(){
+  const h=stats.history; if(h.length<3) return null;
+  const last=h.slice(-3), lv=last[0].l;
+  if(!last.every(x=>x.l===lv)) return null;
+  const avg=last.reduce((a,x)=>a+x.c/x.t,0)/3;
+  if(avg>=0.85 && lv<4) return lv+1;
+  if(avg<0.5 && lv>1) return lv-1;
+  return null;
+}
+
+/* ============================= RENDER SCREENS ============================= */
+function renderStart(){
+  document.getElementById('progressOuter').style.display='none';
+  document.getElementById('starsBadge').textContent=`⭐ ${stats.totalStars}`;
+  const sug=suggestedLevel();
+  const cards=LEVELS.map(l=>`<button type="button" class="level-card ${l.cls} ${selectedLevel===l.id?'active':''}" aria-pressed="${selectedLevel===l.id}" onclick="setLevel(${l.id})">
+      <span class="lv-emoji" aria-hidden="true">${l.emoji}</span><span class="lv-name">${l.name}</span>${sug===l.id?'<span class="lv-badge">⭐ Try me!</span>':''}
+    </button>`).join('');
+  document.getElementById('app').innerHTML=`
+    <h1 class="sr-only">Cathy's Learning Adventure</h1>
+    <div class="owl-row">
+      <button type="button" class="owl-btn" onclick="speak('Hi Cathy! Pick a game!')" aria-label="Hear the owl">🦉</button>
+      <div class="bubble">Hi Cathy!<br>Pick a game!</div>
+    </div>
+    <div class="level-grid" role="group" aria-label="Choose a level">${cards}</div>
+    <button class="big-btn play" onclick="startSession()">▶️ Play!</button>
+    <div class="footline">⭐ ${stats.totalStars} &nbsp;·&nbsp; ${stats.sessionsCompleted} games &nbsp;·&nbsp; v${APP_VERSION}</div>
+  `;
+}
+function setLevel(l){ sfx.playPop(); selectedLevel=l; renderStart(); speak(LEVELS[l-1].name); }
+
+function renderQuestion(){
+  document.getElementById('progressOuter').style.display='block';
+  const q=session[idx];
+  const pct=(idx/session.length)*100;
+  document.getElementById('progressInner').style.width=pct+'%';
+
+  let optsHtml='';
+  const opts = typeof q.options==='function' ? q.options() : q.options;
+  q._resolvedOptions = opts;
+
+  if(q.type==='mc'){
+    optsHtml=`<div class="options-grid">${opts.map((o,i)=>
+      `<button class="opt-btn" id="opt-${i}" onclick="answerMC(${i})">${o.label}</button>`).join('')}</div>`;
+  } else if(q.type==='mc2'){
+    optsHtml=`<div class="options-grid opt2">${opts.map((o,i)=>
+      `<button class="opt-btn" id="opt-${i}" onclick="answerMC(${i})">${o.label}</button>`).join('')}</div>`;
+  } else if(q.type==='verbal'){
+    optsHtml=`<div id="verbalStep1"><button class="big-btn" onclick="verbalSaid()">🎤 I said it!</button></div>
+    <div id="verbalStep2" hidden>
+      <div class="grownup-note">👩‍👧 Grown-up check</div>
+      <div class="verbal-grid">
+        <button class="vbtn yes holdbtn" id="holdYes" type="button">✓ Got it<br><small>(hold to confirm)</small></button>
+        <button class="vbtn no" type="button" onclick="answerVerbal(false)">✗ Practice more</button>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('app').innerHTML=`
+    <div class="section-tag">${CAT_LABELS[q.category]||''} · Item ${idx+1} of ${session.length}</div>
+    <div class="streak-flame">${streak>=3?`🔥 ${streak} in a row!`:''}</div>
+    <div class="prompt-box"><span>${q.prompt}</span><button class="speak-btn" type="button" onclick="speakCurrent()" aria-label="Hear it again">🔊</button></div>
+    <div class="display-box">${q.display}</div>
+    <div id="feedback" class="feedback-banner" aria-live="polite"></div>
+    ${optsHtml}
+  `;
+  if(q.type==='verbal') setupHold(document.getElementById('holdYes'),900,()=>answerVerbal(true));
+  setTimeout(()=>speak(q.tts||q.prompt),350);
+}
+
+function speakCurrent(){ const q=session[idx]; if(q) speak(q.tts||q.prompt); }
+function plainSpeech(t){ return String(t).replace(/[^\p{L}\p{N}\s'!?.,-]/gu,'').trim(); }
+function pick(a){ return a[rand(0,a.length-1)]; }
+
+function recordAndAdvance(item,correct,delay){
+  const s=itemStat(item.id);
+  s.attempts++; if(correct) s.correct++; s.lastSeen=stats.sessionNum;
+  results.push({category:item.category,label:CAT_LABELS[item.category]||item.category,correct});
+  if(correct){ streak++; sessionStars++; } else { streak=0; }
+  saveStats();
+  idx++;
+  setTimeout(()=>{ if(idx<session.length) renderQuestion(); else renderSummary(); }, delay||(correct?1100:2800));
+}
+
+function answerMC(i){
+  const q=session[idx];
+  const opts=q._resolvedOptions;
+  const buttons=document.querySelectorAll('.opt-btn');
+  buttons.forEach(b=>b.disabled=true);
+  const chosen=opts[i];
+  const right=opts.find(o=>o.correct);
+
+  if(chosen.correct){ sfx.playCorrect(); } else { sfx.playIncorrect(); }
+
+  document.getElementById('opt-'+i).classList.add(chosen.correct?'correct':'incorrect');
+  if(!chosen.correct){
+    opts.forEach((o,idx2)=>{ if(o.correct) document.getElementById('opt-'+idx2).classList.add('correct'); });
+  }
+  const fb=document.getElementById('feedback');
+  fb.textContent=chosen.correct?'Great job! 🎉':`Good try! It's "${right.label}"`;
+  fb.className='feedback-banner '+(chosen.correct?'fb-good':'fb-bad');
+  if(chosen.correct){
+    speak(pick(['Great job!','You got it!','Awesome!','Super!']));
+  }else{
+    const word=plainSpeech(right.label);
+    speak(word?`Good try! The answer is ${word}.`:'Good try! Look at the green one.');
+  }
+  recordAndAdvance(q,chosen.correct);
+}
+
+function verbalSaid(){
+  sfx.playPop();
+  document.getElementById('verbalStep1').hidden=true;
+  document.getElementById('verbalStep2').hidden=false;
+}
+
+// press-and-hold (pointer or keyboard) so a quick child tap can't grade herself
+function setupHold(el,ms,cb){
+  if(!el) return;
+  let t=null;
+  const start=()=>{ if(t||el.disabled) return; el.classList.add('holding'); t=setTimeout(()=>{ t=null; el.classList.remove('holding'); cb(); },ms); };
+  const stop=()=>{ if(t){ clearTimeout(t); t=null; } el.classList.remove('holding'); };
+  el.addEventListener('pointerdown',e=>{ e.preventDefault(); start(); });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>el.addEventListener(ev,stop));
+  el.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ') && !e.repeat){ e.preventDefault(); start(); } });
+  el.addEventListener('keyup',e=>{ if(e.key==='Enter'||e.key===' ') stop(); });
+  el.addEventListener('contextmenu',e=>e.preventDefault());
+}
+
+function answerVerbal(correct){
+  if(correct){ sfx.playCorrect(); } else { sfx.playIncorrect(); }
+  const fb=document.getElementById('feedback');
+  fb.textContent=correct?'Wonderful! 🎉':"That's okay — let's practice this one again soon.";
+  fb.className='feedback-banner '+(correct?'fb-good':'fb-bad');
+  speak(correct?pick(['Wonderful!','Great reading!','You did it!']):"That's okay. We'll practice again soon.");
+  document.querySelectorAll('.vbtn').forEach(b=>b.disabled=true);
+  recordAndAdvance(session[idx],correct,correct?1200:2200);
+}
+
+function launchConfetti(){
+  if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const emojis=['🎉','⭐','🌟','🎊','✨'];
+  for(let i=0;i<26;i++){
+    const el=document.createElement('div');
+    el.className='confetti'; el.textContent=emojis[rand(0,emojis.length-1)];
+    el.style.left=rand(0,100)+'vw';
+    el.style.animationDuration=(rand(18,32)/10)+'s';
+    el.style.animationDelay=(rand(0,10)/10)+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),4000);
+  }
+}
+
+function renderSummary(){
+  document.getElementById('progressInner').style.width='100%';
+  const total=results.length;
+  const correctCt=results.filter(r=>r.correct).length;
+  const pct=Math.round((correctCt/total)*100);
+  const bonus=(correctCt===total)?3:(pct>=80?1:0);
+  sessionStars+=bonus;
+  stats.totalStars+=sessionStars;
+  stats.sessionsCompleted++;
+  stats.history.push({d:new Date().toISOString().slice(0,10),l:selectedLevel,c:correctCt,t:total});
+  if(stats.history.length>40) stats.history=stats.history.slice(-40);
+  saveStats();
+  document.getElementById('starsBadge').textContent=`⭐ ${stats.totalStars}`;
+
+  const byCat={};
+  results.forEach(r=>{ if(!byCat[r.label]) byCat[r.label]={c:0,t:0}; byCat[r.label].t++; if(r.correct) byCat[r.label].c++; });
+  const rows=Object.keys(byCat).map(label=>{
+    const {c,t}=byCat[label];
+    const pass=c/t>=0.6;
+    return `<div class="cat-row"><span>${label}</span><span class="cat-badge ${pass?'cat-pass':'cat-review'}">${c}/${t}</span></div>`;
+  }).join('');
+
+  document.getElementById('app').innerHTML=`
+    <div class="mascot">${pct>=80?'🥳':pct>=50?'🦉':'🤗'}</div>
+    <div class="section-tag">Session Complete</div>
+    <h2>Great work, Cathy!</h2>
+    <div class="summary-hero">${correctCt} / ${total}</div>
+    <div class="summary-sub">${pct}% correct &nbsp;·&nbsp; +${sessionStars} stars earned this session ⭐</div>
+    <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:16px; padding:0 14px; margin-top:10px;">${rows}</div>
+    <button class="big-btn" onclick="renderStart()">🔁 Play Again</button>
+    <button class="ghost-btn" onclick="changeLevel()">🎚️ Choose a Different Level</button>
+  `;
+  if(pct>=80){ sfx.playCorrect(); launchConfetti(); }
+  speak(pct>=80?'Great work, Cathy! You are a star!':'Nice playing, Cathy! Let\'s play again soon.');
+}
+function changeLevel(){ sfx.playPop(); renderStart(); }
+
+function startSession(){
+  sfx.playPop();
+  session=buildSession(selectedLevel);
+  idx=0; results=[]; sessionStars=0; streak=0;
+  renderQuestion();
+}
+
+/* ============================= GROWN-UPS AREA ============================= */
+let lastFocus=null;
+function modalShell(inner,label){
+  return `<div class="modal-overlay" onclick="closeParentPortal(event)">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="${label}">${inner}</div></div>`;
+}
+function focusModal(){
+  const el=document.querySelector('#modalContainer button:not(.close-btn)')||document.querySelector('#modalContainer button');
+  if(el) el.focus();
+}
+
+// Gate: a small multiplication question a pre-schooler can't answer
+function openParentPortal(){
+  sfx.playPop();
+  if(!document.getElementById('modalContainer').innerHTML) lastFocus=document.activeElement;
+  const a=rand(6,9), b=rand(3,5), ans=a*b;
+  const set=new Set([ans]);
+  [ans+a,ans-b,ans+b+1,ans+2,ans-2,ans+10].forEach(v=>{ if(set.size<4 && v>0) set.add(v); });
+  const opts=shuffle([...set]);
+  document.getElementById('modalContainer').innerHTML=modalShell(`
+    <div class="modal-header"><h2>🔒 Grown-ups only</h2>
+      <button class="close-btn" type="button" onclick="closeParentPortalDirect()" aria-label="Close">✕</button></div>
+    <div class="sub">Answer this to open the grown-ups area.</div>
+    <div class="gate-q">${a} × ${b} = ?</div>
+    <div class="gate-opts">${opts.map(o=>`<button class="opt-btn" type="button" onclick="gateAnswer(${o},${ans})">${o}</button>`).join('')}</div>
+  `,'Grown-ups gate');
+  focusModal();
+}
+function gateAnswer(v,ans){ if(v===ans){ sfx.playPop(); showPortal(); } else { sfx.playIncorrect(); openParentPortal(); } }
+
+function skillRows(){
+  const by={};
+  Object.keys(CAT_LABELS).forEach(c=>{by[c]={a:0,c:0};});
+  Object.keys(stats.items).forEach(id=>{
+    const cat=CATOF[id]; if(!cat) return;
+    by[cat].a+=stats.items[id].attempts||0; by[cat].c+=stats.items[id].correct||0;
+  });
+  const rows=Object.keys(by).map(c=>{
+    const {a,c:k}=by[c]; const pct=a?Math.round(k/a*100):0;
+    const tag=a<3?['new','Just starting']:pct>=75?['strong','Strong']:pct>=50?['ok','Getting there']:['weak','Needs practice'];
+    return {cat:c,a,pct,tag};
+  });
+  const rank={weak:0,ok:1,new:2,strong:3};
+  rows.sort((x,y)=>rank[x.tag[0]]-rank[y.tag[0]]||x.pct-y.pct);
+  return rows;
+}
+
+function showPortal(){
+  let itemTotal=0, itemMastered=0;
+  Object.values(stats.items).forEach(it=>{
+    itemTotal++;
+    if(it.attempts>0 && it.correct/it.attempts>=0.75) itemMastered++;
+  });
+  const sug=suggestedLevel();
+  const sugHtml=sug?`<div class="mini" style="margin-top:8px;">💡 ${sug>stats.history[stats.history.length-1].l?'Ready to try':'Might help to go back to'} <strong>${LEVELS[sug-1].emoji} ${LEVELS[sug-1].name}</strong> (based on her last 3 games).</div>`:'';
+  const skills=skillRows().map(r=>`<div class="skill-row"><span>${CAT_LABELS[r.cat]}</span><span class="tag ${r.tag[0]}">${r.tag[1]}${r.a>=3?' · '+r.pct+'%':''}</span><div class="bar"><i style="width:${r.pct}%"></i></div></div>`).join('');
+  const hist=stats.history.slice(-10).reverse().map(h=>`<div class="hist-row"><span>${h.d} · ${LEVELS[h.l-1]?LEVELS[h.l-1].emoji+' '+LEVELS[h.l-1].name:'Level '+h.l}</span><span>${h.c}/${h.t}</span></div>`).join('')||'<div class="mini">No games recorded yet. Every game from now on will show up here.</div>';
+  const sw=(on,fn,label)=>`<div class="set-row"><button type="button" class="switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="${label}" onclick="${fn}"></button><span>${label}</span></div>`;
+  document.getElementById('modalContainer').innerHTML=modalShell(`
+    <div class="modal-header"><h2>📊 Grown-ups area</h2>
+      <button class="close-btn" type="button" onclick="closeParentPortalDirect()" aria-label="Close">✕</button></div>
+
+    <div class="panel"><h3>Overall</h3>
+      <div style="font-size:.95rem;line-height:1.7;">
+        • Games played: <strong>${stats.sessionsCompleted}</strong><br>
+        • Stars: <strong>${stats.totalStars} ⭐</strong><br>
+        • Different questions seen: <strong>${itemTotal}</strong><br>
+        • Questions she's strong on (&gt;75%): <strong>${itemMastered}</strong>
+      </div>${sugHtml}
+    </div>
+
+    <div class="panel"><h3>Skills</h3>${skills}
+      <div class="mini" style="margin-top:8px;">"Needs practice" skills are shown first and the game automatically asks those questions more often.</div></div>
+
+    <div class="panel"><h3>Last 10 games</h3>${hist}</div>
+
+    <div class="panel"><h3>Settings</h3>
+      ${sw(stats.settings.review,"toggleSetting('review')",'Mix in 2 easier review questions')}
+      ${sw(stats.settings.solo,"toggleSetting('solo')",'Solo mode: skip questions a grown-up has to check')}
+      <div class="mini">Reading-aloud and "make a rhyme" questions need a grown-up to confirm. Turn on solo mode when she plays on her own so the results stay honest.</div>
+    </div>
+
+    <div class="panel"><h3>Levels</h3>
+      ${LEVELS.map(l=>`<div class="mini"><strong>${l.emoji} ${l.name}</strong> — ${l.hint}</div>`).join('')}
+    </div>
+
+    <div class="btn-row">
+      <button class="big-btn" type="button" style="font-size:.95rem;padding:12px;" onclick="downloadBackup()">💾 Save backup</button>
+      <button class="ghost-btn" type="button" style="margin-top:6px;" onclick="document.getElementById('restoreFile').click()">📂 Restore backup</button>
+    </div>
+    <input type="file" id="restoreFile" accept="application/json,.json" hidden onchange="restoreBackup(this)">
+    <button class="ghost-btn" type="button" onclick="exportData()">📋 Copy summary</button>
+    <button class="ghost-btn" type="button" style="color:var(--red); border-color:#fca5a5;" onclick="resetStats()">🗑️ Reset all progress</button>
+    <div class="mini" style="text-align:center;margin-top:14px;">Version ${APP_VERSION} · <span id="cacheName"></span><br>Everything stays on this device. Nothing is sent anywhere.</div>
+  `,'Grown-ups area');
+  focusModal();
+  if(window.caches && caches.keys){
+    caches.keys().then(k=>{ const el=document.getElementById('cacheName'); const c=k.find(x=>x.indexOf('cathy-adventure-')===0); if(el) el.textContent=c?('cache '+c):'cache not ready yet'; }).catch(()=>{});
+  }
+}
+function toggleSetting(k){ sfx.playPop(); stats.settings[k]=!stats.settings[k]; saveStats(); showPortal(); }
+
+function closeParentPortal(e){ if(e.target.classList.contains('modal-overlay')) closeParentPortalDirect(); }
+function closeParentPortalDirect(){
+  document.getElementById('modalContainer').innerHTML='';
+  if(lastFocus && lastFocus.focus){ try{lastFocus.focus();}catch(e){} }
+  if(document.querySelector('.level-grid')) renderStart();   // refresh start screen (badges, stars)
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && document.getElementById('modalContainer').innerHTML) closeParentPortalDirect(); });
+
+function toast(msg){
+  const old=document.querySelector('.toast'); if(old) old.remove();
+  const t=document.createElement('div'); t.className='toast'; t.setAttribute('role','status'); t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),3000);
+}
+
+function summaryText(){
+  const lines=[`Cathy's Learning Adventure — progress report (${new Date().toLocaleDateString()})`,
+    `Games played: ${stats.sessionsCompleted} · Stars: ${stats.totalStars}`,'','Skills:'];
+  skillRows().forEach(r=>lines.push(`- ${CAT_LABELS[r.cat].replace(/^\S+\s/,'')}: ${r.tag[1]}${r.a>=3?' ('+r.pct+'%)':''}`));
+  if(stats.history.length){ lines.push('','Recent games:'); stats.history.slice(-5).reverse().forEach(h=>lines.push(`- ${h.d} · Level ${h.l} · ${h.c}/${h.t}`)); }
+  return lines.join('\n');
+}
+function exportData(){
+  const txt=summaryText();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>toast('Summary copied ✔')).catch(()=>alert(txt));
+  } else alert(txt);
+}
+
+function downloadBackup(){
+  const name='cathy-progress-'+new Date().toISOString().slice(0,10)+'.json';
+  const body=JSON.stringify({app:'cathy-adventure',version:APP_VERSION,exported:new Date().toISOString(),stats},null,1);
+  try{
+    const file=new File([body],name,{type:'application/json'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      navigator.share({files:[file],title:'Cathy progress backup'}).catch(()=>{});
+      return;
+    }
+  }catch(e){}
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([body],{type:'application/json'}));
+  a.download=name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+  toast('Backup saved ✔');
+}
+function restoreBackup(input){
+  const f=input.files && input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const o=JSON.parse(r.result), st=o && o.stats;
+      if(!st || typeof st.totalStars!=='number' || !st.items || typeof st.items!=='object') throw new Error('bad');
+      if(confirm(`Replace the current progress with this backup (${st.sessionsCompleted||0} games, ${st.totalStars} stars)?`)){
+        localStorage.setItem(STORE_KEY,JSON.stringify(st));
+        stats=loadStats(); closeParentPortalDirect(); renderStart(); toast('Progress restored ✔');
+      }
+    }catch(e){ toast('That file is not a valid backup.'); }
+  };
+  r.readAsText(f); input.value='';
+}
+
+function resetStats(){
+  if(confirm("Are you sure you want to reset all of Cathy's stars and progress? Save a backup first if you might want it back.")){
+    try{localStorage.removeItem(STORE_KEY);}catch(e){}
+    stats=loadStats();
+    closeParentPortalDirect();
+    renderStart();
+  }
+}
+
+/* ============================= INIT ============================= */
+renderStart();
+
+/* ============================= PWA: SERVICE WORKER ============================= */
+function showUpdateBar(){
+  if(document.querySelector('.update-bar')) return;
+  const b=document.createElement('div'); b.className='update-bar'; b.setAttribute('role','status');
+  b.innerHTML='<span>✨ A new version is ready</span><button type="button" onclick="location.reload()">Update</button>';
+  document.body.appendChild(b);
+}
+if('serviceWorker' in navigator){
+  // Only announce an update when THIS app's worker is being replaced (not when it first takes over from the landing page's worker).
+  const appSW=new URL('sw.js',location.href).href;
+  const hadAppController=!!(navigator.serviceWorker.controller && navigator.serviceWorker.controller.scriptURL===appSW);
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadAppController) showUpdateBar(); });
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').then(reg=>{ try{reg.update();}catch(e){} }).catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
