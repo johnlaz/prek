@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Cathy's Adventure">
-<meta name="description" content="A playful letters, words and math game for pre-K and kindergarten.">
+<meta name="description" content="A Pre-K assessment tool: a playful letters, words and math game for pre-K and kindergarten.">
 <title>Cathy's Learning Adventure</title>
 <link rel="icon" href="app/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="app/icon-192.png">
@@ -27,17 +27,18 @@
     background:linear-gradient(135deg,var(--purple),var(--pink));box-shadow:0 9px 0 var(--purple-dark),0 18px 30px rgba(91,33,182,.3);transition:transform .1s,box-shadow .1s;}
   .play:active,.play.pressed{transform:translateY(7px);box-shadow:0 2px 0 var(--purple-dark),0 6px 12px rgba(91,33,182,.3);}
   .play:focus-visible{outline:5px solid #f59e0b;outline-offset:4px;}
+  .tag{margin-top:clamp(2px,.8vh,8px);font-size:clamp(.8rem,2.6vmin + .3rem,1.1rem);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);}
   footer{font-size:.72rem;color:var(--muted);font-weight:700;line-height:1.3;}
   footer a{color:inherit;}
   @media (max-height:430px){main{flex-direction:row;flex-wrap:wrap;gap:8px 20px;align-content:center;}
-    .logo{width:26vh;} h1{font-size:1.4rem;max-width:9em;text-align:left;} .play{width:min(44vw,320px);height:78px;font-size:2.2rem;} footer{flex-basis:100%;}}
+    .logo{width:26vh;} h1{font-size:1.4rem;max-width:9em;text-align:left;} .title{text-align:left;max-width:9em;} .tag{margin-top:4px;} .play{width:min(44vw,320px);height:78px;font-size:2.2rem;} footer{flex-basis:100%;}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
 <main>
   <img class="logo" src="app/icon-192.png" alt="" width="192" height="192">
-  <h1>Cathy's Learning Adventure</h1>
+  <div class="title"><h1>Cathy's Learning Adventure</h1><p class="tag">Pre-K Assessment Tool</p></div>
   <a class="play" id="play" href="app/">▶ PLAY!</a>
   <footer>© 2026 LAZLAB Creations. All Rights Reserved. · <a href="mailto:lazlab.io@gmail.com">lazlab.io@gmail.com</a></footer>
 </main>

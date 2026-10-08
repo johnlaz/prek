@@ -2,7 +2,7 @@
 
 # Cathy's Learning Adventure
 
-A playful, ever-changing letters, words and math practice game for pre-K through 1st grade. Four levels, spoken questions, a star reward system, and a grown-ups area with real progress tracking. Built as a single-file offline-capable web app (PWA) by LAZLAB Creations.
+A **Pre-K assessment tool**: a playful, ever-changing letters, words and math game for pre-K through 1st grade. Four levels, spoken questions, a star reward system, and a grown-ups area with real progress tracking. Built as a single-file offline-capable web app (PWA) by LAZLAB Creations.
 
 ## Live
 
@@ -55,10 +55,13 @@ All progress is stored only in this browser (`localStorage`, key `cathyTrainerSt
 ## Deploy / update
 
 1. Edit `/app/index.html` (and `/index.html` if the landing changes).
-2. **Bump the version in two places**: `APP_VERSION` in `/app/index.html` and `CACHE_NAME` in `/app/sw.js` (e.g. `2.1` and `cathy-adventure-v2.1`). The Grown-ups area shows both so you can check they match.
+2. **Bump the version in two places**: `APP_VERSION` in `/app/index.html` and `CACHE_NAME` in `/app/sw.js` (e.g. `2.2` and `cathy-adventure-v2.2`). The Grown-ups area shows both so you can check they match.
 3. Commit and push to `main`; GitHub Pages publishes it. Open the installed app twice and a "new version is ready" bar appears.
 
 ## Changelog
+
+**v2.1**
+- "Pre-K Assessment Tool" label on the landing and start screens; level tiles show age range, skills covered and question counts again
 
 **v2.0**
 - New one-button landing page; app moved to `/app/`
