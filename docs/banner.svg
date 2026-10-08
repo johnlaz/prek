@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="t d">
+  <title id="t">Cathy's Learning Adventure</title>
+  <desc id="d">Purple and pink banner with stars: a letters, words and math game for pre-K and kindergarten.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+    <polygon id="star" points="0,-20 6,-6 21,-6 9,3 13,18 0,9 -13,18 -9,3 -21,-6 -6,-6"/>
+  </defs>
+  <rect width="1200" height="300" rx="28" fill="url(#bg)"/>
+  <g fill="#fde68a" opacity=".9">
+    <use href="#star" x="90" y="70"/><use href="#star" x="1110" y="230" transform="translate(0 0)"/>
+    <use href="#star" x="1040" y="60" transform="translate(1040 60) scale(.7) translate(-1040 -60)"/>
+    <use href="#star" x="150" y="240" transform="translate(150 240) scale(.6) translate(-150 -240)"/>
+  </g>
+  <g font-family="ui-rounded,'SF Pro Rounded','Arial Rounded MT Bold',Quicksand,Nunito,'Segoe UI',system-ui,sans-serif" text-anchor="middle" fill="#ffffff">
+    <text x="600" y="140" font-size="72" font-weight="800">Cathy's Learning Adventure</text>
+    <text x="600" y="200" font-size="30" font-weight="700" opacity=".95">Letters · Words · Numbers · Shapes · Puzzles</text>
+    <text x="600" y="250" font-size="22" font-weight="600" opacity=".85">A LAZLAB Creations app for pre-K and kindergarten</text>
+  </g>
+</svg>
