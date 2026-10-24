@@ -1,6 +1,6 @@
 // Cathy's Learning Adventure — app service worker (scope: /app/)
 // VERSION: bump CACHE_NAME and APP_VERSION in index.html together on every release.
-const CACHE_NAME = 'cathy-adventure-v2.2';
+const CACHE_NAME = 'cathy-adventure-v2.4';
 const PREFIX = 'cathy-adventure-';
 const CORE_ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
@@ -41,6 +41,9 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+
+  // version.json must always come fresh from the network (it is how the app notices a new release)
+  if (url.pathname.endsWith('/version.json')) { event.respondWith(fetch(req, { cache: 'no-store' })); return; }
 
   // HTML: network-first (new versions show up right away), cached copy when offline or slow
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {

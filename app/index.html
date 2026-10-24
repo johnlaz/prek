@@ -106,9 +106,14 @@
   .emoji-row{font-size:2.8rem; line-height:1.3; word-spacing:6px;}
   .side-by-side{display:flex; gap:22px; justify-content:center; align-items:center; font-size:2.5rem;}
 
-  .options-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
-  .options-grid.opt2{grid-template-columns:1fr 1fr;}
-  @media(max-width:480px){.options-grid{grid-template-columns:1fr 1fr;}}
+  /* answer buttons: always even columns, odd leftovers centred at the same size */
+  .options-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px;}
+  .options-grid[data-n="2"],.options-grid[data-n="4"]{grid-template-columns:repeat(2,minmax(0,1fr));}
+  @media(min-width:760px){.options-grid[data-n="4"]{grid-template-columns:repeat(4,minmax(0,1fr));}}
+  @media(max-width:480px){
+    .options-grid[data-n="3"]{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .options-grid[data-n="3"] > :last-child{grid-column:1/-1; justify-self:center; width:calc(50% - 6px);}
+  }
   
   .opt-btn{
     padding:16px 10px; font-size:1.25rem; font-family:var(--display); font-weight:700;
@@ -121,7 +126,8 @@
   .opt-btn[disabled]{opacity:.65; cursor:default;}
   @keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);}}
 
-  .verbal-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .verbal-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px;}
+  @media(max-width:340px){.verbal-grid{grid-template-columns:1fr;}}
   .vbtn{padding:16px 14px; font-size:1.05rem; font-family:var(--display); font-weight:700; border:3px solid var(--border); border-radius:18px; cursor:pointer;}
   .vbtn.yes{background:#f0fdf4; border-color:var(--green); color:#15803d; box-shadow:0 5px 0 var(--green);}
   .vbtn.no{background:#fef2f2; border-color:var(--red); color:#b91c1c; box-shadow:0 5px 0 var(--red);}
@@ -172,12 +178,68 @@
   .show-word-btn{margin:0 auto 12px;display:block;padding:10px 18px;font-family:var(--display);font-weight:700;font-size:1rem;border:3px solid var(--border);border-radius:16px;background:#fff;cursor:pointer;}
   .show-word-btn:active{transform:translateY(2px);}
   .revealed-word{font-family:var(--display);font-weight:800;font-size:2rem;text-align:center;margin:0 0 12px;}
+  .owl-wrap{position:relative;display:inline-block;}
+  .owl-hat{position:absolute;top:-2px;left:50%;transform:translateX(-50%) rotate(-6deg);font-size:2.3rem;line-height:1;pointer-events:none;}
+  .book-btn{font-size:1.05rem;min-height:56px;}
+  .book-btn.glow,.big-btn.gift{animation:glow 1.6s ease-in-out infinite;}
+  @keyframes glow{0%,100%{box-shadow:0 4px 0 var(--border),0 0 0 0 rgba(245,158,11,.5);}50%{box-shadow:0 4px 0 var(--border),0 0 0 8px rgba(245,158,11,0);}}
+  .big-btn.gift{background:linear-gradient(135deg,#f59e0b,#ec4899);box-shadow:0 6px 0 #b45309;}
+  .sticker-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:14px 0;}
+  .sticker-grid .sticker-cell{flex:0 0 calc(25% - 8px);}
+  @media(max-width:420px){.sticker-grid .sticker-cell{flex:0 0 calc(33.333% - 7px);}}
+  .sticker-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:78px;padding:8px 4px;border:3px solid var(--border);border-radius:18px;background:#fff;cursor:pointer;box-shadow:0 4px 0 var(--border);}
+  .sticker-cell:active{transform:translateY(3px);box-shadow:0 1px 0 var(--border);}
+  .sticker-cell .se{font-size:2.2rem;line-height:1;}
+  .sticker-cell .sc{font-size:.78rem;font-weight:900;color:var(--muted);font-family:var(--display);}
+  .sticker-cell:not(.own) .se{filter:grayscale(1);opacity:.4;}
+  .sticker-cell.can{border-color:#fcd34d;background:#fffbeb;} .sticker-cell.can .se{filter:none;opacity:1;}
+  .sticker-cell.own{background:#f0fdf4;border-color:#86efac;} .sticker-cell.own .sc{color:#15803d;}
+  .sticker-cell.sel{outline:4px solid var(--purple);outline-offset:2px;}
+  .book-panel{background:#f6f3ff;border-radius:20px;padding:14px;text-align:center;}
+  .book-big{font-size:4.5rem;line-height:1.1;} .book-name{font-family:var(--display);font-weight:800;font-size:1.3rem;margin-bottom:6px;} .book-name small{font-size:.8rem;color:var(--muted);}
+  .book-have{font-weight:900;color:#15803d;} .book-need{font-weight:900;color:#92400e;} .book-hint{text-align:center;font-weight:800;color:var(--muted);padding:12px 0;}
+  .skill-btn{width:100%;background:none;border:none;border-bottom:1px solid var(--border);text-align:left;color:inherit;cursor:pointer;min-height:48px;}
+  .skill-btn .go{color:var(--purple);font-size:.8rem;margin-left:4px;}
+  .skill-btn:active{background:#ede9fe;}
+  .count-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:100%;}
+  .count-item{position:relative;min-width:56px;min-height:56px;padding:2px;border:3px solid transparent;border-radius:16px;background:transparent;cursor:pointer;line-height:1;transition:.12s;}
+  .count-item .ce{font-size:2.3rem;display:block;}
+  .count-item.sm{min-width:50px;min-height:50px;} .count-item.sm .ce{font-size:1.8rem;}
+  .count-item:active{transform:scale(.92);}
+  .count-item.counted{background:#ede9fe;border-color:#c4b5fd;}
+  .count-item.counted .ce{opacity:.45;}
+  .count-item .cn{position:absolute;right:-2px;bottom:-2px;min-width:22px;height:22px;padding:0 5px;border-radius:99px;background:var(--purple);color:#fff;font-size:.8rem;font-weight:900;display:none;align-items:center;justify-content:center;font-family:var(--display);}
+  .count-item.counted .cn{display:flex;}
+  .count-hint{font-weight:800;color:var(--muted);font-size:.95rem;margin-top:8px;}
+  .again-btn{border:2px solid var(--border);background:#fff;border-radius:12px;padding:6px 12px;min-height:40px;font-weight:800;color:var(--purple-dark);cursor:pointer;}
   .holdbtn small{font-weight:700;opacity:.8;}
   .holdbtn::before{content:'';position:absolute;left:0;bottom:0;height:8px;width:0;background:var(--green);}
   .holdbtn.holding::before{width:100%;transition:width .9s linear;}
-  .toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-weight:800;z-index:200;max-width:90vw;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.25);}
-  .update-bar{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:150;background:var(--purple-dark);color:#fff;border-radius:18px;padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.3);}
-  .update-bar button{background:#fff;color:var(--purple-dark);border:none;border-radius:12px;padding:10px 16px;font-weight:900;cursor:pointer;min-height:44px;}
+  html,body{overscroll-behavior:none;}
+  #toasts{position:fixed;top:max(10px,env(safe-area-inset-top));left:0;right:0;z-index:400;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 12px;}
+  .toast{pointer-events:auto;display:flex;align-items:center;gap:10px;max-width:min(92vw,460px);background:#fff;color:var(--ink);border:3px solid #ddd6fe;border-radius:20px;padding:8px 18px 8px 8px;font-family:var(--display);font-weight:700;font-size:1rem;line-height:1.25;box-shadow:0 10px 0 -4px rgba(124,58,237,.18),0 14px 30px rgba(49,46,82,.22);animation:toastIn .35s cubic-bezier(.2,1.4,.4,1) both;}
+  .toast.out{animation:toastOut .25s ease-in both;}
+  .toast .ti{flex:0 0 auto;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.35rem;background:#f1effb;}
+  .toast.success{border-color:#86efac;} .toast.success .ti{background:#dcfce7;}
+  .toast.warn{border-color:#fcd34d;} .toast.warn .ti{background:#fef3c7;}
+  .toast.star{border-color:#fcd34d;background:linear-gradient(135deg,#fffbeb,#fdf2f8);} .toast.star .ti{background:#fde68a;}
+  @keyframes toastIn{from{transform:translateY(-24px) scale(.9);opacity:0;}to{transform:none;opacity:1;}}
+  @keyframes toastOut{to{transform:translateY(-16px) scale(.95);opacity:0;}}
+  .dlg-overlay{position:fixed;inset:0;background:rgba(49,46,82,.62);display:flex;align-items:center;justify-content:center;z-index:300;padding:16px;animation:fadeIn .2s ease both;}
+  .dlg-card{background:#fff;border-radius:28px;padding:22px 20px 20px;width:100%;max-width:420px;text-align:center;box-shadow:0 24px 50px rgba(0,0,0,.3);border:3px solid #ede9fe;animation:toastIn .3s cubic-bezier(.2,1.4,.4,1) both;max-height:88vh;overflow:auto;}
+  .dlg-emoji{font-size:3.4rem;line-height:1.1;margin-bottom:4px;}
+  .dlg-card h2{font-family:var(--display);font-size:1.4rem;color:var(--ink);margin-bottom:6px;}
+  .dlg-text{color:var(--muted);font-weight:700;line-height:1.45;margin-bottom:14px;white-space:pre-wrap;text-align:center;}
+  .dlg-btns{display:flex;flex-direction:column;gap:2px;}
+  .big-btn.danger{background:linear-gradient(135deg,#ef4444,#f97316);box-shadow:0 6px 0 #991b1b;}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  .update-note{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:250;margin:0 auto;max-width:520px;background:#fff;border:3px solid #c4b5fd;border-radius:22px;padding:12px 12px 12px 14px;display:flex;gap:10px;align-items:center;box-shadow:0 14px 34px rgba(49,46,82,.3);animation:toastIn .4s cubic-bezier(.2,1.4,.4,1) both;}
+  .update-note .un-i{font-size:2rem;flex:0 0 auto;}
+  .update-note .un-t{flex:1;font-family:var(--display);font-weight:700;color:var(--ink);line-height:1.25;min-width:0;}
+  .update-note .un-t small{display:block;color:var(--muted);font-weight:700;font-size:.78rem;}
+  .update-note button{border:none;border-radius:14px;min-height:48px;padding:0 16px;font-family:var(--display);font-weight:800;cursor:pointer;}
+  .update-note .un-go{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;box-shadow:0 4px 0 var(--purple-dark);}
+  .update-note .un-later{background:#f1effb;color:var(--purple-dark);}
   .gate-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
   .gate-q{font-family:var(--display);font-size:2rem;text-align:center;font-weight:700;margin:8px 0;}
   .panel{background:#f6f3ff;border-radius:16px;padding:16px;margin-bottom:16px;}
@@ -194,8 +256,6 @@
   .hist-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.9rem;font-weight:800;border-bottom:1px solid var(--border);}
   .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   @media(max-width:380px){.btn-row{grid-template-columns:1fr;}}
-  .options-grid > :last-child:nth-child(odd){grid-column:1/-1;}
-  .options-grid.opt2 > :last-child:nth-child(odd){grid-column:auto;}
   @media(max-width:600px){.level-grid{grid-template-columns:1fr;gap:12px;}}
   @media(max-width:480px){.card{padding:18px;} .name-badge{padding:8px 14px;} .topbar{flex-wrap:nowrap;} .parent-portal-btn{padding:8px 10px;}}
   .name-badge,.stars-badge,.parent-portal-btn{white-space:nowrap;}
@@ -297,9 +357,9 @@ function makeOptions(correct,pool,count){
 
 /* ============================= STATE / STORAGE ============================= */
 const STORE_KEY='cathyTrainerStats_v2';   // unchanged so existing progress carries over
-const APP_VERSION = '2.2';                  // keep in step with CACHE_NAME in sw.js
+const APP_VERSION = '2.4';                  // keep in step with CACHE_NAME in sw.js
 function defaultStats(){
-  return {totalStars:0, sessionsCompleted:0, sessionNum:0, items:{}, history:[], settings:{review:true, solo:false}};
+  return {totalStars:0, spent:0, stickers:[], hat:'', sessionsCompleted:0, sessionNum:0, items:{}, history:[], settings:{review:true, solo:false}};
 }
 function loadStats(){
   const d=defaultStats();
@@ -311,7 +371,10 @@ function loadStats(){
         return Object.assign(d,p,{
           items:(p.items && typeof p.items==='object')?p.items:{},
           history:Array.isArray(p.history)?p.history:[],
-          settings:Object.assign(d.settings,p.settings||{})
+          settings:Object.assign(d.settings,p.settings||{}),
+          spent:(typeof p.spent==='number' && p.spent>=0)?p.spent:0,
+          stickers:Array.isArray(p.stickers)?p.stickers.filter(x=>typeof x==='string'):[],
+          hat:(typeof p.hat==='string')?p.hat:''
         });
       }
     }
@@ -333,7 +396,9 @@ const CAT_LABELS={
   rhymeMatch:'🎵 Rhyme Time', rhymeProd:'🎤 Make a Rhyme', syllables:'👏 Syllable Claps',
   numbers:'🔢 Numbers', counting:'🧮 Counting', addition:'➕ Adding',
   shapes:'🔺 Shapes', colors:'🎨 Colors', compare:'⚖️ More or Less',
-  patterns:'🧩 Patterns', opposites:'↔️ Opposites', oddOne:'🔍 Odd One Out'
+  patterns:'🧩 Patterns', opposites:'↔️ Opposites', oddOne:'🔍 Odd One Out',
+  endSounds:'👂 Ending Sounds', numberOrder:'🔢 Number Neighbors', subtract:'➖ Taking Away',
+  sorting:'🗂️ Sorting', feelings:'😊 Feelings', calendar:'📅 Days & Seasons'
 };
 
 const SIGHT_WORDS={
@@ -502,6 +567,12 @@ function buildNumbers(){
     display:`<span class="big-target">${n}</span>`,options:()=>makeOptions(n,bigOnes,3)}));
   return items;
 }
+function countItem(id,lvl,count,emoji,max){
+  return {id,category:'counting',level:+lvl,type:'mc',tapCount:true,count,emoji,
+    prompt:'How many do you see?',tts:'How many do you see? Tap each one to count.',
+    display:'',
+    options:()=>makeOptions(count,Array.from({length:max},(_,i)=>i+1),3)};
+}
 function buildCounting(){
   const items=[];
   const cfg={1:{max:5,n:6},2:{max:10,n:6},3:{max:15,n:5},4:{max:20,n:5}};
@@ -509,11 +580,7 @@ function buildCounting(){
     const {max,n}=cfg[lvl];
     for(let i=0;i<n;i++){
       const count=rand(Math.max(1,max-4),max);
-      const emoji=COUNT_EMOJI[i%COUNT_EMOJI.length];
-      items.push({id:nid('ct'),category:'counting',level:+lvl,type:'mc',
-        prompt:'How many do you see?',tts:'How many do you see?',
-        display:`<div class="emoji-row" style="font-size:${count>12?'1.9rem':'2.8rem'}">${emoji.repeat(count)}</div>`,
-        options:()=>makeOptions(count,Array.from({length:max},(_,i)=>i+1),3)});
+      items.push(countItem(nid('ct'),lvl,count,COUNT_EMOJI[i%COUNT_EMOJI.length],max));
     }
   });
   return items;
@@ -677,30 +744,283 @@ function buildExtras(){
   return items;
 }
 
+/* ============================= v2.3 CONTENT EXPANSION =============================
+   Explicit, stable ids ('m-...') so saved progress never shifts when content grows. */
+const MORE_RHYME_PAIRS={
+  1:[['pen','hen',true],['bug','rug',true],['pig','wig',true],['bus','cup',false],['car','dog',false],['fox','sun',false]],
+  2:[['boat','coat',true],['rain','train',true],['ball','wall',true],['fish','dish',true],['frog','bed',false],['tree','cake',false],['cat','cap',false],['pin','pan',false]],
+  3:[['stone','bone',true],['hand','sand',true],['bell','shell',true],['fox','box',true],['jump','bump',true],['sheep','jeep',true],['drum','plane',false],['hen','hand',false]],
+  4:[['table','cable',true],['kitten','mitten',true],['pencil','stencil',true],['rocket','pocket',true],['monkey','donkey',true],['rabbit','habit',true],['butter','window',false],['elephant','umbrella',false]]
+};
+const RHYME_FAMS={
+  1:[['at',['cat','hat','bat','mat']],['og',['dog','frog','log','fog']],['un',['sun','run','bun','fun']],['ed',['bed','red','head']],['ug',['bug','rug','hug','mug']],['ig',['pig','wig','dig','big']]],
+  2:[['op',['mop','top','hop','pop']],['en',['pen','hen','ten','men']],['oon',['moon','spoon']],['ee',['tree','bee','knee']],['ing',['king','ring','sing','wing']],['ake',['snake','cake','lake']]],
+  3:[['ouse',['house','mouse']],['ar',['star','car','jar']],['ook',['book','hook','cook']],['ight',['light','night','fight','kite']],['ock',['clock','sock','rock','block']],['oat',['boat','coat','goat']]],
+  4:[['ower',['flower','shower','tower']],['ain',['rain','train','plane']],['all',['ball','wall','tall']],['ound',['round','sound','found','ground']],['ish',['fish','dish','wish']],['ell',['bell','shell','well','tell']]]
+};
+const MORE_RHYME_PROD={1:['bug','pig','bed','pen'],2:['boat','rain','cake','ball'],3:['fox','bell','hand','stone'],4:['kitten','monkey','rocket','table']};
+const MORE_SIGHT={
+  1:['to','me','not','one','two','red','blue','yes'],
+  2:['away','find','funny','help','here','jump','make','where'],
+  3:['all','but','did','get','good','into','must','new','now','our','out','want','went','what','will','with'],
+  4:['around','better','bring','carry','clean','done','draw','drink','eight','fall','full','hold','hurt','keep','kind','laugh','myself','never','only','pick','seven','show','start','today','together','try','wash','which','wish']
+};
+const MORE_BEGIN={
+  1:[['Hat','🎩','H'],['Pig','🐷','P'],['Tree','🌳','T'],['Lion','🦁','L'],['Rabbit','🐰','R'],['Nose','👃','N']],
+  2:[['Zebra','🦓','Z'],['Duck','🦆','D'],['Pizza','🍕','P'],['Tiger','🐯','T'],['Van','🚐','V'],['Egg','🥚','E']],
+  3:[['Chicken','🐔','CH'],['Sheep','🐑','SH'],['Cherry','🍒','CH'],['Shell','🐚','SH']],
+  4:[['Sled','🛷','SL'],['Spider','🕷️','SP'],['Swan','🦢','SW'],['Crab','🦀','CR'],['Drum','🥁','DR'],['Grapes','🍇','GR'],['Flag','🏁','FL']]
+};
+const END_SOUNDS={
+  2:[['cat','🐱','T'],['dog','🐶','G'],['sun','☀️','N'],['bus','🚌','S'],['cup','🥤','P'],['bed','🛏️','D']],
+  3:[['pig','🐷','G'],['hat','🎩','T'],['hen','🐔','N'],['bat','🦇','T'],['web','🕸️','B'],['drum','🥁','M']],
+  4:[['fish','🐟','SH'],['duck','🦆','CK'],['bath','🛁','TH'],['ring','💍','NG'],['cake','🎂','K'],['book','📖','K']]
+};
+const MORE_OPP={
+  1:[['in','out'],['on','off'],['stop','go'],['yes','no']],
+  2:[['push','pull'],['laugh','cry'],['clean','dirty'],['tall','short']],
+  3:[['awake','asleep'],['buy','sell'],['sink','float'],['above','below'],['begin','end']],
+  4:[['always','never'],['arrive','leave'],['borrow','lend'],['strong','weak']]
+};
+const MORE_ODD={
+  1:[[['🐶','🐱','🐻','🍎'],3],[['⚽','🧸','🪁','🍌'],3]],
+  2:[[['🍎','🍌','🍇','🚗'],3],[['👕','👖','🧦','🐶'],3]],
+  3:[[['🚗','🚌','🚂','🍕'],3],[['☀️','🌧️','⛄','🍎'],3]],
+  4:[[['🐟','🐬','🦈','🐕'],3],[['🌹','🌷','🌻','🌲'],3]]
+};
+const MORE_PATTERNS={
+  1:[[['🐶','🐶','🐱','🐶','🐶'],'🐱'],[['🔴','🔵','🔵','🔴','🔵','🔵'],'🔴']],
+  2:[[['⭐','🌙','🌙','⭐','🌙'],'🌙'],[['🍎','🍌','🍇','🍎','🍌'],'🍇']],
+  3:[[['2','4','6','8'],'10'],[['5','10','15','20'],'25'],[['9','8','7'],'6']],
+  4:[[['3','6','9','12'],'15'],[['1','2','4','8'],'16'],[['20','18','16'],'14']]
+};
+const MORE_SYL=[
+  [2,'rabbit','🐰',2],[2,'tiger','🐯',2],[2,'robot','🤖',2],[2,'spider','🕷️',2],
+  [3,'tomato','🍅',3],[3,'hamburger','🍔',3],[3,'kangaroo','🦘',3],[3,'octopus','🐙',3],
+  [4,'alligator','🐊',4],[4,'watermelon','🍉',4],[4,'helicopter','🚁',4],[4,'caterpillar','🐛',4]
+];
+const COLOR_WORLD={
+  1:[['banana','🍌','yellow'],['apple','🍎','red'],['frog','🐸','green'],['blueberry','🫐','blue']],
+  2:[['carrot','🥕','orange'],['grapes','🍇','purple'],['pig','🐷','pink'],['chocolate','🍫','brown']],
+  3:[['black cat','🐈‍⬛','black'],['snowman','⛄','white'],['elephant','🐘','gray']]
+};
+const SORT_SETS={
+  animal:['🐶','🐱','🐰','🐻','🐘','🦁','🐸','🐢'],
+  fruit:['🍎','🍌','🍇','🍓','🍊','🍉'],
+  vehicle:['🚗','🚌','🚲','✈️','🚂','🚁'],
+  food:['🍕','🍔','🍟','🍦','🥪','🍩'],
+  clothes:['👕','👖','🧦','🧢','👟','🧥'],
+  toy:['⚽','🧸','🪁','🎈','🪀','🎲']
+};
+const SORT_NAME={animal:'an animal',fruit:'a fruit',vehicle:'a vehicle',food:'food',clothes:'something you wear',toy:'a toy'};
+const SORT_LEVEL={1:['animal','fruit','vehicle'],2:['food','clothes','toy'],3:['animal','fruit','vehicle','food','clothes','toy']};
+const FEEL=[['happy','😀'],['sad','😢'],['angry','😠'],['surprised','😮'],['sleepy','😴'],['scared','😨'],['silly','🤪'],['sick','🤒']];
+const FEEL_LEVEL={1:['happy','sad','angry','sleepy'],2:['surprised','scared','silly','sick']};
+const FEEL_SITU=[['🎁','You get a present!','happy'],['🧸💔','Your toy is broken.','sad'],['⛈️','There is loud thunder.','scared'],['😤','Someone took your toy.','angry'],['🌙','It is bedtime.','sleepy'],['🎈💥','A balloon pops!','surprised']];
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function buildMore(){
+  const items=[]; const add=o=>items.push(o);
+  const sw=(id,lvl,w,pool)=>lvl<=2
+    ? {id,category:'sightWords',level:lvl,type:'mc',prompt:'Tap the word you hear',tts:`Can you find the word ${w}?`,reveal:w,
+       display:`<div style="font-size:2.2rem;">📖</div>`,options:()=>makeOptions(w,pool,3)}
+    : {id,category:'sightWords',level:lvl,type:'verbal',prompt:'Read this word out loud',tts:'Can you read this word out loud?',
+       display:`<span class="big-target">${w}</span>`,answer:w};
+
+  // --- rhyme: yes/no pairs
+  Object.keys(MORE_RHYME_PAIRS).forEach(l=>MORE_RHYME_PAIRS[l].forEach(([a,b,r])=>add({
+    id:`m-rm-${a}-${b}`,category:'rhymeMatch',level:+l,type:'mc2',
+    prompt:`Do "${a}" and "${b}" rhyme?`,tts:`Do ${a} and ${b} rhyme?`,
+    display:`<div style="font-size:2rem;font-weight:800;">${a} &amp; ${b}</div>`,
+    options:[{label:'Yes! 🎵',correct:r===true},{label:'No',correct:r===false}]})));
+  // --- rhyme: pick the word that rhymes (no grown-up needed)
+  const allFam=[].concat(...Object.values(RHYME_FAMS).map(f=>f.map(x=>x))); 
+  Object.keys(RHYME_FAMS).forEach(l=>RHYME_FAMS[l].forEach(([fam,words])=>words.forEach(w=>{
+    const others=[].concat(...allFam.filter(f=>f[0]!==fam).map(f=>f[1]));
+    add({id:`m-rf-${w}`,category:'rhymeMatch',level:+l,type:'mc',
+      prompt:`Which word rhymes with "${w}"?`,tts:`Which word rhymes with ${w}?`,
+      display:`<div style="font-size:3rem;">🎵</div><div style="font-weight:800;font-size:1.6rem;">${w}</div>`,
+      options:()=>{ const mate=pick(words.filter(x=>x!==w)); return makeOptions(mate,[mate,...others],3); }});
+  })));
+  Object.keys(MORE_RHYME_PROD).forEach(l=>MORE_RHYME_PROD[l].forEach(w=>add({
+    id:`m-rp-${w}`,category:'rhymeProd',level:+l,type:'verbal',
+    prompt:`Say a word that rhymes with "${w}"`,tts:`Can you say a word that rhymes with ${w}?`,
+    display:`<span class="big-target">${w}</span>`,answer:'rhyme production'})));
+
+  // --- sight words
+  Object.keys(MORE_SIGHT).forEach(l=>{
+    const pool=[...SIGHT_WORDS[l],...MORE_SIGHT[l]].filter(x=>x!=='I');
+    MORE_SIGHT[l].forEach(w=>add(sw(`m-sw-${w}`,+l,w,pool)));
+  });
+
+  // --- beginning + ending sounds
+  const bsPool=[...new Set([...Object.values(BEGIN_SOUNDS).flat(),...Object.values(MORE_BEGIN).flat()].map(x=>x[2]))];
+  Object.keys(MORE_BEGIN).forEach(l=>MORE_BEGIN[l].forEach(([w,e,L])=>add({
+    id:`m-bs-${w}`,category:'beginSounds',level:+l,type:'mc',
+    prompt:`What sound does "${w}" start with?`,tts:`What sound does the word ${w} start with?`,
+    display:`<div style="font-size:3.2rem;">${e}</div><div style="font-weight:800;font-size:1.2rem;margin-top:4px;">${w}</div>`,
+    options:()=>makeOptions(L,bsPool.filter(x=>x.length===L.length),3)})));
+  const endSingle=['T','G','N','S','P','D','B','M','K','L'], endDi=['SH','CK','TH','NG','CH'];
+  Object.keys(END_SOUNDS).forEach(l=>END_SOUNDS[l].forEach(([w,e,L])=>add({
+    id:`m-es-${w}`,category:'endSounds',level:+l,type:'mc',
+    prompt:`What sound does "${w}" end with?`,tts:`What sound does the word ${w} end with?`,
+    display:`<div style="font-size:3.2rem;">${e}</div><div style="font-weight:800;font-size:1.2rem;margin-top:4px;">${w}</div>`,
+    options:()=>makeOptions(L,L.length>1?endDi:endSingle,3)})));
+
+  // --- counting (tap each to count) + fewer
+  const cfg={1:{max:5,n:4},2:{max:10,n:4},3:{max:15,n:4},4:{max:20,n:4}};
+  Object.keys(cfg).forEach(l=>{
+    const {max,n}=cfg[l];
+    for(let i=0;i<n;i++) add(countItem(`m-ct-${l}-${i}`,+l,rand(Math.max(1,max-4),max),COUNT_EMOJI[(i+3)%COUNT_EMOJI.length],max));
+  });
+  const cmp={1:4,2:6,3:10,4:15};
+  Object.keys(cmp).forEach(l=>{ for(let i=0;i<4;i++){
+    let a=rand(1,cmp[l]), b=rand(1,cmp[l]); while(a===b) b=rand(1,cmp[l]);
+    const e=COUNT_EMOJI[rand(0,COUNT_EMOJI.length-1)], ans=a<b?'Left side':'Right side';
+    add({id:`m-cmpf-${l}-${i}`,category:'compare',level:+l,type:'mc2',
+      prompt:'Which side has fewer?',tts:'Which side has fewer?',
+      display:`<div class="side-by-side"><span>${e.repeat(a)}</span><span style="color:#c7c5e0;">|</span><span>${e.repeat(b)}</span></div>`,
+      options:[{label:'Left side',correct:ans==='Left side'},{label:'Right side',correct:ans==='Right side'}]});
+  }});
+
+  // --- number neighbors
+  const nn=(id,l,prompt,tts,ans,pool,shown)=>add({id,category:'numberOrder',level:l,type:'mc',prompt,tts,
+    display:`<span class="big-target">${shown}</span>`,options:()=>makeOptions(ans,pool,3)});
+  const rng=(a,b)=>Array.from({length:b-a+1},(_,i)=>i+a);
+  [2,4,6,8].forEach(n=>nn(`m-no-a-${n}`,1,`What number comes after ${n}?`,`What number comes after ${n}?`,n+1,rng(1,10),`${n} ➜ ❓`));
+  [11,13,15,17,19].forEach(n=>nn(`m-no-a-${n}`,2,`What number comes after ${n}?`,`What number comes after ${n}?`,n+1,rng(10,21),`${n} ➜ ❓`));
+  [4,6,8].forEach(n=>nn(`m-no-b-${n}`,2,`What number comes before ${n}?`,`What number comes before ${n}?`,n-1,rng(1,10),`❓ ➜ ${n}`));
+  [12,15,18,20].forEach(n=>nn(`m-no-b-${n}`,3,`What number comes before ${n}?`,`What number comes before ${n}?`,n-1,rng(9,21),`❓ ➜ ${n}`));
+  [24,29,39,49].forEach(n=>nn(`m-no-a-${n}`,3,`What number comes after ${n}?`,`What number comes after ${n}?`,n+1,rng(n-2,n+4),`${n} ➜ ❓`));
+  [4,8,13,17,24].forEach(n=>nn(`m-no-m-${n}`,4,`What number is between ${n} and ${n+2}?`,`What number is between ${n} and ${n+2}?`,n+1,rng(n-2,n+4),`${n} ❓ ${n+2}`));
+
+  // --- taking away
+  const sub=(id,l,a,b)=>add({id,category:'subtract',level:l,type:'mc',
+    prompt:`What is ${a} − ${b}?`,tts:`What is ${a} take away ${b}?`,
+    display:`<div style="font-size:1.8rem;">${'●'.repeat(a-b)}<span style="opacity:.35">${'●'.repeat(b)}</span></div><div class="big-target" style="font-size:2.2rem;margin-top:6px;">${a} − ${b} = ?</div>`,
+    options:()=>makeOptions(a-b,[a-b-2,a-b-1,a-b,a-b+1,a-b+2].filter(x=>x>=0),3)});
+  [[2,1],[3,1],[4,2],[5,1],[5,3],[4,1]].forEach(([a,b])=>sub(`m-sub-${a}-${b}`,3,a,b));
+  [[6,2],[7,3],[8,4],[9,5],[10,3],[10,6],[7,2]].forEach(([a,b])=>sub(`m-sub-${a}-${b}`,4,a,b));
+
+  // --- sorting
+  const allSort=[].concat(...Object.values(SORT_SETS));
+  Object.keys(SORT_LEVEL).forEach(l=>SORT_LEVEL[l].forEach(set=>{
+    const members=SORT_SETS[set], others=allSort.filter(x=>!members.includes(x));
+    const n=(+l===3)?1:2;
+    for(let i=0;i<n;i++){
+      const target=members[(i*3+(+l))%members.length];
+      add({id:`m-so-${l}-${set}-${i}`,category:'sorting',level:+l,type:'mc',
+        prompt:`Which one is ${SORT_NAME[set]}?`,tts:`Which one is ${SORT_NAME[set]}?`,
+        display:`<div style="font-size:3rem;">🤔</div>`,
+        options:()=>makeOptions(target,[target,...others],3)});
+    }
+  }));
+  [['🍎🍌🍇','fruits'],['🐶🐱🐰','animals'],['🚗🚌🚲','vehicles'],['👕👖🧦','clothes'],['⚽🧸🪁','toys'],['🍕🍔🍟','food']].forEach(([em,name],i)=>add({
+    id:`m-so-4-${name}`,category:'sorting',level:4,type:'mc',
+    prompt:'What group do these go in?',tts:'What group do these go in?',
+    display:`<div style="font-size:2.6rem;">${em}</div>`,
+    options:()=>makeOptions(name,['fruits','animals','vehicles','clothes','toys','food'],3)}));
+
+  // --- feelings
+  const feelPool=FEEL.map(f=>f[0]);
+  Object.keys(FEEL_LEVEL).forEach(l=>FEEL_LEVEL[l].forEach(name=>{
+    const e=FEEL.find(f=>f[0]===name)[1];
+    add({id:`m-fe-${name}`,category:'feelings',level:+l,type:'mc',
+      prompt:'How does this face feel?',tts:'How does this face feel?',
+      display:`<div style="font-size:4rem;">${e}</div>`,options:()=>makeOptions(name,+l===1?FEEL_LEVEL[1]:[...FEEL_LEVEL[1],...FEEL_LEVEL[2]],3)});
+  }));
+  FEEL_SITU.forEach(([e,txt,ans],i)=>add({id:`m-fs-${i}`,category:'feelings',level:3,type:'mc',
+    prompt:'How would you feel?',tts:`How would you feel? ${txt}`,
+    display:`<div style="font-size:3rem;">${e}</div><div style="font-weight:800;font-size:1.2rem;margin-top:6px;">${txt}</div>`,
+    options:()=>makeOptions(ans,['happy','sad','scared','angry','sleepy','surprised'],3)}));
+
+  // --- days, seasons, months
+  [0,1,2,3,4,5].forEach(i=>add({id:`m-cal-aft-${i}`,category:'calendar',level:2,type:'mc',
+    prompt:`What day comes after ${DAYS[i]}?`,tts:`What day comes after ${DAYS[i]}?`,
+    display:`<div style="font-size:3rem;">📅</div><div style="font-weight:800;font-size:1.3rem;">${DAYS[i]} ➜ ❓</div>`,
+    options:()=>makeOptions(DAYS[i+1],DAYS,3)}));
+  [1,2,3,4,5,6].forEach(i=>add({id:`m-cal-bef-${i}`,category:'calendar',level:3,type:'mc',
+    prompt:`What day comes before ${DAYS[i]}?`,tts:`What day comes before ${DAYS[i]}?`,
+    display:`<div style="font-size:3rem;">📅</div><div style="font-weight:800;font-size:1.3rem;">❓ ➜ ${DAYS[i]}</div>`,
+    options:()=>makeOptions(DAYS[i-1],DAYS,3)}));
+  [['⛄','It is snowy and cold.','winter'],['🌷','Flowers start to grow.','spring'],['🏖️','It is hot. We go to the beach.','summer'],['🍂','Leaves fall from the trees.','fall']].forEach(([e,t,a],i)=>add({
+    id:`m-cal-se-${a}`,category:'calendar',level:3,type:'mc',
+    prompt:'Which season is it?',tts:`Which season is it? ${t}`,
+    display:`<div style="font-size:3rem;">${e}</div><div style="font-weight:800;font-size:1.1rem;margin-top:6px;">${t}</div>`,
+    options:()=>makeOptions(a,['winter','spring','summer','fall'],3)}));
+  add({id:'m-cal-week',category:'calendar',level:4,type:'mc',prompt:'How many days are in a week?',tts:'How many days are in a week?',
+    display:`<div style="font-size:3rem;">📅</div>`,options:()=>makeOptions(7,[5,6,7,8,10],3)});
+  add({id:'m-cal-year',category:'calendar',level:4,type:'mc',prompt:'How many months are in a year?',tts:'How many months are in a year?',
+    display:`<div style="font-size:3rem;">🗓️</div>`,options:()=>makeOptions(12,[10,11,12,13,7],3)});
+  [0,2,5,8].forEach(i=>add({id:`m-cal-mo-${i}`,category:'calendar',level:4,type:'mc',
+    prompt:`What month comes after ${MONTHS[i]}?`,tts:`What month comes after ${MONTHS[i]}?`,
+    display:`<div style="font-size:3rem;">🗓️</div><div style="font-weight:800;font-size:1.3rem;">${MONTHS[i]} ➜ ❓</div>`,
+    options:()=>makeOptions(MONTHS[i+1],MONTHS,3)}));
+
+  // --- opposites, odd one out, patterns, syllables, colors
+  Object.keys(MORE_OPP).forEach(l=>{
+    const pool=[...OPPOSITES[l].map(p=>p[1]),...MORE_OPP[l].map(p=>p[1])];
+    MORE_OPP[l].forEach(([w,o])=>add({id:`m-op-${w}`,category:'opposites',level:+l,type:'mc',
+      prompt:`What is the opposite of "${w}"?`,tts:`What is the opposite of ${w}?`,
+      display:`<div style="font-size:1.8rem;font-weight:800;">${w}</div>`,options:()=>makeOptions(o,pool,3)}));
+  });
+  Object.keys(MORE_ODD).forEach(l=>MORE_ODD[l].forEach(([g,odd],i)=>add({id:`m-oo-${l}-${i}`,category:'oddOne',level:+l,type:'mc',
+    prompt:"Which one doesn't belong?",tts:"Which one doesn't belong?",
+    display:`<div style="font-size:2.5rem;">${g.join('&nbsp;&nbsp;')}</div>`,
+    options:shuffle(g.map((x,k)=>({label:x,correct:k===odd})))})));
+  Object.keys(MORE_PATTERNS).forEach(l=>MORE_PATTERNS[l].forEach(([seq,next],i)=>{
+    const pool=+l<=2?['🔴','🔵','🟢','🔺','🐶','🐱','⭐','🌙','🍎','🍌','🍇']:['2','4','6','8','5','7','10','12','14','15','16','25','6','30'];
+    add({id:`m-pt-${l}-${i}`,category:'patterns',level:+l,type:'mc',prompt:'What comes next?',tts:'What comes next in the pattern?',
+      display:`<div style="font-size:2.4rem;">${seq.join(' ')} ❓</div>`,options:()=>makeOptions(next,pool,3)});
+  }));
+  MORE_SYL.forEach(([l,w,e,n])=>add({id:`m-sy-${w}`,category:'syllables',level:l,type:'mc',
+    prompt:`How many claps (syllables) in "${w}"?`,tts:`How many beats do you hear in the word ${w}?`,
+    display:`<div style="font-size:2.8rem;">${e}</div><div style="font-weight:800;font-size:1.1rem;">${w}</div>`,
+    options:()=>makeOptions(n,[1,2,3,4],3)}));
+  Object.keys(COLOR_WORLD).forEach(l=>{
+    const names=COLORS[l].map(c=>c[0]);
+    COLOR_WORLD[l].forEach(([thing,e,c])=>add({id:`m-cw-${thing.replace(/\s/g,'')}`,category:'colors',level:+l,type:'mc',
+      prompt:`What color is a ${thing}?`,tts:`What color is a ${thing}?`,
+      display:`<div style="font-size:4rem;">${e}</div>`,options:()=>makeOptions(c,names,3)}));
+  });
+  return items;
+}
+
 function buildBank(){
   return [].concat(
     buildLetters(), buildBeginSounds(), buildSightWords(), buildRhymeMatch(), buildRhymeProd(),
     buildSyllables(), buildNumbers(), buildCounting(), buildAddition(), buildShapes(),
-    buildColors(), buildCompare(), buildPatterns(), buildOpposites(), buildOddOne(), buildExtras()
+    buildColors(), buildCompare(), buildPatterns(), buildOpposites(), buildOddOne(), buildExtras(),
+    buildMore()
   );
 }
 const BANK=buildBank();
 const CATOF={}; BANK.forEach(b=>{CATOF[b.id]=b.category;});
 
 /* ============================= ENGINE & WEIGHTING ============================= */
-let session=[]; let idx=0; let results=[]; let sessionStars=0; let streak=0; let selectedLevel=1;
+let view='start'; let sessionCat=null; let session=[]; let idx=0; let results=[]; let sessionStars=0; let streak=0; let selectedLevel=1;
 
-function itemStat(id){
-  if(!stats.items[id]) stats.items[id]={attempts:0,correct:0,lastSeen:-1};
-  return stats.items[id];
+/* Leitner boxes: 1 = missed (comes back next game), 2 = +1 day, 3 = +3 days, 4 = +7 days, 5 = +14 days */
+const BOX_DAYS=[0,0,1,3,7,14];
+function today(){ const d=new Date(); return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/86400000); }
+function getStat(id){                       // read-only: never creates entries for unseen items
+  const s=stats.items[id];
+  if(!s) return {attempts:0,correct:0,lastSeen:-1,box:0,due:0};
+  if(s.box===undefined){                    // migrate progress saved before v2.3 from its old accuracy
+    const acc=s.attempts?s.correct/s.attempts:0;
+    s.box=!s.attempts?0:(acc>=0.8&&s.attempts>=2)?3:(acc<0.5?1:2);
+    s.due=today();
+  }
+  return s;
 }
+function itemStat(id){ if(!stats.items[id]) stats.items[id]={attempts:0,correct:0,lastSeen:-1,box:0,due:0}; return getStat(id); }
 function weightFor(item){
-  const s=itemStat(item.id);
-  let w=10;
-  if(stats.sessionNum - s.lastSeen < 2 && s.lastSeen>=0) w-=7;
-  if(s.attempts>0 && s.correct/s.attempts>0.8) w-=4;
-  if(s.attempts>0 && s.correct/s.attempts<0.5) w+=5;
-  return Math.max(1,w);
+  const s=getStat(item.id), t=today();
+  if(!s.attempts) return 9;                                  // new: worth seeing
+  if(s.box<=1) return 15;                                    // missed: recycle right away
+  if(s.due<=t) return 10+Math.min(5,t-s.due);                // due for review (longer overdue = higher)
+  return 1+Math.random();                                    // spaced out: not yet
 }
 function weightedSample(pool,n){
   const copy=pool.map(it=>({it,w:weightFor(it)+Math.random()*3}));
@@ -711,24 +1031,41 @@ function buildSession(level){
   stats.sessionNum++;
   const solo=stats.settings.solo, review=stats.settings.review;
   const ok=it=>!(solo && it.type==='verbal');           // solo mode: skip items a grown-up must grade
-  const core=[];
+  // questions she missed come straight back (up to 4 per game), then the rest is filled by skill
+  const missed=shuffle(BANK.filter(it=>it.level===level && ok(it) && getStat(it.id).attempts>0 && getStat(it.id).box<=1)).slice(0,4);
+  const covered=new Set(missed.map(m=>m.category));
+  const cand=[];
   Object.keys(CAT_LABELS).forEach(cat=>{
+    if(covered.has(cat)) return;
     const pool=BANK.filter(it=>it.category===cat && it.level===level && ok(it));
-    if(pool.length) core.push(...weightedSample(pool,1));
+    if(pool.length){ const it=weightedSample(pool,1)[0]; cand.push({it,w:weightFor(it)+Math.random()*4}); }
   });
-  let main=shuffle(core), reviews=[];
-  if(review && level>1){
+  cand.sort((a,b)=>b.w-a.w);                            // categories with missed/due items first
+  const doReview=review && level>1;
+  let main=missed.concat(cand.slice(0,(doReview?13:15)-missed.length).map(c=>c.it)), reviews=[];
+  if(doReview){
     const used=new Set(main.map(c=>c.id));
     reviews=weightedSample(BANK.filter(it=>it.level<level && ok(it) && !used.has(it.id)),2);
-    main=main.slice(0,13);
   }
   const have=new Set(main.concat(reviews).map(c=>c.id));
   const extra=weightedSample(BANK.filter(it=>it.level===level && ok(it) && !have.has(it.id)),Math.max(0,15-main.length-reviews.length));
   return shuffle(main.concat(reviews,extra)).slice(0,15);
 }
+// 5-question practice on one skill, started from the Grown-ups area (nearest levels first)
+function buildTargeted(cat,level){
+  stats.sessionNum++;
+  const chosen=[];
+  for(let d=0; d<=3 && chosen.length<5; d++){
+    const lv=d===0?[level]:[level-d,level+d].filter(x=>x>=1&&x<=4);
+    const have=new Set(chosen.map(c=>c.id));
+    const pool=BANK.filter(it=>it.category===cat && lv.includes(it.level) && !have.has(it.id));
+    chosen.push(...weightedSample(pool,5-chosen.length));
+  }
+  return shuffle(chosen);
+}
 
 function suggestedLevel(){
-  const h=stats.history; if(h.length<3) return null;
+  const h=stats.history.filter(x=>!x.k); if(h.length<3) return null;
   const last=h.slice(-3), lv=last[0].l;
   if(!last.every(x=>x.l===lv)) return null;
   const avg=last.reduce((a,x)=>a+x.c/x.t,0)/3;
@@ -739,8 +1076,9 @@ function suggestedLevel(){
 
 /* ============================= RENDER SCREENS ============================= */
 function renderStart(){
+  view='start';
   document.getElementById('progressOuter').style.display='none';
-  document.getElementById('starsBadge').textContent=`⭐ ${stats.totalStars}`;
+  updateStarsBadge();
   const sug=suggestedLevel();
   const cards=LEVELS.map(l=>`<button type="button" class="level-card ${l.cls} ${selectedLevel===l.id?'active':''}" aria-pressed="${selectedLevel===l.id}" onclick="setLevel(${l.id})">
       <span class="lv-emoji" aria-hidden="true">${l.emoji}</span>
@@ -751,17 +1089,19 @@ function renderStart(){
     <div class="section-tag" style="text-align:center;">Pre-K Assessment Tool</div>
     <div class="sub" style="text-align:center;margin-bottom:6px;">Pick a level. Each game is 15 questions on letters, words and math, and results show up in the Grown-ups area.</div>
     <div class="owl-row">
-      <button type="button" class="owl-btn" onclick="speak('Hi Cathy! Pick a game!')" aria-label="Hear the owl">🦉</button>
+      ${owlHtml()}
       <div class="bubble">Hi Cathy!<br>Pick a game!</div>
     </div>
     <div class="level-grid" role="group" aria-label="Choose a level">${cards}</div>
     <button class="big-btn play" onclick="startSession()">▶️ Play!</button>
-    <div class="footline">⭐ ${stats.totalStars} &nbsp;·&nbsp; ${stats.sessionsCompleted} games &nbsp;·&nbsp; v${APP_VERSION}</div>
+    ${bookButtonHtml()}
+    <div class="footline">⭐ ${balance()} &nbsp;·&nbsp; ${stats.sessionsCompleted} games &nbsp;·&nbsp; v${APP_VERSION}</div>
   `;
 }
 function setLevel(l){ sfx.playPop(); selectedLevel=l; renderStart(); speak(LEVELS[l-1].name); }
 
 function renderQuestion(){
+  view='game';
   document.getElementById('progressOuter').style.display='block';
   const q=session[idx];
   const pct=(idx/session.length)*100;
@@ -772,10 +1112,10 @@ function renderQuestion(){
   q._resolvedOptions = opts;
 
   if(q.type==='mc'){
-    optsHtml=`<div class="options-grid">${opts.map((o,i)=>
+    optsHtml=`<div class="options-grid" data-n="${opts.length}">${opts.map((o,i)=>
       `<button class="opt-btn" id="opt-${i}" onclick="answerMC(${i})">${o.label}</button>`).join('')}</div>`;
   } else if(q.type==='mc2'){
-    optsHtml=`<div class="options-grid opt2">${opts.map((o,i)=>
+    optsHtml=`<div class="options-grid" data-n="${opts.length}">${opts.map((o,i)=>
       `<button class="opt-btn" id="opt-${i}" onclick="answerMC(${i})">${o.label}</button>`).join('')}</div>`;
   } else if(q.type==='verbal'){
     optsHtml=`<div id="verbalStep1"><button class="big-btn" onclick="verbalSaid()">🎤 I said it!</button></div>
@@ -792,7 +1132,7 @@ function renderQuestion(){
     <div class="section-tag">${CAT_LABELS[q.category]||''} · Item ${idx+1} of ${session.length}</div>
     <div class="streak-flame">${streak>=3?`🔥 ${streak} in a row!`:''}</div>
     <div class="prompt-box"><span>${q.prompt}</span><button class="speak-btn" type="button" onclick="speakCurrent()" aria-label="Hear it again">🔊</button></div>
-    <div class="display-box">${q.display}</div>
+    <div class="display-box" id="displayBox">${q.tapCount?countDisplay(q):q.display}</div>
     ${q.reveal?`<div id="revealSlot"><button type="button" class="show-word-btn" onclick="showWord()">👀 Show word</button></div>`:''}
     <div id="feedback" class="feedback-banner" aria-live="polite"></div>
     ${optsHtml}
@@ -801,6 +1141,29 @@ function renderQuestion(){
   setTimeout(()=>speak(q.tts||q.prompt),350);
 }
 
+let countedN=0;
+function countDisplay(q){
+  countedN=0;
+  const big=q.count>12;
+  return `<div class="count-row" role="group" aria-label="Tap each one to count">${
+    Array.from({length:q.count},(_,i)=>`<button type="button" class="count-item${big?' sm':''}" id="ci-${i}" onclick="tapCountItem(${i})" aria-label="Item ${i+1}"><span class="ce">${q.emoji}</span><b class="cn"></b></button>`).join('')
+  }</div><div class="count-hint" id="countHint">👆 Tap each one to count!</div>`;
+}
+function tapCountItem(i){
+  const el=document.getElementById('ci-'+i);
+  if(!el || el.classList.contains('counted')) return;
+  countedN++;
+  el.classList.add('counted');
+  el.querySelector('.cn').textContent=countedN;
+  sfx.playPop();
+  speak(String(countedN));
+  const h=document.getElementById('countHint');
+  if(h) h.innerHTML=`You counted <strong>${countedN}</strong> &nbsp;<button type="button" class="again-btn" onclick="resetCount()">↺ Count again</button>`;
+}
+function resetCount(){
+  const q=session[idx]; if(!q||!q.tapCount) return;
+  document.getElementById('displayBox').innerHTML=countDisplay(q);
+}
 function showWord(){
   const q=session[idx], slot=document.getElementById('revealSlot');
   if(!q||!q.reveal||!slot) return;
@@ -814,6 +1177,9 @@ function pick(a){ return a[rand(0,a.length-1)]; }
 function recordAndAdvance(item,correct,delay){
   const s=itemStat(item.id);
   s.attempts++; if(correct) s.correct++; s.lastSeen=stats.sessionNum;
+  const b=s.box||0;
+  s.box=correct?Math.min(5,Math.max(2,b+1)):1;
+  s.due=today()+BOX_DAYS[s.box];
   results.push({category:item.category,label:CAT_LABELS[item.category]||item.category,correct});
   if(correct){ streak++; sessionStars++; } else { streak=0; }
   saveStats();
@@ -823,6 +1189,7 @@ function recordAndAdvance(item,correct,delay){
 
 function answerMC(i){
   const q=session[idx];
+  document.querySelectorAll('.count-item').forEach(b=>b.disabled=true);
   const opts=q._resolvedOptions;
   const buttons=document.querySelectorAll('.opt-btn');
   buttons.forEach(b=>b.disabled=true);
@@ -891,18 +1258,21 @@ function launchConfetti(){
 }
 
 function renderSummary(){
+  view='summary';
   document.getElementById('progressInner').style.width='100%';
   const total=results.length;
   const correctCt=results.filter(r=>r.correct).length;
   const pct=Math.round((correctCt/total)*100);
-  const bonus=(correctCt===total)?3:(pct>=80?1:0);
+  const bonus=sessionCat?(correctCt===total?1:0):((correctCt===total)?3:(pct>=80?1:0));
   sessionStars+=bonus;
   stats.totalStars+=sessionStars;
-  stats.sessionsCompleted++;
-  stats.history.push({d:new Date().toISOString().slice(0,10),l:selectedLevel,c:correctCt,t:total});
+  if(!sessionCat) stats.sessionsCompleted++;
+  const entry={d:new Date().toISOString().slice(0,10),l:selectedLevel,c:correctCt,t:total};
+  if(sessionCat) entry.k=sessionCat;
+  stats.history.push(entry);
   if(stats.history.length>40) stats.history=stats.history.slice(-40);
   saveStats();
-  document.getElementById('starsBadge').textContent=`⭐ ${stats.totalStars}`;
+  updateStarsBadge();
 
   const byCat={};
   results.forEach(r=>{ if(!byCat[r.label]) byCat[r.label]={c:0,t:0}; byCat[r.label].t++; if(r.correct) byCat[r.label].c++; });
@@ -911,17 +1281,22 @@ function renderSummary(){
     const pass=c/t>=0.6;
     return `<div class="cat-row"><span>${label}</span><span class="cat-badge ${pass?'cat-pass':'cat-review'}">${c}/${t}</span></div>`;
   }).join('');
+  const canBuy=SHOP.some(x=>!owns(x.id) && balance()>=x.c);
 
   document.getElementById('app').innerHTML=`
     <div class="mascot">${pct>=80?'🥳':pct>=50?'🦉':'🤗'}</div>
-    <div class="section-tag">Session Complete</div>
+    <div class="section-tag">${sessionCat?'Practice Complete':'Session Complete'}</div>
     <h2>Great work, Cathy!</h2>
     <div class="summary-hero">${correctCt} / ${total}</div>
-    <div class="summary-sub">${pct}% correct &nbsp;·&nbsp; +${sessionStars} stars earned this session ⭐</div>
+    <div class="summary-sub">${pct}% correct &nbsp;·&nbsp; +${sessionStars} stars earned ⭐</div>
     <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:16px; padding:0 14px; margin-top:10px;">${rows}</div>
-    <button class="big-btn" onclick="renderStart()">🔁 Play Again</button>
+    ${canBuy?`<button class="big-btn gift" onclick="openBook()">🎁 You can get a new sticker!</button>`:''}
+    <button class="big-btn" onclick="renderStart()">🔁 ${sessionCat?'Done':'Play Again'}</button>
+    ${canBuy?'':`<button class="ghost-btn" onclick="openBook()">🎟️ Sticker Book (⭐ ${balance()})</button>`}
     <button class="ghost-btn" onclick="changeLevel()">🎚️ Choose a Different Level</button>
   `;
+  sessionCat=null;
+  if(sessionStars>0) toast(`+${sessionStars} star${sessionStars===1?'':'s'} earned!`,'star','⭐');
   if(pct>=80){ sfx.playCorrect(); launchConfetti(); }
   speak(pct>=80?'Great work, Cathy! You are a star!':'Nice playing, Cathy! Let\'s play again soon.');
 }
@@ -929,9 +1304,89 @@ function changeLevel(){ sfx.playPop(); renderStart(); }
 
 function startSession(){
   sfx.playPop();
+  sessionCat=null;
   session=buildSession(selectedLevel);
   idx=0; results=[]; sessionStars=0; streak=0;
   renderQuestion();
+}
+function startTargeted(cat){
+  sfx.playPop();
+  document.getElementById('modalContainer').innerHTML='';
+  sessionCat=cat;
+  session=buildTargeted(cat,selectedLevel);
+  if(!session.length){ sessionCat=null; renderStart(); return; }
+  idx=0; results=[]; sessionStars=0; streak=0;
+  renderQuestion();
+}
+
+/* ============================= STICKER BOOK ============================= */
+const SHOP=[
+  {id:'balloon',e:'🎈',n:'Balloon',c:5,k:'s'},{id:'dog',e:'🐶',n:'Puppy',c:5,k:'s'},{id:'cat',e:'🐱',n:'Kitty',c:5,k:'s'},
+  {id:'frog',e:'🐸',n:'Frog',c:6,k:'s'},{id:'rabbit',e:'🐰',n:'Bunny',c:6,k:'s'},{id:'strawberry',e:'🍓',n:'Strawberry',c:6,k:'s'},
+  {id:'panda',e:'🐼',n:'Panda',c:8,k:'s'},{id:'fox',e:'🦊',n:'Fox',c:8,k:'s'},{id:'turtle',e:'🐢',n:'Turtle',c:8,k:'s'},
+  {id:'icecream',e:'🍦',n:'Ice cream',c:8,k:'s'},{id:'sunflower',e:'🌻',n:'Sunflower',c:8,k:'s'},
+  {id:'bow',e:'🎀',n:'Bow',c:10,k:'h'},{id:'lion',e:'🦁',n:'Lion',c:10,k:'s'},{id:'cupcake',e:'🧁',n:'Cupcake',c:10,k:'s'},{id:'sparkle',e:'🌟',n:'Shining star',c:10,k:'s'},
+  {id:'cap',e:'🧢',n:'Cap',c:12,k:'h'},{id:'rainbow',e:'🌈',n:'Rainbow',c:12,k:'s'},{id:'palette',e:'🎨',n:'Paint',c:12,k:'s'},
+  {id:'rocket',e:'🚀',n:'Rocket',c:15,k:'s'},{id:'butterfly',e:'🦋',n:'Butterfly',c:15,k:'s'},
+  {id:'planet',e:'🪐',n:'Planet',c:18,k:'s'},{id:'octopus',e:'🐙',n:'Octopus',c:18,k:'s'},
+  {id:'tophat',e:'🎩',n:'Top hat',c:20,k:'h'},{id:'unicorn',e:'🦄',n:'Unicorn',c:20,k:'s'},{id:'robot',e:'🤖',n:'Robot',c:20,k:'s'},{id:'dolphin',e:'🐬',n:'Dolphin',c:20,k:'s'},
+  {id:'gradcap',e:'🎓',n:'Graduation cap',c:25,k:'h'},{id:'cowboy',e:'🤠',n:'Cowboy hat',c:25,k:'h'},{id:'dragon',e:'🐉',n:'Dragon',c:25,k:'s'},{id:'trex',e:'🦖',n:'Dinosaur',c:25,k:'s'},
+  {id:'trophy',e:'🏆',n:'Trophy',c:40,k:'s'},{id:'crown',e:'👑',n:'Crown',c:40,k:'h'}
+];
+let bookSel=null;
+function owns(id){ return stats.stickers.indexOf(id)>=0; }
+function balance(){ return Math.max(0,stats.totalStars-(stats.spent||0)); }
+function updateStarsBadge(){ document.getElementById('starsBadge').textContent=`⭐ ${balance()}`; }
+function owlHtml(big){
+  const hat=SHOP.find(x=>x.id===stats.hat && owns(x.id));
+  return `<span class="owl-wrap"><button type="button" class="owl-btn" onclick="speak('Hi Cathy! Pick a game!')" aria-label="Hear the owl">🦉</button>${hat?`<span class="owl-hat" aria-hidden="true">${hat.e}</span>`:''}</span>`;
+}
+function bookButtonHtml(){
+  const afford=SHOP.some(x=>!owns(x.id) && balance()>=x.c);
+  return `<button type="button" class="ghost-btn book-btn${afford?' glow':''}" onclick="openBook()">🎟️ Sticker Book · ${stats.stickers.length}/${SHOP.length}${afford?' · 🎁 new!':''}</button>`;
+}
+function openBook(){ sfx.playPop(); bookSel=null; renderBook(); }
+function renderBook(){
+  view='book';
+  document.getElementById('progressOuter').style.display='none';
+  updateStarsBadge();
+  const sel=SHOP.find(x=>x.id===bookSel);
+  let panel='<div class="book-hint">Tap a sticker to see it. Earn ⭐ stars by playing!</div>';
+  if(sel){
+    const own=owns(sel.id), can=balance()>=sel.c;
+    panel=`<div class="book-panel"><div class="book-big">${sel.e}</div><div class="book-name">${sel.n}${sel.k==='h'?' <small>(owl hat)</small>':''}</div>`+
+      (own?(sel.k==='h'?`<button type="button" class="big-btn" onclick="toggleHat('${sel.id}')">${stats.hat===sel.id?'Take it off':'🦉 Put it on the owl'}</button>`:`<div class="book-have">✔ You have this one!</div>`)
+          :can?`<button type="button" class="big-btn gift" onclick="buySticker('${sel.id}')">Get it! ⭐ ${sel.c}</button>`
+          :`<div class="book-need">Needs ⭐ ${sel.c} · ${sel.c-balance()} more to go!</div>`)+`</div>`;
+  }
+  const cells=SHOP.map(x=>{
+    const own=owns(x.id), can=!own && balance()>=x.c;
+    return `<button type="button" class="sticker-cell${own?' own':''}${can?' can':''}${bookSel===x.id?' sel':''}" onclick="selectSticker('${x.id}')" aria-label="${x.n}${own?', you have it':', costs '+x.c+' stars'}">
+      <span class="se">${x.e}</span><span class="sc">${own?(x.k==='h'&&stats.hat===x.id?'wearing':'✔'):'⭐ '+x.c}</span></button>`;
+  }).join('');
+  document.getElementById('app').innerHTML=`
+    <div class="section-tag" style="text-align:center;">Sticker Book</div>
+    <div class="owl-row">${owlHtml()}<div class="bubble">You have<br><strong>⭐ ${balance()}</strong></div></div>
+    ${panel}
+    <div class="sticker-grid">${cells}</div>
+    <button class="ghost-btn" onclick="renderStart()">⬅️ Back</button>
+  `;
+}
+function selectSticker(id){
+  sfx.playPop(); bookSel=id; renderBook();
+  const x=SHOP.find(v=>v.id===id); if(x) speak(x.n);
+}
+function buySticker(id){
+  const x=SHOP.find(v=>v.id===id);
+  if(!x || owns(id) || balance()<x.c){ sfx.playIncorrect(); return; }
+  stats.spent=(stats.spent||0)+x.c; stats.stickers.push(id);
+  if(x.k==='h' && !stats.hat) stats.hat=id;
+  saveStats(); sfx.playCorrect(); launchConfetti();
+  renderBook(); speak(`You got the ${x.n}!`);
+  toast(`New sticker: ${x.n}!`,'star',x.e);
+}
+function toggleHat(id){
+  sfx.playPop(); stats.hat=(stats.hat===id)?'':id; saveStats(); renderBook();
 }
 
 /* ============================= GROWN-UPS AREA ============================= */
@@ -983,14 +1438,18 @@ function skillRows(){
 
 function showPortal(){
   let itemTotal=0, itemMastered=0;
-  Object.values(stats.items).forEach(it=>{
+  let itemDue=0; const t0=today();
+  Object.keys(stats.items).forEach(id=>{
+    const it=getStat(id); if(!(it.attempts>0)) return;
     itemTotal++;
-    if(it.attempts>0 && it.correct/it.attempts>=0.75) itemMastered++;
+    if(it.box>=4) itemMastered++;
+    if(it.due<=t0) itemDue++;
   });
   const sug=suggestedLevel();
-  const sugHtml=sug?`<div class="mini" style="margin-top:8px;">💡 ${sug>stats.history[stats.history.length-1].l?'Ready to try':'Might help to go back to'} <strong>${LEVELS[sug-1].emoji} ${LEVELS[sug-1].name}</strong> (based on her last 3 games).</div>`:'';
-  const skills=skillRows().map(r=>`<div class="skill-row"><span>${CAT_LABELS[r.cat]}</span><span class="tag ${r.tag[0]}">${r.tag[1]}${r.a>=3?' · '+r.pct+'%':''}</span><div class="bar"><i style="width:${r.pct}%"></i></div></div>`).join('');
-  const hist=stats.history.slice(-10).reverse().map(h=>`<div class="hist-row"><span>${h.d} · ${LEVELS[h.l-1]?LEVELS[h.l-1].emoji+' '+LEVELS[h.l-1].name:'Level '+h.l}</span><span>${h.c}/${h.t}</span></div>`).join('')||'<div class="mini">No games recorded yet. Every game from now on will show up here.</div>';
+  const lastGame=stats.history.filter(x=>!x.k).slice(-1)[0];
+  const sugHtml=sug&&lastGame?`<div class="mini" style="margin-top:8px;">💡 ${sug>lastGame.l?'Ready to try':'Might help to go back to'} <strong>${LEVELS[sug-1].emoji} ${LEVELS[sug-1].name}</strong> (based on her last 3 games).</div>`:'';
+  const skills=skillRows().map(r=>`<button type="button" class="skill-row skill-btn" onclick="startTargeted('${r.cat}')" aria-label="Practice ${CAT_LABELS[r.cat].replace(/^\S+\s/,'')}"><span>${CAT_LABELS[r.cat]} <span class="go">▶</span></span><span class="tag ${r.tag[0]}">${r.tag[1]}${r.a>=3?' · '+r.pct+'%':''}</span><div class="bar"><i style="width:${r.pct}%"></i></div></button>`).join('');
+  const hist=stats.history.slice(-10).reverse().map(h=>`<div class="hist-row"><span>${h.d} · ${h.k&&CAT_LABELS[h.k]?'🎯 '+CAT_LABELS[h.k]:(LEVELS[h.l-1]?LEVELS[h.l-1].emoji+' '+LEVELS[h.l-1].name:'Level '+h.l)}</span><span>${h.c}/${h.t}</span></div>`).join('')||'<div class="mini">No games recorded yet. Every game from now on will show up here.</div>';
   const sw=(on,fn,label)=>`<div class="set-row"><button type="button" class="switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="${label}" onclick="${fn}"></button><span>${label}</span></div>`;
   document.getElementById('modalContainer').innerHTML=modalShell(`
     <div class="modal-header"><h2>📊 Grown-ups area</h2>
@@ -999,16 +1458,17 @@ function showPortal(){
     <div class="panel"><h3>Overall</h3>
       <div style="font-size:.95rem;line-height:1.7;">
         • Games played: <strong>${stats.sessionsCompleted}</strong><br>
-        • Stars: <strong>${stats.totalStars} ⭐</strong><br>
-        • Different questions seen: <strong>${itemTotal}</strong><br>
-        • Questions she's strong on (&gt;75%): <strong>${itemMastered}</strong>
+        • Stars earned: <strong>${stats.totalStars} ⭐</strong> (${balance()} to spend) · Stickers: <strong>${stats.stickers.length}/${SHOP.length}</strong><br>
+        • Different questions seen: <strong>${itemTotal}</strong> of ${BANK.length}<br>
+        • Locked in (answered right several times, now spaced out): <strong>${itemMastered}</strong><br>
+        • Due for review: <strong>${itemDue}</strong>
       </div>${sugHtml}
     </div>
 
     <div class="panel"><h3>Skills</h3>${skills}
-      <div class="mini" style="margin-top:8px;">"Needs practice" skills are shown first and the game automatically asks those questions more often.</div></div>
+      <div class="mini" style="margin-top:8px;"><strong>Tap a skill to play a quick 5-question practice round on it</strong> (uses the level selected on the home screen). Missed questions come back in the very next game; ones she knows get spaced out over days and weeks.</div></div>
 
-    <div class="panel"><h3>Last 10 games</h3>${hist}</div>
+    <div class="panel"><h3>Last 10 games &amp; practice rounds</h3>${hist}</div>
 
     <div class="panel"><h3>Settings</h3>
       ${sw(stats.settings.review,"toggleSetting('review')",'Mix in 2 easier review questions')}
@@ -1027,6 +1487,7 @@ function showPortal(){
     <input type="file" id="restoreFile" accept="application/json,.json" hidden onchange="restoreBackup(this)">
     <button class="ghost-btn" type="button" onclick="exportData()">📋 Copy summary</button>
     <button class="ghost-btn" type="button" style="color:var(--red); border-color:#fca5a5;" onclick="resetStats()">🗑️ Reset all progress</button>
+    <button class="ghost-btn" type="button" onclick="checkForUpdate(true)">🔄 Check for updates</button>
     <div class="mini" style="text-align:center;margin-top:14px;">Version ${APP_VERSION} · <span id="cacheName"></span><br>Everything stays on this device. Nothing is sent anywhere.</div>
   `,'Grown-ups area');
   focusModal();
@@ -1042,26 +1503,52 @@ function closeParentPortalDirect(){
   if(lastFocus && lastFocus.focus){ try{lastFocus.focus();}catch(e){} }
   if(document.querySelector('.level-grid')) renderStart();   // refresh start screen (badges, stars)
 }
-document.addEventListener('keydown',e=>{ if(e.key==='Escape' && document.getElementById('modalContainer').innerHTML) closeParentPortalDirect(); });
+document.addEventListener('keydown',e=>{ if(e.key!=='Escape') return; if(document.getElementById('dlg')){ const n=document.getElementById('dlgNo'); closeDlg(); return; } if(document.getElementById('modalContainer').innerHTML) closeParentPortalDirect(); });
 
-function toast(msg){
-  const old=document.querySelector('.toast'); if(old) old.remove();
-  const t=document.createElement('div'); t.className='toast'; t.setAttribute('role','status'); t.textContent=msg;
-  document.body.appendChild(t); setTimeout(()=>t.remove(),3000);
+function toast(msg,type,icon){
+  let box=document.getElementById('toasts');
+  if(!box){ box=document.createElement('div'); box.id='toasts'; box.setAttribute('role','status'); box.setAttribute('aria-live','polite'); document.body.appendChild(box); }
+  while(box.children.length>=3) box.firstChild.remove();
+  type=type||'info';
+  const ic=icon||({success:'✅',warn:'⚠️',star:'⭐',info:'🦉'})[type]||'🦉';
+  const t=document.createElement('div'); t.className='toast '+type;
+  const i=document.createElement('span'); i.className='ti'; i.textContent=ic;
+  const m=document.createElement('span'); m.textContent=msg;
+  t.append(i,m); box.appendChild(t);
+  const kill=()=>{ if(!t.parentNode) return; t.classList.add('out'); setTimeout(()=>t.remove(),260); };
+  t.addEventListener('click',kill); setTimeout(kill,3400);
+}
+// themed replacement for confirm()/alert()
+function closeDlg(){ const d=document.getElementById('dlg'); if(d) d.remove(); }
+function askConfirm(o,onYes,onNo){
+  closeDlg();
+  const d=document.createElement('div'); d.id='dlg'; d.className='dlg-overlay';
+  d.innerHTML=`<div class="dlg-card" role="alertdialog" aria-modal="true" aria-labelledby="dlgT"><div class="dlg-emoji"></div><h2 id="dlgT"></h2><div class="dlg-text"></div><div class="dlg-btns"><button type="button" class="big-btn" id="dlgYes"></button>${o.no===false?'':'<button type="button" class="ghost-btn" id="dlgNo"></button>'}</div></div>`;
+  d.querySelector('.dlg-emoji').textContent=o.icon||'🦉';
+  d.querySelector('h2').textContent=o.title||'';
+  d.querySelector('.dlg-text').textContent=o.text||'';
+  const yes=d.querySelector('#dlgYes'), no=d.querySelector('#dlgNo');
+  yes.textContent=o.yes||'OK'; if(o.danger) yes.classList.add('danger'); if(no) no.textContent=o.no||'Cancel';
+  yes.onclick=()=>{ closeDlg(); if(onYes) onYes(); };
+  if(no) no.onclick=()=>{ closeDlg(); if(onNo) onNo(); };
+  d.addEventListener('click',e=>{ if(e.target===d && no){ closeDlg(); if(onNo) onNo(); } });
+  document.body.appendChild(d);
+  (o.danger&&no?no:yes).focus();
 }
 
 function summaryText(){
   const lines=[`Cathy's Learning Adventure — progress report (${new Date().toLocaleDateString()})`,
     `Games played: ${stats.sessionsCompleted} · Stars: ${stats.totalStars}`,'','Skills:'];
   skillRows().forEach(r=>lines.push(`- ${CAT_LABELS[r.cat].replace(/^\S+\s/,'')}: ${r.tag[1]}${r.a>=3?' ('+r.pct+'%)':''}`));
-  if(stats.history.length){ lines.push('','Recent games:'); stats.history.slice(-5).reverse().forEach(h=>lines.push(`- ${h.d} · Level ${h.l} · ${h.c}/${h.t}`)); }
+  if(stats.history.length){ lines.push('','Recent games:'); stats.history.slice(-5).reverse().forEach(h=>lines.push(`- ${h.d} · ${h.k&&CAT_LABELS[h.k]?'Practice: '+CAT_LABELS[h.k].replace(/^\S+\s/,''):'Level '+h.l} · ${h.c}/${h.t}`)); }
   return lines.join('\n');
 }
 function exportData(){
   const txt=summaryText();
+  const show=()=>askConfirm({icon:'📋',title:'Progress summary',text:txt,yes:'Close',no:false});
   if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(()=>toast('Summary copied ✔')).catch(()=>alert(txt));
-  } else alert(txt);
+    navigator.clipboard.writeText(txt).then(()=>toast('Summary copied','success','📋')).catch(show);
+  } else show();
 }
 
 function downloadBackup(){
@@ -1078,7 +1565,7 @@ function downloadBackup(){
   a.href=URL.createObjectURL(new Blob([body],{type:'application/json'}));
   a.download=name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href),3000);
-  toast('Backup saved ✔');
+  toast('Backup saved','success','💾');
 }
 function restoreBackup(input){
   const f=input.files && input.files[0]; if(!f) return;
@@ -1087,39 +1574,106 @@ function restoreBackup(input){
     try{
       const o=JSON.parse(r.result), st=o && o.stats;
       if(!st || typeof st.totalStars!=='number' || !st.items || typeof st.items!=='object') throw new Error('bad');
-      if(confirm(`Replace the current progress with this backup (${st.sessionsCompleted||0} games, ${st.totalStars} stars)?`)){
-        localStorage.setItem(STORE_KEY,JSON.stringify(st));
-        stats=loadStats(); closeParentPortalDirect(); renderStart(); toast('Progress restored ✔');
-      }
-    }catch(e){ toast('That file is not a valid backup.'); }
+      askConfirm({icon:'📂',title:'Restore this backup?',text:`This replaces the current progress with the backup (${st.sessionsCompleted||0} games, ${st.totalStars} stars).`,yes:'Restore',no:'Keep current',danger:true},()=>{
+        try{ localStorage.setItem(STORE_KEY,JSON.stringify(st)); }catch(e){}
+        stats=loadStats(); closeParentPortalDirect(); renderStart(); toast('Progress restored','success');
+      });
+    }catch(e){ toast('That file is not a valid backup.','warn'); }
   };
   r.readAsText(f); input.value='';
 }
 
 function resetStats(){
-  if(confirm("Are you sure you want to reset all of Cathy's stars and progress? Save a backup first if you might want it back.")){
+  askConfirm({icon:'🗑️',title:'Reset everything?',text:"This erases all of Cathy's stars, stickers and progress. Save a backup first if you might want it back.",yes:'Yes, reset it',no:'Keep her progress',danger:true},()=>{
     try{localStorage.removeItem(STORE_KEY);}catch(e){}
     stats=loadStats();
     closeParentPortalDirect();
     renderStart();
-  }
+    toast('Progress reset','info','🗑️');
+  });
 }
 
 /* ============================= INIT ============================= */
 renderStart();
 
-/* ============================= PWA: SERVICE WORKER ============================= */
-function showUpdateBar(){
-  if(document.querySelector('.update-bar')) return;
-  const b=document.createElement('div'); b.className='update-bar'; b.setAttribute('role','status');
-  b.innerHTML='<span>✨ A new version is ready</span><button type="button" onclick="location.reload()">Update</button>';
-  document.body.appendChild(b);
+/* ============================= BACK-BUTTON PROTECTION ============================= */
+// The browser/OS back button (or an edge-swipe) never leaves the app by accident:
+// it closes dialogs/menus, asks before abandoning a game, and needs a second press on the home screen.
+let lastBackAt=0, allowExit=false;
+function gameInProgress(){ return view==='game' && results.length>0; }
+function handleBack(){
+  if(document.getElementById('dlg')){ closeDlg(); return; }                       // dialog → close it
+  if(document.getElementById('modalContainer').innerHTML){ closeParentPortalDirect(); return; }
+  if(view==='game'){
+    askConfirm({icon:'🦉',title:'Leave this game?',text:results.length?"Cathy's answers in this game won't be saved.":'You can start again any time.',yes:'Keep playing',no:'Leave game'},null,()=>{ renderStart(); });
+    return;
+  }
+  if(view!=='start'){ renderStart(); return; }                                      // book / summary → home
+  const now=Date.now();
+  if(now-lastBackAt<2500){ allowExit=true; history.go(-2); setTimeout(()=>{ allowExit=false; toast('Use the home button to close the app','info','🏠'); },600); return; }
+  lastBackAt=now; toast('Press back again to leave','info','👋');
 }
+try{
+  history.replaceState({base:1},'');
+  history.pushState({app:1},'');
+  window.addEventListener('popstate',()=>{
+    if(allowExit) return;
+    try{ history.pushState({app:1},''); }catch(e){}                                  // re-arm before anything else
+    handleBack();
+  });
+}catch(e){}
+window.addEventListener('beforeunload',e=>{ if(gameInProgress()){ e.preventDefault(); e.returnValue=''; } });
+
+/* ============================= VERSION CHECK & UPDATES ============================= */
+let lastCheckAt=0, updateShownFor='';
+function verNewer(a,b){ const x=String(a).split('.').map(Number), y=String(b).split('.').map(Number); for(let i=0;i<Math.max(x.length,y.length);i++){ const d=(x[i]||0)-(y[i]||0); if(d) return d>0; } return false; }
+function showUpdateNote(ver){
+  if(document.querySelector('.update-note') || updateShownFor===ver) return;
+  updateShownFor=ver;
+  const n=document.createElement('div'); n.className='update-note'; n.setAttribute('role','status');
+  n.innerHTML=`<span class="un-i" aria-hidden="true">🎁</span><span class="un-t">A new version is ready<small>${ver?'Version '+ver+' (you have '+APP_VERSION+')':'Tap update to get the latest'}</small></span><button type="button" class="un-later">Later</button><button type="button" class="un-go">Update</button>`;
+  n.querySelector('.un-later').onclick=()=>{ n.remove(); };
+  n.querySelector('.un-go').onclick=()=>{
+    if(gameInProgress()) askConfirm({icon:'🎁',title:'Update now?',text:'This game will start over. You can also tap Later and update after the game.',yes:'Update now',no:'Later'},doUpdate);
+    else doUpdate();
+  };
+  document.body.appendChild(n);
+}
+async function doUpdate(){
+  toast('Updating…','info','🔄');
+  try{
+    const reg=navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+    if(reg) await reg.update();
+    if(window.caches){ const ks=await caches.keys(); await Promise.all(ks.filter(k=>k.indexOf('cathy-adventure-')===0).map(k=>caches.delete(k))); }
+  }catch(e){}
+  allowExit=true; location.reload();
+}
+async function checkForUpdate(manual){
+  if(!manual && Date.now()-lastCheckAt<5*60*1000) return;
+  lastCheckAt=Date.now();
+  try{
+    const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error('http');
+    const j=await r.json();
+    if(j && verNewer(j.version,APP_VERSION)){ if(manual){ updateShownFor=''; document.querySelectorAll('.update-note').forEach(x=>x.remove()); } showUpdateNote(j.version); if(manual) closeParentPortalDirect(); }
+    else if(manual) toast(`You have the latest version (${APP_VERSION})`,'success','✨');
+  }catch(e){ if(manual) toast("Couldn't check for updates. Are you online?",'warn','📡'); }
+}
+window.addEventListener('load',()=>{ setTimeout(()=>checkForUpdate(false),2500); });
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') checkForUpdate(false); });
+setInterval(()=>checkForUpdate(false),30*60*1000);
+
+/* connectivity toasts: offline play is a feature, so say so kindly */
+let wasOffline=!navigator.onLine;
+window.addEventListener('offline',()=>{ wasOffline=true; toast("You're offline. The game still works!",'info','📴'); });
+window.addEventListener('online',()=>{ if(wasOffline){ wasOffline=false; toast("Back online",'success','📶'); checkForUpdate(false); } });
+
+/* ============================= PWA: SERVICE WORKER ============================= */
 if('serviceWorker' in navigator){
-  // Only announce an update when THIS app's worker is being replaced (not when it first takes over from the landing page's worker).
+  // A new worker taking over this app's old one means a new version is live: offer it (not on first install).
   const appSW=new URL('sw.js',location.href).href;
   const hadAppController=!!(navigator.serviceWorker.controller && navigator.serviceWorker.controller.scriptURL===appSW);
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadAppController) showUpdateBar(); });
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadAppController && !allowExit) showUpdateNote(''); });
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js').then(reg=>{ try{reg.update();}catch(e){} }).catch(()=>{});
   });
