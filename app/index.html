@@ -168,7 +168,10 @@
   .big-btn.play{font-size:1.6rem;padding:20px;}
   .footline{margin-top:16px;text-align:center;font-size:.85rem;color:var(--muted);font-weight:800;}
   .grownup-note{text-align:center;font-weight:900;color:var(--muted);margin:6px 0 10px;font-size:.95rem;}
-  .holdbtn{position:relative;overflow:hidden;}
+  .holdbtn{position:relative;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
+  .show-word-btn{margin:0 auto 12px;display:block;padding:10px 18px;font-family:var(--display);font-weight:700;font-size:1rem;border:3px solid var(--border);border-radius:16px;background:#fff;cursor:pointer;}
+  .show-word-btn:active{transform:translateY(2px);}
+  .revealed-word{font-family:var(--display);font-weight:800;font-size:2rem;text-align:center;margin:0 0 12px;}
   .holdbtn small{font-weight:700;opacity:.8;}
   .holdbtn::before{content:'';position:absolute;left:0;bottom:0;height:8px;width:0;background:var(--green);}
   .holdbtn.holding::before{width:100%;transition:width .9s linear;}
@@ -294,7 +297,7 @@ function makeOptions(correct,pool,count){
 
 /* ============================= STATE / STORAGE ============================= */
 const STORE_KEY='cathyTrainerStats_v2';   // unchanged so existing progress carries over
-const APP_VERSION='2.1';                  // keep in step with CACHE_NAME in sw.js
+const APP_VERSION = '2.2';                  // keep in step with CACHE_NAME in sw.js
 function defaultStats(){
   return {totalStars:0, sessionsCompleted:0, sessionNum:0, items:{}, history:[], settings:{review:true, solo:false}};
 }
@@ -429,7 +432,8 @@ function buildSightWords(){
     pool.forEach(w=>{
       if(lvl<=2){
         items.push({id:nid('sw'),category:'sightWords',level:lvl,type:'mc',
-          prompt:`Tap the word "${w}"`,tts:`Can you find the word ${w}?`,
+          prompt:'Tap the word you hear',tts:`Can you find the word ${w}?`,
+          reveal:w,
           display:`<div style="font-size:2.2rem;">📖</div>`,
           options:()=>makeOptions(w, w==='I'?['I','It','In','If','At']:pool.filter(x=>x!=='I'), 3)});
       }else{
@@ -789,6 +793,7 @@ function renderQuestion(){
     <div class="streak-flame">${streak>=3?`🔥 ${streak} in a row!`:''}</div>
     <div class="prompt-box"><span>${q.prompt}</span><button class="speak-btn" type="button" onclick="speakCurrent()" aria-label="Hear it again">🔊</button></div>
     <div class="display-box">${q.display}</div>
+    ${q.reveal?`<div id="revealSlot"><button type="button" class="show-word-btn" onclick="showWord()">👀 Show word</button></div>`:''}
     <div id="feedback" class="feedback-banner" aria-live="polite"></div>
     ${optsHtml}
   `;
@@ -796,6 +801,12 @@ function renderQuestion(){
   setTimeout(()=>speak(q.tts||q.prompt),350);
 }
 
+function showWord(){
+  const q=session[idx], slot=document.getElementById('revealSlot');
+  if(!q||!q.reveal||!slot) return;
+  sfx.playPop();
+  slot.innerHTML=`<div class="revealed-word">${q.reveal}</div>`;
+}
 function speakCurrent(){ const q=session[idx]; if(q) speak(q.tts||q.prompt); }
 function plainSpeech(t){ return String(t).replace(/[^\p{L}\p{N}\s'!?.,-]/gu,'').trim(); }
 function pick(a){ return a[rand(0,a.length-1)]; }
@@ -848,7 +859,7 @@ function setupHold(el,ms,cb){
   let t=null;
   const start=()=>{ if(t||el.disabled) return; el.classList.add('holding'); t=setTimeout(()=>{ t=null; el.classList.remove('holding'); cb(); },ms); };
   const stop=()=>{ if(t){ clearTimeout(t); t=null; } el.classList.remove('holding'); };
-  el.addEventListener('pointerdown',e=>{ e.preventDefault(); start(); });
+  el.addEventListener('pointerdown',e=>{ e.preventDefault(); try{ el.setPointerCapture(e.pointerId); }catch(_){} start(); });
   ['pointerup','pointerleave','pointercancel'].forEach(ev=>el.addEventListener(ev,stop));
   el.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ') && !e.repeat){ e.preventDefault(); start(); } });
   el.addEventListener('keyup',e=>{ if(e.key==='Enter'||e.key===' ') stop(); });
