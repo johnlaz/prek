@@ -38,6 +38,7 @@ Tap **🔒 Grown-ups** and answer the multiplication question.
 /docs/banner.svg
 /app/index.html      the game (all code and styles in one file)
 /app/manifest.json
+/app/version.json    the version the live site is on (the app checks this to offer updates)
 /app/sw.js           app service worker
 /app/icon-192.png
 /app/icon-512.png
@@ -74,3 +75,19 @@ All progress is stored only in this browser (`localStorage`, key `cathyTrainerSt
 
 ---
 © 2026 LAZLAB Creations. All Rights Reserved. · lazlab.io@gmail.com
+
+
+## Releasing an update
+
+Bump the version in **three** places, then push:
+
+1. `APP_VERSION` in `app/index.html`
+2. `CACHE_NAME` in `app/sw.js`
+3. `app/version.json`
+
+Open copies of the app compare their own version to `version.json` (on launch, when the app comes back to the foreground, when the device comes back online, and every 30 minutes) and show a themed "A new version is ready" notice. Grown-ups can also tap **Check for updates** in the Grown-ups area.
+
+## Safety nets
+
+- The back button / edge-swipe never exits by accident: it closes menus, asks before abandoning a game, and needs a second press on the home screen.
+- Closing or refreshing mid-game asks first.
