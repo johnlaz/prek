@@ -16,7 +16,7 @@ Install it from the app page: **Share → Add to Home Screen** (iPhone/iPad) or 
 ## What's in the game
 
 - **4 levels**: Little Explorer (3–4), Word Adventurer (4–5), Reading Star (5–6), Rising Champion (6–7).
-- **15 skills** per game: letters (upper/lower and matching), starting sounds, sight words, rhyming, syllable claps, numbers, counting, adding, shapes, colors, more-or-less, patterns, opposites, odd-one-out.
+- **28 skills** (15 questions per game): letters (upper/lower and matching), starting sounds, sight words, rhyming, syllable claps, numbers, counting, adding, shapes, colors, more-or-less, patterns, opposites, odd-one-out, plus reading sentences, missing words, word order, building words from letter tiles, tens & ones, skip counting and story problems.
 - Every question is **read aloud**; wrong answers are spoken back with the right answer.
 - Each game is 15 questions. Questions she struggles with come up more often; ones she knows come up less.
 - Reading-aloud questions need a grown-up to confirm (**press and hold ✓**), so the results stay honest.
@@ -60,6 +60,10 @@ All progress is stored only in this browser (`localStorage`, key `cathyTrainerSt
 3. Commit and push to `main`; GitHub Pages publishes it. Open the installed app twice and a "new version is ready" bar appears.
 
 ## Changelog
+
+**v2.6**
+- Every screen now fits the phone/tablet screen without scrolling (compact 2x2 level picker, tighter question and results layouts)
+- 7 new harder skills for the upper levels: Read & Answer, Missing Word, Word Order, Build a Word (tap letter tiles), Tens & Ones, Skip Counting, Story Problems (~124 new questions)
 
 **v2.1**
 - "Pre-K Assessment Tool" label on the landing and start screens; level tiles show age range, skills covered and question counts again

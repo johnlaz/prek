@@ -261,6 +261,82 @@
   @media(max-width:480px){.card{padding:18px;} .name-badge{padding:8px 14px;} .topbar{flex-wrap:nowrap;} .parent-portal-btn{padding:8px 10px;}}
   .name-badge,.stars-badge,.parent-portal-btn{white-space:nowrap;}
   @media(max-width:360px){.topbar{flex-wrap:wrap;}}
+  /* ===== v2.6 fit-to-screen: every screen sized to the visible viewport so nothing needs scrolling =====
+     Strategy: spacing and sizes scale with viewport height (vh/dvh + clamp) instead of fixed pixels,
+     and short screens (phones, split-view) get a compact layout. Tablets keep the roomy look. */
+  body{padding:max(clamp(8px,1.6dvh,14px),env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(clamp(8px,1.6dvh,14px),env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));}
+  .card{padding:clamp(12px,2.4dvh,24px) clamp(14px,3vw,24px);}
+  .topbar{margin-bottom:clamp(6px,1.4dvh,14px);}
+  .progress-outer{height:clamp(10px,1.6dvh,16px); margin-bottom:clamp(8px,1.8dvh,18px);}
+  .display-box{padding:clamp(10px,2.6dvh,26px) 14px; min-height:clamp(96px,17dvh,150px); margin-bottom:clamp(8px,1.8dvh,18px);}
+  .big-target{font-size:clamp(2.6rem,8dvh,4.5rem);}
+  .emoji-row{font-size:clamp(1.9rem,5.2dvh,2.8rem);}
+  .feedback-banner{min-height:0; height:clamp(22px,3.6dvh,32px); margin-bottom:clamp(4px,1.2dvh,12px); font-size:clamp(1.05rem,2.6dvh,1.3rem);}
+  .streak-flame{min-height:0; height:clamp(14px,2.4dvh,20px); margin-bottom:clamp(2px,.8dvh,8px);}
+  .opt-btn{min-height:clamp(56px,8.5dvh,68px); padding:clamp(8px,1.6dvh,16px) 10px;}
+  .options-grid{gap:clamp(8px,1.5dvh,12px);}
+  .prompt-box{margin-bottom:clamp(8px,1.8dvh,16px);}
+  .count-item{min-width:clamp(38px,6dvh,56px); min-height:clamp(38px,6dvh,56px);}
+  .count-item .ce{font-size:clamp(1.6rem,4.6dvh,2.3rem);}
+  .count-item.sm{min-width:clamp(34px,5.2dvh,50px); min-height:clamp(34px,5.2dvh,50px);}
+  .count-item.sm .ce{font-size:clamp(1.4rem,3.8dvh,1.8rem);}
+  .count-row{gap:clamp(2px,.8dvh,6px);}
+  .count-hint{margin-top:clamp(2px,.8dvh,8px);}
+  .big-btn{margin-top:clamp(8px,1.6dvh,14px);}
+  .mascot{font-size:clamp(2.4rem,7dvh,3.6rem); margin-bottom:0;}
+  .summary-hero{font-size:clamp(2.2rem,6dvh,3rem); margin:clamp(2px,1dvh,10px) 0 2px;}
+  .summary-sub{margin-bottom:clamp(6px,1.6dvh,16px);}
+  .summary-list{max-height:clamp(70px,20dvh,220px); overflow-y:auto; border:1px solid var(--border); border-radius:16px; padding:0 14px; margin-top:6px;}
+  .cat-row{padding:clamp(6px,1.2dvh,12px) 4px;}
+  .footline{margin-top:clamp(6px,1.4dvh,16px);}
+  .owl-btn{font-size:clamp(2.8rem,7.5dvh,4.2rem);}
+  .owl-row{margin:0 0 clamp(4px,1dvh,8px);}
+  .bubble{font-size:clamp(1rem,2.8dvh,1.25rem); padding:clamp(6px,1.2dvh,10px) 14px;}
+
+  /* Start screen: the four levels always sit in a 2x2 grid, compact on phones */
+  .level-grid{grid-template-columns:1fr 1fr!important; gap:clamp(8px,1.6dvh,14px); margin:clamp(6px,1.4dvh,16px) 0;}
+  @media(max-width:600px){
+    .level-card{flex-direction:column; text-align:center; justify-content:center; gap:2px; min-height:clamp(86px,13dvh,120px); padding:8px 6px;}
+    .lv-text{align-items:center;}
+    .lv-emoji{font-size:clamp(1.8rem,4.6dvh,2.6rem);}
+    .lv-name{font-size:1rem;}
+    .lv-hint,.lv-count{display:none;}            /* details live in the Grown-ups area; keeps the screen to one glance */
+    .lv-badge{top:-8px;right:-4px;font-size:.7rem;padding:1px 8px;}
+  }
+  @media(max-height:760px){ .start-intro{display:none;} .section-tag{margin-bottom:2px;} }
+  .big-btn.play{padding:clamp(12px,2.4dvh,20px);}
+
+  /* Short landscape screens (phones turned sideways): tighter still, answers in one row */
+  @media(max-height:480px){
+    .card{padding:8px 14px;} .topbar{margin-bottom:4px;}
+    .name-badge,.stars-badge{padding:4px 12px;font-size:.85rem;} .parent-portal-btn{min-height:36px;padding:4px 10px;}
+    .display-box{min-height:70px;padding:6px 10px;margin-bottom:6px;}
+    .options-grid,.options-grid[data-n="3"],.options-grid[data-n="4"]{grid-template-columns:repeat(4,minmax(0,1fr));}
+    .options-grid[data-n="2"]{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .options-grid[data-n="3"]{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .options-grid[data-n="3"] > :last-child{grid-column:auto;width:auto;}
+    .opt-btn{min-height:48px;font-size:1.1rem;padding:4px 6px;}
+    .owl-row{display:none;} .level-card{min-height:70px;} .lv-emoji{font-size:1.5rem;}
+    .level-grid{grid-template-columns:repeat(4,1fr)!important;}
+    .mascot{display:none;} .summary-list{display:none;}
+  }
+  /* v2.6 content styles: sentences, blanks, base-ten blocks, tiles */
+  .sent-text{font-family:var(--display);font-weight:800;font-size:clamp(1.35rem,3.9dvh,2.1rem);line-height:1.35;color:var(--ink);text-align:center;}
+  .blank{display:inline-block;min-width:2.2em;border-bottom:4px solid var(--purple);margin:0 4px;transform:translateY(-2px);}
+  .blocks{display:flex;gap:clamp(14px,3dvh,26px);align-items:flex-end;justify-content:center;flex-wrap:wrap;}
+  .rod,.dot{display:inline-block;vertical-align:bottom;}
+  .rod{width:clamp(11px,2.4dvh,16px);height:clamp(44px,8.5dvh,70px);background:linear-gradient(#a78bfa,#7c3aed);border-radius:5px;margin:0 3px;}
+  .bk-ones{display:inline-flex;flex-wrap:wrap;gap:4px;max-width:clamp(80px,16dvh,110px);align-items:flex-end;}
+  .dot{width:clamp(11px,2.4dvh,16px);height:clamp(11px,2.4dvh,16px);background:#fbbf24;border-radius:4px;}
+  .tile-slots,.tile-bank{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:clamp(5px,1.2dvh,10px);}
+  .tile{min-width:clamp(50px,8dvh,68px);min-height:clamp(50px,8dvh,68px);padding:0 12px;font-family:var(--display);font-weight:800;font-size:clamp(1.3rem,3.4dvh,1.75rem);
+    color:var(--ink);background:#fff;border:3px solid var(--border);border-radius:16px;box-shadow:0 4px 0 var(--border);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation;}
+  .tile:active{transform:translateY(3px);box-shadow:0 1px 0 var(--border);}
+  .tile.slot{background:#f6f3ff;border-style:dashed;box-shadow:none;cursor:default;}
+  .tile.placed{background:#ede9fe;border-color:#c4b5fd;box-shadow:0 4px 0 #c4b5fd;}
+  .tile.fix{background:#f0fdf4;border-color:var(--green);color:#15803d;box-shadow:0 4px 0 var(--green);}
+  .tile.ghost{visibility:hidden;}
+  .tile-end{font-family:var(--display);font-weight:900;font-size:2rem;color:var(--muted);}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
@@ -358,7 +434,7 @@ function makeOptions(correct,pool,count){
 
 /* ============================= STATE / STORAGE ============================= */
 const STORE_KEY='cathyTrainerStats_v2';   // unchanged so existing progress carries over
-const APP_VERSION = '2.5';                  // keep in step with CACHE_NAME in sw.js
+const APP_VERSION = '2.6';                  // keep in step with CACHE_NAME in sw.js
 function defaultStats(){
   return {lastBackup:'', totalStars:0, spent:0, stickers:[], hat:'', sessionsCompleted:0, sessionNum:0, items:{}, history:[], settings:{review:true, solo:false}};
 }
@@ -389,8 +465,8 @@ let stats=loadStats();
 const LEVELS=[
   {id:1,cls:'lvl1',emoji:'🌱',name:'Little Explorer',hint:'Ages 3–4 · letters, first words, shapes & colors'},
   {id:2,cls:'lvl2',emoji:'🚀',name:'Word Adventurer',hint:'Ages 4–5 · more sight words, rhymes, counting to 20'},
-  {id:3,cls:'lvl3',emoji:'⭐',name:'Reading Star',hint:'Ages 5–6 · digraphs, syllables, bigger numbers'},
-  {id:4,cls:'lvl4',emoji:'🏆',name:'Rising Champion',hint:'Ages 6–7 · blends, addition, tricky words'}
+  {id:3,cls:'lvl3',emoji:'⭐',name:'Reading Star',hint:'Ages 5–6 · first sentences, word building, tens & ones'},
+  {id:4,cls:'lvl4',emoji:'🏆',name:'Rising Champion',hint:'Ages 6–7 · reading sentences, story math, tricky words'}
 ];
 const CAT_LABELS={
   letters:'🔤 Letters', beginSounds:'👂 Starting Sounds', sightWords:'📖 Sight Words',
@@ -399,7 +475,9 @@ const CAT_LABELS={
   shapes:'🔺 Shapes', colors:'🎨 Colors', compare:'⚖️ More or Less',
   patterns:'🧩 Patterns', opposites:'↔️ Opposites', oddOne:'🔍 Odd One Out',
   endSounds:'👂 Ending Sounds', numberOrder:'🔢 Number Neighbors', subtract:'➖ Taking Away',
-  sorting:'🗂️ Sorting', feelings:'😊 Feelings', calendar:'📅 Days & Seasons'
+  sorting:'🗂️ Sorting', feelings:'😊 Feelings', calendar:'📅 Days & Seasons',
+  readSentence:'📚 Read & Answer', fillWord:'✏️ Missing Word', sentenceOrder:'🔀 Word Order', buildWord:'🔤 Build a Word',
+  placeValue:'🔟 Tens & Ones', skipCount:'🦘 Skip Counting', wordProblem:'📝 Story Problems'
 };
 
 const SIGHT_WORDS={
@@ -988,12 +1066,162 @@ function buildMore(){
   return items;
 }
 
+/* ===== v2.6 new skills: sentences, word building, tens & ones, skip counting, story problems =====
+   Item ids are fixed strings (rs-, fw-, wo-, bw-, pv-, sk-, wp-) so saved progress keeps matching the same question. */
+function numOpts(ans,extras){                       // 3 distinct positive number choices incl. the answer
+  const pool=[...new Set(extras.filter(x=>x>0&&x!==ans))];
+  return makeOptions(ans,[ans,...pool],3);
+}
+const READ_SENT={
+  2:[['The dog ran.','Who ran?','dog',['cat','pig']],
+     ['A pig is big.','What is big?','pig',['hen','cow']],
+     ['I see a red hat.','What do I see?','hat',['bat','car']],
+     ['The sun is hot.','What is hot?','sun',['ice','moon']],
+     ['The fish can swim.','What can swim?','fish',['bird','dog']],
+     ['Mom has a cup.','What does Mom have?','cup',['cap','cat']]],
+  3:[['Sam has a red ball.','What color is the ball?','red',['blue','green']],
+     ['The bird sits in the tree.','Where is the bird?','tree',['house','box']],
+     ['We play at the park.','Where do we play?','park',['school','store']],
+     ['Ben has two dogs.','How many dogs does Ben have?','2',['1','3']],
+     ['The frog can jump high.','What can the frog do?','jump',['swim','fly']],
+     ['Mia eats a big apple.','What does Mia eat?','apple',['pizza','cake']],
+     ['It is cold and snowy.','What is the weather like?','snowy',['sunny','hot']]],
+  4:[['Tom got a puppy. The puppy is brown.','What color is the puppy?','brown',['black','white']],
+     ['Lily went to the store. She bought milk.','What did Lily buy?','milk',['bread','eggs']],
+     ['It was raining. Dan took his umbrella.','What was the weather?','rainy',['sunny','snowy']],
+     ['Ava is sad. Her ice cream fell.','What fell?','ice cream',['cake','hat']],
+     ['The bus stops at school. The kids get off.','Where does the bus stop?','school',['park','home']],
+     ['Max ran fast and won the race.','What did Max do?','won',['lost','slept']]]
+};
+function buildReading(){
+  const items=[];
+  Object.keys(READ_SENT).forEach(l=>READ_SENT[l].forEach(([s,q,a,d],i)=>items.push({
+    id:`rs-${l}-${i}`,category:'readSentence',level:+l,type:'mc',
+    prompt:q, tts:'Read the sentence. '+q, display:`<div class="sent-text">${s}</div>`,
+    options:()=>makeOptions(a,[a,...d],3)})));
+  return items;
+}
+const BLANK='<span class="blank"></span>';
+const FILL_WORD={
+  3:[['The sun is in the ___.','sky',['cup','shoe']],['We eat with a ___.','fork',['hat','bed']],
+     ['A bird can ___.','fly',['bark','moo']],['I wear a ___ on my head.','hat',['shoe','cup']],
+     ['A fish lives in the ___.','water',['tree','bed']],['The cat ___ on the mat.','sat',['sit','sad']]],
+  4:[['I ___ a big dog.','have',['has','having']],['She ___ to school.','goes',['go','going']],
+     ['Tom and Sam ___ happy.','are',['is','am']],
+     ['The cat is on the bed ___','.',['?']],['Do you like pizza ___','?',['.']],['Where is my hat ___','?',['.']]]
+};
+function buildFill(){
+  const items=[];
+  Object.keys(FILL_WORD).forEach(l=>FILL_WORD[l].forEach(([s,a,d],i)=>{
+    const punct=(a==='.'||a==='?');
+    items.push({id:`fw-${l}-${i}`,category:'fillWord',level:+l,type:'mc',
+      prompt:punct?'Which mark ends the sentence?':'Which word fits?',
+      tts:punct?'Which mark goes at the end of the sentence?':'Which word fits in the blank? '+s.replace('___','blank'),
+      display:`<div class="sent-text">${s.replace('___',BLANK)}</div>`,
+      options:()=>makeOptions(a,[a,...d],Math.min(3,1+d.length))});
+  }));
+  return items;
+}
+// word order and word building use tap-the-tiles answers (type 'order' / 'build'), see tileInit() below
+const WORD_ORDER={
+  3:['I like pizza','The dog runs','We can play','She has a hat','Dad is tall','The sun is hot'],
+  4:['The cat sat on the mat','I can see a big bird','We go to the park','My mom makes good soup','The boy kicks the ball','Birds fly in the sky']
+};
+function buildOrder(){
+  const items=[];
+  Object.keys(WORD_ORDER).forEach(l=>WORD_ORDER[l].forEach((s,i)=>{
+    const words=s.split(' ');
+    items.push({id:`wo-${l}-${i}`,category:'sentenceOrder',level:+l,type:'order',
+      prompt:'Put the words in order',tts:'Tap the words in the right order to make a sentence.',
+      display:'<div class="tile-slots" id="tileSlots"></div>',answer:words,endMark:'.',
+      tiles:()=>{ let t=shuffle(words), n=0; while(t.join(' ')===s && n++<10) t=shuffle(words); return t; }});
+  }));
+  return items;
+}
+const BUILD_WORDS={
+  2:[['🐱','cat'],['🐶','dog'],['☀️','sun'],['🐷','pig'],['🚌','bus'],['🛏️','bed'],['🦊','fox'],['🐛','bug']],
+  3:[['🐸','frog'],['🐟','fish'],['🐻','bear'],['🦆','duck'],['🌙','moon'],['⭐','star'],['🎂','cake'],['🌳','tree']],
+  4:[['🍎','apple'],['🏠','house'],['🐴','horse'],['🚂','train'],['🐍','snake'],['🦓','zebra'],['🍕','pizza'],['🍞','bread']]
+};
+function buildSpelling(){
+  const items=[], extra={2:1,3:2,4:2}, ABC='abcdefghijklmnopqrstuvwxyz'.split('');
+  Object.keys(BUILD_WORDS).forEach(l=>BUILD_WORDS[l].forEach(([e,w],i)=>{
+    const letters=w.split('');
+    items.push({id:`bw-${l}-${i}`,category:'buildWord',level:+l,type:'build',
+      prompt:'Spell the word',tts:'Tap the letters to spell this word.',
+      display:`<div class="big-target">${e}</div><div class="tile-slots" id="tileSlots"></div>`,answer:letters,
+      tiles:()=>{ const ex=shuffle(ABC.filter(c=>!letters.includes(c))).slice(0,extra[l]);
+                  let t=shuffle(letters.concat(ex)), n=0; while(t.slice(0,letters.length).join('')===w && n++<10) t=shuffle(letters.concat(ex)); return t; }});
+  }));
+  return items;
+}
+function blocksHtml(n){                              // base-ten blocks: tall bars = tens, small squares = ones
+  return `<div class="blocks"><span class="bk-tens">${'<i class="rod"></i>'.repeat(Math.floor(n/10))}</span><span class="bk-ones">${'<i class="dot"></i>'.repeat(n%10)}</span></div>`;
+}
+function buildPlaceValue(){
+  const items=[];
+  const sets={3:[12,15,18,21,23,26,28,31,34,37],4:[42,47,53,58,64,69,75,81,86,93]};
+  Object.keys(sets).forEach(l=>sets[l].forEach(n=>{
+    const rev=+String(n).split('').reverse().join('');
+    items.push({id:`pv-${n}`,category:'placeValue',level:+l,type:'mc',
+      prompt:'How many in all?', tts:'Each tall bar is ten. Each little square is one. How many in all?',
+      display:blocksHtml(n),
+      options:()=>numOpts(n,[rev,n+10,n-10,n+1,n-1])});
+  }));
+  [34,52,27,66].forEach(n=>items.push({id:`pv-more-${n}`,category:'placeValue',level:4,type:'mc',
+    prompt:`What is 10 more than ${n}?`,tts:`What is ten more than ${n}?`,
+    display:`<div class="sent-text">10 more than ${n}</div>`,
+    options:()=>numOpts(n+10,[n+1,n-10,n+11,n+20])}));
+  return items;
+}
+function buildSkip(){
+  const items=[];
+  // [level, sequence with null = the missing number, step]
+  const defs=[[3,[2,4,6,null,10],2],[3,[4,6,null,10,12],2],[3,[10,20,null,40],10],[3,[20,30,40,null],10],[3,[1,2,null,4,5],1],
+              [4,[5,10,15,null,25],5],[4,[20,25,null,35],5],[4,[30,40,null,60],10],[4,[60,70,80,null],10],[4,[12,14,null,18],2],[4,[18,16,14,null,10],-2]];
+  defs.forEach(([l,seq,step],i)=>{
+    const at=seq.indexOf(null), ans=seq[at-1]+step, st=Math.abs(step);
+    items.push({id:`sk-${l}-${i}`,category:'skipCount',level:l,type:'mc',
+      prompt:'What number is missing?',tts:'What number is missing in the counting pattern?',
+      display:`<div class="sent-text">${seq.map(x=>x===null?BLANK:x).join(', ')}</div>`,
+      options:()=>numOpts(ans,[ans+1,ans-1,ans+st,ans-st])});
+  });
+  return items;
+}
+const WP_NOUNS=[['dogs','🐶'],['apples','🍎'],['birds','🐦'],['cookies','🍪'],['stars','⭐'],['fish','🐟']];
+const WP_NAMES=['Mia','Sam','Ava','Ben','Zoe','Max'];
+function buildWordProblems(){
+  const items=[];
+  const add={3:[[3,2],[4,3],[5,2],[2,6],[4,4],[6,3]],4:[[8,7],[9,6],[12,5],[10,9],[11,6],[7,8]]};
+  const sub={3:[[5,2],[7,3],[6,4],[8,5]],4:[[15,6],[12,7],[18,9],[14,5],[16,8],[13,4]]};
+  let k=0;
+  const disp=(story,row)=>`<div class="sent-text">${story}</div>${row?`<div class="emoji-row">${row}</div>`:''}`;
+  [3,4].forEach(l=>{
+    add[l].forEach(([a,b],i)=>{
+      const [n,e]=WP_NOUNS[k%6], nm=WP_NAMES[k%6]; k++;
+      const story=`${nm} has ${a} ${n}. ${nm} gets ${b} more.`;
+      items.push({id:`wp-a-${l}-${i}`,category:'wordProblem',level:l,type:'mc',
+        prompt:`How many ${n} now?`,tts:`${story} How many ${n} now?`,
+        display:disp(story,l===3?e.repeat(a)+' ➕ '+e.repeat(b):''),
+        options:()=>numOpts(a+b,[a+b+1,a+b-1,a+b+2,a,b])});
+    });
+    sub[l].forEach(([a,b],i)=>{
+      const [n,e]=WP_NOUNS[k%6], nm=WP_NAMES[k%6]; k++;
+      const story=`${nm} has ${a} ${n}. ${nm} gives away ${b}.`;
+      items.push({id:`wp-s-${l}-${i}`,category:'wordProblem',level:l,type:'mc',
+        prompt:'How many are left?',tts:`${story} How many are left?`,
+        display:disp(story,l===3?e.repeat(a):''),
+        options:()=>numOpts(a-b,[a-b+1,a-b-1,a-b+2,a,b])});
+    });
+  });
+  return items;
+}
 function buildBank(){
   return [].concat(
     buildLetters(), buildBeginSounds(), buildSightWords(), buildRhymeMatch(), buildRhymeProd(),
     buildSyllables(), buildNumbers(), buildCounting(), buildAddition(), buildShapes(),
     buildColors(), buildCompare(), buildPatterns(), buildOpposites(), buildOddOne(), buildExtras(),
-    buildMore()
+    buildMore(), buildReading(), buildFill(), buildOrder(), buildSpelling(), buildPlaceValue(), buildSkip(), buildWordProblems()
   );
 }
 const BANK=buildBank();
@@ -1088,7 +1316,7 @@ function renderStart(){
   document.getElementById('app').innerHTML=`
     <h1 class="sr-only">Cathy's Learning Adventure</h1>
     <div class="section-tag" style="text-align:center;">Pre-K Assessment Tool</div>
-    <div class="sub" style="text-align:center;margin-bottom:6px;">Pick a level. Each game is 15 questions on letters, words and math, and results show up in the Grown-ups area.</div>
+    <div class="sub start-intro" style="text-align:center;margin-bottom:6px;">Pick a level. Each game is 15 questions on letters, words and math, and results show up in the Grown-ups area.</div>
     <div class="owl-row">
       ${owlHtml()}
       <div class="bubble">Hi Cathy!<br>Pick a game!</div>
@@ -1127,6 +1355,8 @@ function renderQuestion(){
         <button class="vbtn no" type="button" onclick="answerVerbal(false)">✗ Practice more</button>
       </div>
     </div>`;
+  } else if(q.type==='build'||q.type==='order'){
+    optsHtml=`<div class="tile-bank" id="tileBank"></div>`;     // tiles are drawn by tileInit() below
   }
 
   document.getElementById('app').innerHTML=`
@@ -1139,6 +1369,7 @@ function renderQuestion(){
     ${optsHtml}
   `;
   if(q.type==='verbal') setupHold(document.getElementById('holdYes'),900,()=>answerVerbal(true));
+  if(q.type==='build'||q.type==='order') tileInit(q); else tile=null;
   setTimeout(()=>speak(q.tts||q.prompt),350);
 }
 
@@ -1244,6 +1475,43 @@ function answerVerbal(correct){
   recordAndAdvance(session[idx],correct,correct?1200:2200);
 }
 
+// ---- tile answers (word order, spelling): tap tiles into the slots; tap a placed tile to take it back ----
+let tile=null;
+function tileInit(q){ tile={q,tokens:q.tiles(),placed:[],done:false}; tileDraw(); }
+function tileDraw(){
+  const slots=document.getElementById('tileSlots'), bank=document.getElementById('tileBank');
+  if(!tile||!slots||!bank) return;
+  const {q,tokens,placed}=tile;
+  slots.innerHTML=q.answer.map((_,i)=>i<placed.length
+    ?`<button type="button" class="tile placed" onclick="tileUndo(${i})" aria-label="Take back ${tokens[placed[i]]}">${tokens[placed[i]]}</button>`
+    :`<span class="tile slot" aria-hidden="true"></span>`).join('')+(q.endMark?`<span class="tile-end">${q.endMark}</span>`:'');
+  bank.innerHTML=tokens.map((t,i)=>placed.includes(i)
+    ?`<span class="tile ghost" aria-hidden="true">${t}</span>`            /* ghost keeps the bank layout from jumping */
+    :`<button type="button" class="tile" onclick="tileTap(${i})">${t}</button>`).join('');
+}
+function tileTap(i){
+  if(!tile||tile.done||tile.placed.includes(i)) return;
+  sfx.playPop(); tile.placed.push(i);
+  if(tile.q.type==='order') speak(tile.tokens[i]);
+  tileDraw();
+  if(tile.placed.length===tile.q.answer.length) tileCheck();
+}
+function tileUndo(i){ if(!tile||tile.done) return; sfx.playPop(); tile.placed.splice(i,1); tileDraw(); }
+function tileCheck(){
+  const {q,tokens,placed}=tile; tile.done=true;
+  const sep=q.type==='build'?'':' ';
+  const want=q.answer.join(sep), ok=placed.map(i=>tokens[i]).join(sep)===want;
+  if(ok) sfx.playCorrect(); else sfx.playIncorrect();
+  const fb=document.getElementById('feedback');
+  fb.textContent=ok?'Great job! 🎉':`Good try! It's "${want}${q.endMark||''}"`;
+  fb.className='feedback-banner '+(ok?'fb-good':'fb-bad');
+  if(!ok) document.getElementById('tileSlots').innerHTML=q.answer.map(t=>`<span class="tile placed fix">${t}</span>`).join('')+(q.endMark?`<span class="tile-end">${q.endMark}</span>`:'');
+  else document.querySelectorAll('#tileSlots .tile').forEach(b=>{ b.disabled=true; b.classList.add('fix'); });
+  document.querySelectorAll('#tileBank .tile').forEach(b=>b.disabled=true);
+  speak(ok?pick(['Great job!','You got it!','Awesome!','Super!']):(q.type==='build'?`Good try! The word is ${want}.`:`Good try! It says ${want}.`));
+  recordAndAdvance(q,ok);
+}
+
 function launchConfetti(){
   if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const emojis=['🎉','⭐','🌟','🎊','✨'];
@@ -1290,7 +1558,7 @@ function renderSummary(){
     <h2>Great work, Cathy!</h2>
     <div class="summary-hero">${correctCt} / ${total}</div>
     <div class="summary-sub">${pct}% correct &nbsp;·&nbsp; +${sessionStars} stars earned ⭐</div>
-    <div style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:16px; padding:0 14px; margin-top:10px;">${rows}</div>
+    <div class="summary-list">${rows}</div>
     ${canBuy?`<button class="big-btn gift" onclick="openBook()">🎁 You can get a new sticker!</button>`:''}
     <button class="big-btn" onclick="renderStart()">🔁 ${sessionCat?'Done':'Play Again'}</button>
     ${canBuy?'':`<button class="ghost-btn" onclick="openBook()">🎟️ Sticker Book (⭐ ${balance()})</button>`}
